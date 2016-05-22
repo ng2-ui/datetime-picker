@@ -1,0 +1,62 @@
+<div class="datetime-picker" *ngIf="true || opened" (click)="clicked=true">
+
+  <!-- Month - Year  -->
+  <div class="month">
+    <button type="button" class="prev" (click)="showPrevMonth()">&laquo;</button>
+     <span title="{{dateTime.months[month].fullName}}">
+           {{dateTime.months[month].shortName}}
+     </span>
+    {{year}}
+    <button type="button" class="next" (click)="showNextMonth()">&raquo;</button>
+  </div>
+
+  <div class="days">
+
+    <!-- Su Mo Tu We Th Fr Sa -->
+    <div class="day-of-week"
+         *ngFor="let dayOfWeek of dateTime.daysOfWeek"
+         title="{{dayOfWeek.fullName}}">
+      {{dayOfWeek.shortName}}
+    </div>
+
+    <!-- Fill up blank days for this month -->
+    <div class="day"
+         *ngIf="monthData.leadingDays.length < 7"
+         *ngFor="let dayNum of monthData.leadingDays">
+      {{dayNum}}
+    </div>
+
+    <!-- day 1 to the end of day -->
+    <div class="day selectable"
+         *ngFor="let dayNum of monthData.days"
+         (click)="setSelectedDate(dayNum)"
+         title="{{year}}-{{month}}-{{dayNum}}"
+         [ngClass]="{
+           selected: toDateInt(year, month, dayNum) === selectedDate.getTime(),
+           today: toDateInt(year, month, dayNum) === today.getTime(),
+           weekend: (monthData.leadingDays.length + day)%7 == 1 || (monthData.leadingDays.length + day)%7 == 0
+         }"
+         >
+      {{dayNum}}
+    </div>
+
+    <!-- Fill up blank days for this month -->
+    <div class="day"
+       *ngIf="monthData.trailingDays.length < 7"
+       *ngFor="let dayNum of monthData.trailingDays">
+      {{dayNum}}
+    </div>
+  </div>
+
+  <!-- Time -->
+  <div class="days" id="time" *ngIf="!dateOnly">
+    <label class="timeLabel">Time:</label>
+    <span class="timeValue">
+      {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
+    </span><br/>
+    <label class="hourLabel">Hour:</label>
+    <input class="hourInput" type="range" min="0" max="23" [(ngModel)]="hour" />
+    <label class="minutesLabel">Min:</label>
+    <input class="minutesInput" type="range" min="0" max="59" [(ngModel)]="minute"/>
+  </div>
+</div>
