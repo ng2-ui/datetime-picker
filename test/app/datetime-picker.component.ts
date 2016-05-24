@@ -1,6 +1,7 @@
-import {Component, Input, ElementRef} from '@angular/core';
+import {Component, Input, ElementRef, AfterViewChecked, ViewEncapsulation, SimpleChange} from '@angular/core';
+import {Subject} from "rxjs/Subject";
 import {DateTime} from './datetime';
-import {ViewEncapsulation} from "@angular/core/src/metadata/view";
+import {ChangeDetectorRef} from "@angular/core";
 
 //@TODO
 // . display currently selected day
@@ -9,6 +10,7 @@ import {ViewEncapsulation} from "@angular/core/src/metadata/view";
  * show a selected date in monthly calendar
  */
 @Component({
+  providers: [DateTime],
   selector: 'datetime-picker',
   moduleId: module.id,
   templateUrl: './datetime-picker.html',
@@ -16,32 +18,52 @@ import {ViewEncapsulation} from "@angular/core/src/metadata/view";
   encapsulation: ViewEncapsulation.Native
   // encapsulation: ViewEncapsulation.None
   // encapsulation: ViewEncapsulation.Emulated is default
-
 })
-export class DateTimePickerComponent {
+export class DateTimePickerComponent implements AfterViewChecked {
 
-  @Input() year: number;
-  @Input() month: number;
-  @Input() day: number;
-  @Input() hour: number;
-  @Input() minute: number;
-
-  @Input() dateFormat: string;
-  @Input() dateOnly: boolean;
-  @Input() closeOnSelect: boolean;
-
-  public selectedDate: Date;      //currently selected date
-  public opened: boolean = false; //show/hide datetime picker
+  /**
+   * public variables
+   */
+  public dateOnly: boolean;
   
-  public el: HTMLElement;
-  public monthData: any;
+  public selectedDate: Date; //currently selected date
+  public hour: number;
+  public minute: number;
+  
+  public el: HTMLElement; // this component element
+  public monthData: any;  // month calendar data
 
-  constructor(elementRef: ElementRef, public dateTime: DateTime) {
+  public changes: Subject<any> = new Subject();
+  public closing: Subject<any> = new Subject();
+
+  /**
+   * constructor
+   */
+  constructor(elementRef: ElementRef, public dateTime: DateTime, public cdRef: ChangeDetectorRef) {
     this.el = elementRef.nativeElement;
-    this.setSelectedDate(new Date());
-    this.monthData = dateTime.getMonthData(this.year, this.month);
+    this.initDateTime();
+  }
+  
+  private prevHour: number;
+  private prevMinute: number;
+  ngAfterViewChecked() {
+    if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
+      this.changes.next({
+        selectedDate: this.selectedDate,
+        hour: this.hour,
+        minute: this.minute
+      });
+      this.cdRef.detectChanges();  // https://github.com/angular/angular/issues/6005, this is silly
+    }
   }
 
+  /**
+   * getters
+   */
+  get year():   number { return this.selectedDate.getFullYear(); }
+  get month():  number { return this.selectedDate.getMonth(); }
+  get day():    number { return this.selectedDate.getDate(); }
+  
   get today() {
     let dt = new Date();
     dt.setHours(0);
@@ -51,77 +73,39 @@ export class DateTimePickerComponent {
     return dt;
   }
   
-  toDateInt(year, month, day): number {
-    return new Date(year, month, day, 0, 0, 0).getTime();
+  initDateTime(date?: Date | String) {
+    this.selectedDate = date || new Date();
+    if (typeof date === 'string') {
+      date = new Date(date);
+    }
+    this.selectedDate = date || new Date();
+    this.hour = this.selectedDate.getHours();
+    this.minute = this.selectedDate.getMinutes();
+    this.monthData = this.dateTime.getMonthData(this.year, this.month);
+  }
+
+  toDate(year: number, month: number, day: number): Date {
+    return new Date(year, month, day);
   }
   
-  /**
-   * open datetime picker under the give element in given options
-   * @param triggerEl
-   * @param options
-   */
-  openUnder(triggerEl, options): any {
-    this.close();
-    for(let key in options) {
-      this[key] = options[key];
-    }
-
-    //show datetimePicker below triggerEl
-    let targetBcr = triggerEl.getBoundingClientRect();
-
-    //show element transparently then calculate width/height
-    this.el.style.dispay = '';
-    this.el.style.opacity = 0;
-    this.el.style.position='absolute';
-    let thisBcr = this.el.getBoundingClientRect();
-
-    let left: number = targetBcr.width > thisBcr.width ?
-      targetBcr.left + targetBcr.width - thisBcr.width + window.scrollX :
-      targetBcr.left + window.scrollX;
-    let top: number = targetBcr.top < 300 || window.innerHeight - targetBcr.bottom > 300 ?
-      targetBcr.bottom + window.scrollY : targetBcr.top - thisBcr.height + window.scrollY;
-
-    this.el.style.top = top + 'px';
-    this.el.style.left = left + 'px';
-    this.el.style.opacity = 1;
-
-    document.body.addEventListener('click', this.close);
-  };
-
-  /**
-   * close datetime picker
-   */
-  close() {
-    this.opened = false
+  toDateOnly(date: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0,0,0,0);
   }
 
   /**
    * set the selected date and close it when closeOnSelect is true
    * @param date {Date}
    */
-  setSelectedDate(date: number) {
-    let now = new Date();
-    this.year = this.year || now.getFullYear();
-    this.month =  this.month || now.getMonth();
-    this.day = date || now.getDate();
-    this.hour = this.hour || now.getHours();
-    this.minute = this.minute || now.getMinutes();
-    this.selectedDate = new Date(this.year, this.month, this.day, 0, 0, 0);
-    this.closeOnSelect && (this.close());
+  setDayNum(dayNum?: number) {
+    this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+    this.closing.next(true);
   };
 
   /**
-   * show next month calendar
+   * show prev/next month calendar
    */
-  showNextMonth() {
-    this.monthData = this.dateTime.getMonthData(this.year, this.month+1);
-  }
-
-  /**
-   * show previous month calendar
-   */
-  showPrevMonth() {
-    this.monthData = this.dateTime.getMonthData(this.year, this.month-1);
+  updateMonthData(num: number) {
+    this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month+num);
   }
 
 }
