@@ -26,6 +26,9 @@ import {DateTime} from "./datetime";
 })
 export class DateTimePickerDirective implements OnInit {
 
+  @Input() year: number;
+  @Input() month: number;
+  @Input() day: number;
   @Input() hour: number;
   @Input() minute: number;
 
@@ -51,19 +54,19 @@ export class DateTimePickerDirective implements OnInit {
   ngOnInit(): void {
     let dateNgModel: Date =  this.ngModel;
     if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
-      console.error("datetime-picker directive requres ngModel");
+      console.error("datetime-picker directive requires ngModel");
+      this.ngModel = (new Date()).toString();
     }
 
     if (typeof this.ngModel === 'string') { //remove timezone and respect day light saving time
       dateNgModel = this.dateTime.fromString(this.ngModel);
     }
     
-    if (this.hour) {
-      dateNgModel.setHours(this.hour);
-    }
-    if (this.minute) {
-      dateNgModel.setMinutes(this.minute);
-    }
+    this.year   && dateNgModel.setFullYear(this.year);
+    this.month  && dateNgModel.setMonth(this.month-1);
+    this.day    && dateNgModel.setDate(this.day);
+    this.hour   && dateNgModel.setHours(this.hour);
+    this.minute && dateNgModel.setMinutes(this.minute);
 
     // emit toString Modified(date formatted) instance
     // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
@@ -98,22 +101,27 @@ export class DateTimePickerDirective implements OnInit {
         //show element transparently then calculate width/height
         dtpEl.style.dispay = '';
         dtpEl.style.opacity = 0;
-        dtpEl.style.position='absolute';
+        dtpEl.style.position='fixed';
 
         setTimeout(() => { //it needs time to have width and height
           let thisElBcr = this.el.getBoundingClientRect();
           let dtpElBcr = dtpEl.getBoundingClientRect();
 
-          let left: number = thisElBcr.width > dtpElBcr.width ?
-          thisElBcr.left + thisElBcr.width - dtpElBcr.width + window.scrollX :
-          thisElBcr.left + window.scrollX;
-          let top: number = thisElBcr.top < 300 || window.innerHeight - thisElBcr.bottom > 300 ?
-          thisElBcr.bottom + window.scrollY :
-          thisElBcr.top - dtpElBcr.height + window.scrollY;
+          let left: number = thisElBcr.left; 
+          let top: number = thisElBcr.bottom;
+          let bottom: number;
+          if ((thisElBcr.bottom + dtpElBcr.height) > window.innerHeight) {
+            bottom = window.innerHeight - thisElBcr.top; 
+          }
 
-          dtpEl.style.top = top + 'px';
-          dtpEl.style.left = left + 'px';
+          if (bottom) {
+            dtpEl.style.bottom = bottom + window.scrollY + 'px';
+          } else {
+            dtpEl.style.top = top + window.scrollY + 'px';
+          }
+          dtpEl.style.left = left + window.scrollX + 'px';
           dtpEl.style.opacity = 1;
+          dtpEl.style.zIndex = 1;
         });
         $event.stopPropagation();
       })

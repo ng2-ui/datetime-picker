@@ -88,7 +88,8 @@ export class DateTime {
       .replace(/([\/-][0-9]{2,4})\ ([0-9]{2}\:[0-9]{2}\:)/,'$1T$2')   //reformat for FF
       .replace(/EDT|EST|CDT|CST|MDT|PDT|PST|UT|GMT/g,'')              //remove timezone
       .replace(/\s*\(\)\s*/,'')                                       //remove timezone
-      .replace(/[\-\+][0-9]{2}:?[0-9]{2}$/,'');                       //remove timezone
+      .replace(/[\-\+][0-9]{2}:?[0-9]{2}$/,'')                        //remove timezone
+      .replace(/000Z$/,'00');                                         //remove timezone
   }
 
   private addDSTOffset(dateStr): string {
