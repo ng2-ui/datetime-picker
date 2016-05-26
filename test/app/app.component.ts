@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {DateTimePickerDirective} from "./datetime-picker.directive";
+// import {DateTimePickerDirective} from "./datetime-picker.directive";
+import {DateTimePickerDirective} from "datetime-picker";
 
 @Component({
   selector: 'my-app',

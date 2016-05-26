@@ -12,7 +12,15 @@ var core_1 = require('@angular/core');
 var Subject_1 = require("rxjs/Subject");
 var datetime_1 = require('./datetime');
 var core_2 = require("@angular/core");
+//@TODO
+// . display currently selected day
+/**
+ * show a selected date in monthly calendar
+ */
 var DateTimePickerComponent = (function () {
+    /**
+     * constructor
+     */
     function DateTimePickerComponent(elementRef, dateTime, cdRef) {
         this.dateTime = dateTime;
         this.cdRef = cdRef;
@@ -28,10 +36,13 @@ var DateTimePickerComponent = (function () {
                 hour: this.hour,
                 minute: this.minute
             });
-            this.cdRef.detectChanges();
+            this.cdRef.detectChanges(); // https://github.com/angular/angular/issues/6005, this is silly
         }
     };
     Object.defineProperty(DateTimePickerComponent.prototype, "year", {
+        /**
+         * getters
+         */
         get: function () { return this.selectedDate.getFullYear(); },
         enumerable: true,
         configurable: true
@@ -59,7 +70,6 @@ var DateTimePickerComponent = (function () {
         configurable: true
     });
     DateTimePickerComponent.prototype.initDateTime = function (date) {
-        this.selectedDate = date || new Date();
         if (typeof date === 'string') {
             date = new Date(date);
         }
@@ -74,11 +84,18 @@ var DateTimePickerComponent = (function () {
     DateTimePickerComponent.prototype.toDateOnly = function (date) {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
     };
+    /**
+     * set the selected date and close it when closeOnSelect is true
+     * @param date {Date}
+     */
     DateTimePickerComponent.prototype.setDayNum = function (dayNum) {
         this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
         this.closing.next(true);
     };
     ;
+    /**
+     * show prev/next month calendar
+     */
     DateTimePickerComponent.prototype.updateMonthData = function (num) {
         this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
     };

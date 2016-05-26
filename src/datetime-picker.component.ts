@@ -1,4 +1,4 @@
-import {Component, Input, ElementRef, AfterViewChecked, ViewEncapsulation, SimpleChange} from '@angular/core';
+import {Component, Input, ElementRef, AfterViewChecked, ViewEncapsulation} from '@angular/core';
 import {Subject} from "rxjs/Subject";
 import {DateTime} from './datetime';
 import {ChangeDetectorRef} from "@angular/core";
@@ -74,11 +74,10 @@ export class DateTimePickerComponent implements AfterViewChecked {
   }
   
   initDateTime(date?: Date | String) {
-    this.selectedDate = date || new Date();
     if (typeof date === 'string') {
-      date = new Date(date);
+      date = new Date((<string>date));
     }
-    this.selectedDate = date || new Date();
+    this.selectedDate = (<Date>date) || new Date();
     this.hour = this.selectedDate.getHours();
     this.minute = this.selectedDate.getMinutes();
     this.monthData = this.dateTime.getMonthData(this.year, this.month);

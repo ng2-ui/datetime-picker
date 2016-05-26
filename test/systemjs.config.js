@@ -52,6 +52,9 @@
     //packages['@angular/'+pkgName] = { main: 'index.js', defaultExtension: 'js' };
   });
 
+  map['datetime-picker'] = 'dist';
+  packages['datetime-picker'] = { main: 'index.js', defaultExtension: 'js' };
+  
   var config = {
     // DEMO ONLY! REAL CODE SHOULD NOT TRANSPILE IN THE BROWSER
     transpiler: 'ts',

@@ -39,7 +39,7 @@ export class DateTimePickerDirective implements OnInit {
   @Input() ngModel: String; //not Date, only String !!!
   @Output() ngModelChange = new EventEmitter();
   
-  public componentRef: Promise<ComponentRef>;
+  public componentRef: Promise<ComponentRef<any>>;
   public el: HTMLElement;
   public dtpEl: HTMLElement; // datetime picker element
 
@@ -52,21 +52,21 @@ export class DateTimePickerDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    let dateNgModel: Date =  this.ngModel;
+    let dateNgModel: Date | String =  this.ngModel;
     if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
       console.error("datetime-picker directive requires ngModel");
       this.ngModel = (new Date()).toString();
     }
 
     if (typeof this.ngModel === 'string') { //remove timezone and respect day light saving time
-      dateNgModel = this.dateTime.fromString(this.ngModel);
+      dateNgModel = this.dateTime.fromString((<string>this.ngModel));
     }
     
-    this.year   && dateNgModel.setFullYear(this.year);
-    this.month  && dateNgModel.setMonth(this.month-1);
-    this.day    && dateNgModel.setDate(this.day);
-    this.hour   && dateNgModel.setHours(this.hour);
-    this.minute && dateNgModel.setMinutes(this.minute);
+    this.year   && (<Date>dateNgModel).setFullYear(this.year);
+    this.month  && (<Date>dateNgModel).setMonth(this.month-1);
+    this.day    && (<Date>dateNgModel).setDate(this.day);
+    this.hour   && (<Date>dateNgModel).setHours(this.hour);
+    this.minute && (<Date>dateNgModel).setMinutes(this.minute);
 
     // emit toString Modified(date formatted) instance
     // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
@@ -99,8 +99,8 @@ export class DateTimePickerDirective implements OnInit {
         });
 
         //show element transparently then calculate width/height
-        dtpEl.style.dispay = '';
-        dtpEl.style.opacity = 0;
+        dtpEl.style.display = '';
+        dtpEl.style.opacity = '0';
         dtpEl.style.position='fixed';
 
         setTimeout(() => { //it needs time to have width and height
@@ -120,8 +120,8 @@ export class DateTimePickerDirective implements OnInit {
             dtpEl.style.top = top + window.scrollY + 'px';
           }
           dtpEl.style.left = left + window.scrollX + 'px';
-          dtpEl.style.opacity = 1;
-          dtpEl.style.zIndex = 1;
+          dtpEl.style.opacity = '1';
+          dtpEl.style.zIndex = '1';
         });
         $event.stopPropagation();
       })

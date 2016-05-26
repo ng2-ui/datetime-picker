@@ -12,6 +12,10 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var datetime_picker_component_1 = require("./datetime-picker.component");
 var datetime_1 = require("./datetime");
+/**
+ * To simplify the implementation, it limits the type if ngModel to string only, not a date
+ * If the given string is not a valid date, it defaults back to today
+ */
 var DateTimePickerDirective = (function () {
     function DateTimePickerDirective(dcl, viewContainerRef, dateTime) {
         this.dcl = dcl;
@@ -34,9 +38,12 @@ var DateTimePickerDirective = (function () {
         this.day && dateNgModel.setDate(this.day);
         this.hour && dateNgModel.setHours(this.hour);
         this.minute && dateNgModel.setMinutes(this.minute);
+        // emit toString Modified(date formatted) instance
+        // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
         var newNgModel = new common_1.DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
         this.ngModelChange.emit(newNgModel);
     };
+    //show datetimePicker below the current element
     DateTimePickerDirective.prototype.showDatetimePicker = function ($event) {
         var _this = this;
         this.hideDatetimePicker().then(function () {
@@ -57,8 +64,9 @@ var DateTimePickerDirective = (function () {
                         _this.closeOnSelect !== false && _this.hideDatetimePicker();
                     });
                 });
-                dtpEl.style.dispay = '';
-                dtpEl.style.opacity = 0;
+                //show element transparently then calculate width/height
+                dtpEl.style.display = '';
+                dtpEl.style.opacity = '0';
                 dtpEl.style.position = 'fixed';
                 setTimeout(function () {
                     var thisElBcr = _this.el.getBoundingClientRect();
@@ -76,8 +84,8 @@ var DateTimePickerDirective = (function () {
                         dtpEl.style.top = top + window.scrollY + 'px';
                     }
                     dtpEl.style.left = left + window.scrollX + 'px';
-                    dtpEl.style.opacity = 1;
-                    dtpEl.style.zIndex = 1;
+                    dtpEl.style.opacity = '1';
+                    dtpEl.style.zIndex = '1';
                 });
                 $event.stopPropagation();
             });
@@ -133,6 +141,7 @@ var DateTimePickerDirective = (function () {
         __metadata('design:type', String)
     ], DateTimePickerDirective.prototype, "ngModel", void 0);
     __decorate([
+        //not Date, only String !!!
         core_1.Output(), 
         __metadata('design:type', Object)
     ], DateTimePickerDirective.prototype, "ngModelChange", void 0);
