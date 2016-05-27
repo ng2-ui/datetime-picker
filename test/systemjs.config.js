@@ -16,7 +16,7 @@
     // 'rxjs':                       'https://npmcdn.com/rxjs@5.0.0-beta.6',
     // 'typescript':                 'https://npmcdn.com/typescript@1.8.10/lib/typescript.js',
     //'datetime-picker':            'dist'
-    'datetime-picker':            'https://npmcdn.com/ng2-datetime-picker@0.1.0'
+    'datetime-picker':            'https://npmcdn.com/ng2-datetime-picker'
   };
 
   //packages tells the System loader how to load when no filename and/or no extension
