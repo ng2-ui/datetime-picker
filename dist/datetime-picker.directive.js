@@ -25,6 +25,13 @@ var DateTimePickerDirective = (function () {
         this.el = this.viewContainerRef.element.nativeElement;
     }
     DateTimePickerDirective.prototype.ngOnInit = function () {
+        //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
+        var divEl = document.createElement("div");
+        divEl.className = 'ng2-datetime-picker';
+        divEl.style.display = 'inline-block';
+        divEl.style.position = 'relative';
+        this.el.parentElement.insertBefore(divEl, this.el.nextSibling);
+        divEl.appendChild(this.el);
         var dateNgModel = this.ngModel;
         if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
             console.error("datetime-picker directive requires ngModel");
@@ -64,36 +71,24 @@ var DateTimePickerDirective = (function () {
                         _this.closeOnSelect !== false && _this.hideDatetimePicker();
                     });
                 });
-                //show element transparently then calculate width/height
-                dtpEl.style.display = '';
-                dtpEl.style.opacity = '0';
-                dtpEl.style.position = 'fixed';
+                /* setting width/height auto complete */
+                var thisElBCR = _this.el.getBoundingClientRect();
+                dtpEl.style.width = thisElBCR.width + 'px';
+                dtpEl.style.position = 'absolute';
+                dtpEl.style.zIndex = '1';
+                dtpEl.style.left = '0';
                 setTimeout(function () {
                     var thisElBcr = _this.el.getBoundingClientRect();
                     var dtpElBcr = dtpEl.getBoundingClientRect();
-                    var left = thisElBcr.left;
-                    var top = thisElBcr.bottom;
-                    var bottom;
-                    if ((thisElBcr.bottom + dtpElBcr.height) > window.innerHeight) {
-                        bottom = window.innerHeight - thisElBcr.top;
-                    }
-                    if (bottom) {
-                        dtpEl.style.bottom = bottom + window.scrollY + 'px';
+                    if (thisElBcr.bottom + dtpElBcr.height > window.innerHeight) {
+                        dtpEl.style.bottom = '0';
                     }
                     else {
-                        dtpEl.style.top = top + window.scrollY + 'px';
+                        dtpEl.style.top = thisElBcr.height + 'px';
                     }
-                    dtpEl.style.left = left + window.scrollX + 'px';
-                    dtpEl.style.opacity = '1';
-                    dtpEl.style.zIndex = '1';
                 });
                 $event.stopPropagation();
             });
-        });
-        document.addEventListener('click', function (event) {
-            if (event.target !== _this.el && event.target !== _this.dtpEl) {
-                _this.hideDatetimePicker();
-            }
         });
     };
     DateTimePickerDirective.prototype.hideDatetimePicker = function () {
@@ -150,7 +145,8 @@ var DateTimePickerDirective = (function () {
             selector: '[datetime-picker]',
             providers: [datetime_1.DateTime],
             host: {
-                '(click)': 'showDatetimePicker($event)'
+                '(click)': 'showDatetimePicker($event)',
+                '(blur)': 'hideDatetimePicker()'
             }
         }), 
         __metadata('design:paramtypes', [core_1.DynamicComponentLoader, core_1.ViewContainerRef, datetime_1.DateTime])

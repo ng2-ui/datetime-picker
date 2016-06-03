@@ -21,7 +21,8 @@ import {DateTime} from "./datetime";
   selector: '[datetime-picker]',
   providers: [DateTime],
   host: {
-    '(click)': 'showDatetimePicker($event)'
+    '(click)': 'showDatetimePicker($event)',
+    '(blur)': 'hideDatetimePicker()'
   }
 })
 export class DateTimePickerDirective implements OnInit {
@@ -52,6 +53,15 @@ export class DateTimePickerDirective implements OnInit {
   }
 
   ngOnInit(): void {
+
+    //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
+    let divEl = document.createElement("div");
+    divEl.className = 'ng2-datetime-picker';
+    divEl.style.display = 'inline-block';
+    divEl.style.position = 'relative';
+    this.el.parentElement.insertBefore(divEl, this.el.nextSibling);
+    divEl.appendChild(this.el);
+
     let dateNgModel: Date | String =  this.ngModel;
     if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
       console.error("datetime-picker directive requires ngModel");
@@ -98,40 +108,29 @@ export class DateTimePickerDirective implements OnInit {
           });
         });
 
-        //show element transparently then calculate width/height
-        dtpEl.style.display = '';
-        dtpEl.style.opacity = '0';
-        dtpEl.style.position='fixed';
+        /* setting width/height auto complete */
+        let thisElBCR = this.el.getBoundingClientRect();
+        dtpEl.style.width = thisElBCR.width + 'px';
+        dtpEl.style.position = 'absolute';
+        dtpEl.style.zIndex = '1';
+        dtpEl.style.left = '0';
 
         setTimeout(() => { //it needs time to have width and height
           let thisElBcr = this.el.getBoundingClientRect();
           let dtpElBcr = dtpEl.getBoundingClientRect();
-
-          let left: number = thisElBcr.left; 
-          let top: number = thisElBcr.bottom;
-          let bottom: number;
-          if ((thisElBcr.bottom + dtpElBcr.height) > window.innerHeight) {
-            bottom = window.innerHeight - thisElBcr.top; 
+          
+          if (thisElBcr.bottom + dtpElBcr.height > window.innerHeight) { // if not enough space to show on below, show above
+            dtpEl.style.bottom = '0';
+          } else { // otherwise, show below
+            dtpEl.style.top = thisElBcr.height + 'px';
           }
 
-          if (bottom) {
-            dtpEl.style.bottom = bottom + window.scrollY + 'px';
-          } else {
-            dtpEl.style.top = top + window.scrollY + 'px';
-          }
-          dtpEl.style.left = left + window.scrollX + 'px';
-          dtpEl.style.opacity = '1';
-          dtpEl.style.zIndex = '1';
         });
+
         $event.stopPropagation();
       })
     });
-    
-    document.addEventListener('click', event => {
-      if (event.target !== this.el && event.target !== this.dtpEl) {
-        this.hideDatetimePicker();
-      }
-    });
+
   }
 
   hideDatetimePicker(): Promise<any> {

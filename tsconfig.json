@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "module": "commonjs",
     "target": "es5",
     "outDir": "dist",
@@ -14,6 +15,6 @@
     "typings/main",
     "node_modules",
     "test",
-    "dist"
+    "index.d.ts"
   ]
 }

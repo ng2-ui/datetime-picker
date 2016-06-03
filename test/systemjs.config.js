@@ -15,16 +15,29 @@
     // 'angular2-in-memory-web-api': 'https://npmcdn.com/angular2-in-memory-web-api', // get latest
     // 'rxjs':                       'https://npmcdn.com/rxjs@5.0.0-beta.6',
     // 'typescript':                 'https://npmcdn.com/typescript@1.8.10/lib/typescript.js',
-    //'datetime-picker':            'dist'
-    'datetime-picker':            'https://npmcdn.com/ng2-datetime-picker'
+    // 'datetime-picker':            'src'
+    // 'datetime-picker':            'dist'
+    // 'datetime-picker':            'https://npmcdn.com/ng2-datetime-picker'
   };
 
   //packages tells the System loader how to load when no filename and/or no extension
   var packages = {
     'app':                        { main: 'main.ts',  defaultExtension: 'ts' },
     'rxjs':                       { defaultExtension: 'js' },
-    'datetime-picker':            { main: 'dist/index.js', defaultExtension: 'js' }
+    //'datetime-picker':            { main: 'dist/index.js', defaultExtension: 'js' }
   };
+
+  /**
+   * for development 
+   */
+  // map['datetime-picker'] = 'src';
+  // packages['datetime-picker'] = { main: 'index.ts', defaultExtension: 'ts' }
+
+  /**
+   * for build
+   */
+  map['datetime-picker'] = 'dist';
+  packages['datetime-picker'] = { main: 'index.js', defaultExtension: 'js' };
 
   var ngPackageNames = [
     'common',
