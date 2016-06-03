@@ -39,6 +39,9 @@
   map['datetime-picker'] = 'dist';
   packages['datetime-picker'] = { main: 'index.js', defaultExtension: 'js' };
 
+  /**
+   * For test of node module publish, visit http://plnkr.co/edit/32syXF?p=preview 
+   */
   var ngPackageNames = [
     'common',
     'compiler',
