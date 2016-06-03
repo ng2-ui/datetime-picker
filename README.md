@@ -7,12 +7,19 @@ AngularJS 2 DateTime Picker
 
 ## Install
 
-1. add `map` and `packages` to https://npmcdn.com
+1. install ng2-datetime-picker
 
-        map['datetime-picker'] = 'https://npmcdn.com/ng2-datetime-picker';
+        $ npm install ng2-datetime-picker --save
+
+2. add `map` and `packages` to your `systemjs.config.js`
+
+        map['datetime-picker'] = 'node_modules/ng2-datetime-picker';
+        // map['datetime-picker'] = 'https://npmcdn.com/ng2-datetime-picker'; // or without npm installation
         packages['datetime-picker'] = { main: 'dist/index.js', defaultExtension: 'js' 
-       
-2. import and add directive in your component
+
+## Usage it in your code
+
+1. import and add directive in your component
 
         import {DateTimePickerDirective} from "datetime-picker";
         ...
@@ -21,7 +28,7 @@ AngularJS 2 DateTime Picker
           ..
         });
 
-3. You are ready. use it in your template
+2. You are ready. use it in your template
 
         <input [(ngModel)]="date1" datetime-picker date-only="true" />
 
