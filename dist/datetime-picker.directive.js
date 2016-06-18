@@ -142,7 +142,7 @@ var DateTimePickerDirective = (function () {
     ], DateTimePickerDirective.prototype, "ngModelChange", void 0);
     DateTimePickerDirective = __decorate([
         core_1.Directive({
-            selector: '[datetime-picker]',
+            selector: '[datetime-picker], [jui-datetime-picker]',
             providers: [datetime_1.DateTime],
             host: {
                 '(click)': 'showDatetimePicker($event)',
