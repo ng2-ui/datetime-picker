@@ -41,7 +41,7 @@ export class DateTimePickerDirective implements OnInit {
   
   public componentRef: Promise<ComponentRef<any>>;
   public el: HTMLElement;
-  public dtpEl: HTMLElement; // datetime picker element
+  public datetimePickerEl: HTMLElement; // datetime picker element
   
   constructor(
     public dcl: DynamicComponentLoader,
@@ -82,6 +82,9 @@ export class DateTimePickerDirective implements OnInit {
     //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
     let newNgModel = this.dateTime.formatDate(<Date>dateNgModel, this.dateOnly);
     this.ngModelChange.emit(newNgModel);
+    
+    // add a click listener to document, so that it can hide when others clicked
+    document.addEventListener('click', this.hideWhenOthersClicked);
   }
   
   //show datetimePicker below the current element
@@ -89,8 +92,8 @@ export class DateTimePickerDirective implements OnInit {
     this.hideDatetimePicker().then(() => {
       this.componentRef = this.dcl.loadNextToLocation(DateTimePickerComponent, this.viewContainerRef);
       this.componentRef.then( componentRef => {
-        this.dtpEl = componentRef.location.nativeElement;
-        let dtpEl = this.dtpEl;
+        this.datetimePickerEl = componentRef.location.nativeElement;
+        let datetimePickerEl = this.datetimePickerEl;
 
         componentRef.instance.initDateTime(this.ngModel || new Date());
         componentRef.instance.dateOnly = this.dateOnly;
@@ -111,22 +114,22 @@ export class DateTimePickerDirective implements OnInit {
 
         /* setting width/height auto complete */
         let thisElBCR = this.el.getBoundingClientRect();
-        dtpEl.style.width = thisElBCR.width + 'px';
-        dtpEl.style.position = 'absolute';
-        dtpEl.style.zIndex = '1';
-        dtpEl.style.left = '0';
+        datetimePickerEl.style.width = thisElBCR.width + 'px';
+        datetimePickerEl.style.position = 'absolute';
+        datetimePickerEl.style.zIndex = '1';
+        datetimePickerEl.style.left = '0';
 
-        dtpEl.style.visibility = 'hidden';
+        datetimePickerEl.style.visibility = 'hidden';
         setTimeout(() => { //it needs time to have width and height
           let thisElBcr = this.el.getBoundingClientRect();
-          let dtpElBcr = dtpEl.getBoundingClientRect();
+          let datetimePickerElBcr = datetimePickerEl.getBoundingClientRect();
           
-          if (thisElBcr.bottom + dtpElBcr.height > window.innerHeight) { // if not enough space to show on below, show above
-            dtpEl.style.bottom = '0';
+          if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) { // if not enough space to show on below, show above
+            datetimePickerEl.style.bottom = '0';
           } else { // otherwise, show below
-            dtpEl.style.top = thisElBcr.height + 'px';
+            datetimePickerEl.style.top = thisElBcr.height + 'px';
           }
-          dtpEl.style.visibility = 'visible';
+          datetimePickerEl.style.visibility = 'visible';
         });
 
         //$event.stopPropagation();
@@ -140,6 +143,14 @@ export class DateTimePickerDirective implements OnInit {
       return this.componentRef.then(componentRef=> componentRef.destroy());
     } else {
       return Promise.resolve(true);
+    }
+  }
+  
+  hideWhenOthersClicked = (event): void => {
+    if (event.target === this.el || event.target === this.datetimePickerEl) {
+      // Do Nothing
+    } else {
+      this.hideDatetimePicker();
     }
   }
 

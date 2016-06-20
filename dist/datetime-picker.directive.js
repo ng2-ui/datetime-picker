@@ -17,10 +17,18 @@ var datetime_1 = require("./datetime");
  */
 var DateTimePickerDirective = (function () {
     function DateTimePickerDirective(dcl, viewContainerRef, dateTime) {
+        var _this = this;
         this.dcl = dcl;
         this.viewContainerRef = viewContainerRef;
         this.dateTime = dateTime;
         this.ngModelChange = new core_1.EventEmitter();
+        this.hideWhenOthersClicked = function (event) {
+            if (event.target === _this.el || event.target === _this.datetimePickerEl) {
+            }
+            else {
+                _this.hideDatetimePicker();
+            }
+        };
         this.el = this.viewContainerRef.element.nativeElement;
     }
     DateTimePickerDirective.prototype.ngOnInit = function () {
@@ -49,6 +57,8 @@ var DateTimePickerDirective = (function () {
         //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
         var newNgModel = this.dateTime.formatDate(dateNgModel, this.dateOnly);
         this.ngModelChange.emit(newNgModel);
+        // add a click listener to document, so that it can hide when others clicked
+        document.addEventListener('click', this.hideWhenOthersClicked);
     };
     //show datetimePicker below the current element
     DateTimePickerDirective.prototype.showDatetimePicker = function ($event) {
@@ -56,8 +66,8 @@ var DateTimePickerDirective = (function () {
         this.hideDatetimePicker().then(function () {
             _this.componentRef = _this.dcl.loadNextToLocation(datetime_picker_component_1.DateTimePickerComponent, _this.viewContainerRef);
             _this.componentRef.then(function (componentRef) {
-                _this.dtpEl = componentRef.location.nativeElement;
-                var dtpEl = _this.dtpEl;
+                _this.datetimePickerEl = componentRef.location.nativeElement;
+                var datetimePickerEl = _this.datetimePickerEl;
                 componentRef.instance.initDateTime(_this.ngModel || new Date());
                 componentRef.instance.dateOnly = _this.dateOnly;
                 componentRef.instance.changes.subscribe(function (changes) {
@@ -74,21 +84,21 @@ var DateTimePickerDirective = (function () {
                 });
                 /* setting width/height auto complete */
                 var thisElBCR = _this.el.getBoundingClientRect();
-                dtpEl.style.width = thisElBCR.width + 'px';
-                dtpEl.style.position = 'absolute';
-                dtpEl.style.zIndex = '1';
-                dtpEl.style.left = '0';
-                dtpEl.style.visibility = 'hidden';
+                datetimePickerEl.style.width = thisElBCR.width + 'px';
+                datetimePickerEl.style.position = 'absolute';
+                datetimePickerEl.style.zIndex = '1';
+                datetimePickerEl.style.left = '0';
+                datetimePickerEl.style.visibility = 'hidden';
                 setTimeout(function () {
                     var thisElBcr = _this.el.getBoundingClientRect();
-                    var dtpElBcr = dtpEl.getBoundingClientRect();
-                    if (thisElBcr.bottom + dtpElBcr.height > window.innerHeight) {
-                        dtpEl.style.bottom = '0';
+                    var datetimePickerElBcr = datetimePickerEl.getBoundingClientRect();
+                    if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) {
+                        datetimePickerEl.style.bottom = '0';
                     }
                     else {
-                        dtpEl.style.top = thisElBcr.height + 'px';
+                        datetimePickerEl.style.top = thisElBcr.height + 'px';
                     }
-                    dtpEl.style.visibility = 'visible';
+                    datetimePickerEl.style.visibility = 'visible';
                 });
                 //$event.stopPropagation();
             });
