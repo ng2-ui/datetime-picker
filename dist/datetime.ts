@@ -78,6 +78,20 @@ export class DateTime {
 
     return new Date(dateStr);
   }
+
+  formatDate(d: Date, dateOnly: boolean): string {
+    let hash: any = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    };
+    if (!dateOnly) {
+      hash.hour = '2-digit';
+      hash.minute = '2-digit';
+    }
+    
+    return d.toLocaleString('en-us', hash);
+  }
   
   //remove timezone
   private removeTimezone(dateStr): string {

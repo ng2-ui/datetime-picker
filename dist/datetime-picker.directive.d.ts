@@ -15,7 +15,7 @@ export declare class DateTimePickerDirective implements OnInit {
     minute: number;
     dateFormat: string;
     dateOnly: boolean;
-    closeOnSelect: boolean;
+    closeOnSelect: string;
     ngModel: String;
     ngModelChange: EventEmitter<{}>;
     componentRef: Promise<ComponentRef<any>>;

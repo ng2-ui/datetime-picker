@@ -29,6 +29,7 @@ export declare class DateTime {
     })[];
     getMonthData(year: number, month: number): any;
     fromString(dateStr: string): Date;
+    formatDate(d: Date, dateOnly: boolean): string;
     private removeTimezone(dateStr);
     private addDSTOffset(dateStr);
 }

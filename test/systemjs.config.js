@@ -30,14 +30,14 @@
   /**
    * for development 
    */
-  // map['datetime-picker'] = 'src';
-  // packages['datetime-picker'] = { main: 'index.ts', defaultExtension: 'ts' }
+  map['datetime-picker'] = 'src';
+  packages['datetime-picker'] = { main: 'index.ts', defaultExtension: 'ts' }
 
   /**
    * for build
    */
-  map['datetime-picker'] = 'dist';
-  packages['datetime-picker'] = { main: 'index.js', defaultExtension: 'js' };
+  // map['datetime-picker'] = 'dist';
+  // packages['datetime-picker'] = { main: 'index.js', defaultExtension: 'js' };
 
   /**
    * For test of node module publish, visit http://plnkr.co/edit/32syXF?p=preview 

@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var common_1 = require('@angular/common');
 var datetime_picker_component_1 = require("./datetime-picker.component");
 var datetime_1 = require("./datetime");
 /**
@@ -47,7 +46,8 @@ var DateTimePickerDirective = (function () {
         this.minute && dateNgModel.setMinutes(this.minute);
         // emit toString Modified(date formatted) instance
         // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
-        var newNgModel = new common_1.DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
+        //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
+        var newNgModel = this.dateTime.formatDate(dateNgModel, this.dateOnly);
         this.ngModelChange.emit(newNgModel);
     };
     //show datetimePicker below the current element
@@ -63,12 +63,13 @@ var DateTimePickerDirective = (function () {
                 componentRef.instance.changes.subscribe(function (changes) {
                     changes.selectedDate.setHours(changes.hour);
                     changes.selectedDate.setMinutes(changes.minute);
-                    var newNgModel = new common_1.DatePipe().transform(changes.selectedDate, _this.dateFormat || 'yMd HH:mm');
+                    //let newNgModel = new DatePipe().transform(changes.selectedDate, this.dateFormat || 'yMd HH:mm');
+                    var newNgModel = _this.dateTime.formatDate(changes.selectedDate, _this.dateOnly);
                     _this.ngModelChange.emit(newNgModel);
                 });
                 componentRef.instance.closing.subscribe(function () {
                     setTimeout(function () {
-                        _this.closeOnSelect !== false && _this.hideDatetimePicker();
+                        _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
                     });
                 });
                 /* setting width/height auto complete */
@@ -77,6 +78,7 @@ var DateTimePickerDirective = (function () {
                 dtpEl.style.position = 'absolute';
                 dtpEl.style.zIndex = '1';
                 dtpEl.style.left = '0';
+                dtpEl.style.visibility = 'hidden';
                 setTimeout(function () {
                     var thisElBcr = _this.el.getBoundingClientRect();
                     var dtpElBcr = dtpEl.getBoundingClientRect();
@@ -86,8 +88,9 @@ var DateTimePickerDirective = (function () {
                     else {
                         dtpEl.style.top = thisElBcr.height + 'px';
                     }
+                    dtpEl.style.visibility = 'visible';
                 });
-                $event.stopPropagation();
+                //$event.stopPropagation();
             });
         });
     };
@@ -129,7 +132,7 @@ var DateTimePickerDirective = (function () {
     ], DateTimePickerDirective.prototype, "dateOnly", void 0);
     __decorate([
         core_1.Input('close-on-select'), 
-        __metadata('design:type', Boolean)
+        __metadata('design:type', String)
     ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
     __decorate([
         core_1.Input(), 
@@ -145,8 +148,7 @@ var DateTimePickerDirective = (function () {
             selector: '[datetime-picker], [jui-datetime-picker]',
             providers: [datetime_1.DateTime],
             host: {
-                '(click)': 'showDatetimePicker($event)',
-                '(blur)': 'hideDatetimePicker()'
+                '(click)': 'showDatetimePicker($event)'
             }
         }), 
         __metadata('design:paramtypes', [core_1.DynamicComponentLoader, core_1.ViewContainerRef, datetime_1.DateTime])

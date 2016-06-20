@@ -30,7 +30,7 @@
 
     <div class="day selectable"
          *ngFor="let dayNum of monthData.days"
-         (click)="setDayNum(dayNum)"
+         (click)="selectDate(dayNum)"
          title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
          [ngClass]="{
            selected:
@@ -60,9 +60,13 @@
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
     </span><br/>
     <label class="hourLabel">Hour:</label>
-    <input class="hourInput" type="range" min="0" max="23" [(ngModel)]="hour" />
+    <input class="hourInput"
+           (change)="selectDate()"
+           type="range" min="0" max="23" [(ngModel)]="hour" />
     <label class="minutesLabel">Min:</label>
-    <input class="minutesInput" type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
+    <input class="minutesInput"
+           (change)="selectDate()"
+           type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
   </div>
 </div>
 

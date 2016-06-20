@@ -29,17 +29,17 @@ var DateTimePickerComponent = (function () {
         this.el = elementRef.nativeElement;
         this.initDateTime();
     }
-    DateTimePickerComponent.prototype.ngAfterViewChecked = function () {
-        if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
-            this.changes.next({
-                selectedDate: this.selectedDate,
-                hour: this.hour,
-                minute: this.minute
-            });
-            this.cdRef.detectChanges(); // https://github.com/angular/angular/issues/6005, this is silly
-        }
-    };
     Object.defineProperty(DateTimePickerComponent.prototype, "year", {
+        // ngAfterViewChecked() {
+        //   if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
+        //     this.changes.next({
+        //       selectedDate: this.selectedDate,
+        //       hour: this.hour,
+        //       minute: this.minute
+        //     });
+        //     this.cdRef.detectChanges();  // https://github.com/angular/angular/issues/6005, this is silly
+        //   }
+        // }
         /**
          * getters
          */
@@ -88,8 +88,15 @@ var DateTimePickerComponent = (function () {
      * set the selected date and close it when closeOnSelect is true
      * @param date {Date}
      */
-    DateTimePickerComponent.prototype.setDayNum = function (dayNum) {
-        this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+    DateTimePickerComponent.prototype.selectDate = function (dayNum) {
+        if (dayNum) {
+            this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+        }
+        this.changes.next({
+            selectedDate: this.selectedDate,
+            hour: this.hour,
+            minute: this.minute
+        });
         this.closing.next(true);
     };
     ;
@@ -106,7 +113,7 @@ var DateTimePickerComponent = (function () {
             moduleId: module.id,
             templateUrl: './datetime-picker.html',
             styleUrls: ['./datetime-picker.css'],
-            encapsulation: core_1.ViewEncapsulation.Native
+            encapsulation: core_1.ViewEncapsulation.None
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef, datetime_1.DateTime, core_2.ChangeDetectorRef])
     ], DateTimePickerComponent);

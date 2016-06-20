@@ -1,11 +1,11 @@
-import { ElementRef, AfterViewChecked } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { Subject } from "rxjs/Subject";
 import { DateTime } from './datetime';
 import { ChangeDetectorRef } from "@angular/core";
 /**
  * show a selected date in monthly calendar
  */
-export declare class DateTimePickerComponent implements AfterViewChecked {
+export declare class DateTimePickerComponent {
     dateTime: DateTime;
     cdRef: ChangeDetectorRef;
     /**
@@ -25,7 +25,6 @@ export declare class DateTimePickerComponent implements AfterViewChecked {
     constructor(elementRef: ElementRef, dateTime: DateTime, cdRef: ChangeDetectorRef);
     private prevHour;
     private prevMinute;
-    ngAfterViewChecked(): void;
     /**
      * getters
      */
@@ -40,7 +39,7 @@ export declare class DateTimePickerComponent implements AfterViewChecked {
      * set the selected date and close it when closeOnSelect is true
      * @param date {Date}
      */
-    setDayNum(dayNum?: number): void;
+    selectDate(dayNum?: number): void;
     /**
      * show prev/next month calendar
      */

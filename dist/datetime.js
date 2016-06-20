@@ -80,6 +80,18 @@ var DateTime = (function () {
         dateStr = dateStr + this.addDSTOffset(dateStr);
         return new Date(dateStr);
     };
+    DateTime.prototype.formatDate = function (d, dateOnly) {
+        var hash = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        };
+        if (!dateOnly) {
+            hash.hour = '2-digit';
+            hash.minute = '2-digit';
+        }
+        return d.toLocaleString('en-us', hash);
+    };
     //remove timezone
     DateTime.prototype.removeTimezone = function (dateStr) {
         // if no time is given, add 00:00:00 at the end

@@ -1,4 +1,4 @@
-import {Component, Input, ElementRef, AfterViewChecked, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ElementRef,  ViewEncapsulation} from '@angular/core';
 import {Subject} from "rxjs/Subject";
 import {DateTime} from './datetime';
 import {ChangeDetectorRef} from "@angular/core";
@@ -15,11 +15,11 @@ import {ChangeDetectorRef} from "@angular/core";
   moduleId: module.id,
   templateUrl: './datetime-picker.html',
   styleUrls: ['./datetime-picker.css'],
-  encapsulation: ViewEncapsulation.Native
+  encapsulation: ViewEncapsulation.None
   // encapsulation: ViewEncapsulation.None
   // encapsulation: ViewEncapsulation.Emulated is default
 })
-export class DateTimePickerComponent implements AfterViewChecked {
+export class DateTimePickerComponent {
 
   /**
    * public variables
@@ -46,16 +46,16 @@ export class DateTimePickerComponent implements AfterViewChecked {
   
   private prevHour: number;
   private prevMinute: number;
-  ngAfterViewChecked() {
-    if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
-      this.changes.next({
-        selectedDate: this.selectedDate,
-        hour: this.hour,
-        minute: this.minute
-      });
-      this.cdRef.detectChanges();  // https://github.com/angular/angular/issues/6005, this is silly
-    }
-  }
+  // ngAfterViewChecked() {
+  //   if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
+  //     this.changes.next({
+  //       selectedDate: this.selectedDate,
+  //       hour: this.hour,
+  //       minute: this.minute
+  //     });
+  //     this.cdRef.detectChanges();  // https://github.com/angular/angular/issues/6005, this is silly
+  //   }
+  // }
 
   /**
    * getters
@@ -95,8 +95,15 @@ export class DateTimePickerComponent implements AfterViewChecked {
    * set the selected date and close it when closeOnSelect is true
    * @param date {Date}
    */
-  setDayNum(dayNum?: number) {
-    this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+  selectDate(dayNum?: number) {
+    if (dayNum) {
+      this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+    }
+    this.changes.next({
+        selectedDate: this.selectedDate,
+        hour: this.hour,
+        minute: this.minute
+      });
     this.closing.next(true);
   };
 
