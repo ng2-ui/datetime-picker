@@ -41,21 +41,20 @@ export class DateTimePickerComponent {
    */
   constructor(elementRef: ElementRef, public dateTime: DateTime, public cdRef: ChangeDetectorRef) {
     this.el = elementRef.nativeElement;
-    this.initDateTime();
   }
-  
+
+  // ngOnInit(): void {
+  //   console.log(' on init');
+  // }
+  // ngAfterContentInit(): void {
+  //   console.log('after content init');
+  // }
+  // ngAfterViewInit(): void {
+  //   console.log('after view init');
+  // }
+
   private prevHour: number;
   private prevMinute: number;
-  // ngAfterViewChecked() {
-  //   if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
-  //     this.changes.next({
-  //       selectedDate: this.selectedDate,
-  //       hour: this.hour,
-  //       minute: this.minute
-  //     });
-  //     this.cdRef.detectChanges();  // https://github.com/angular/angular/issues/6005, this is silly
-  //   }
-  // }
 
   /**
    * getters
@@ -74,6 +73,7 @@ export class DateTimePickerComponent {
   }
   
   initDateTime(date?: Date | String) {
+    console.log('initDateTime', date);
     if (typeof date === 'string') {
       date = new Date((<string>date));
     }

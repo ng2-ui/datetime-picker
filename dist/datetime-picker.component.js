@@ -27,19 +27,8 @@ var DateTimePickerComponent = (function () {
         this.changes = new Subject_1.Subject();
         this.closing = new Subject_1.Subject();
         this.el = elementRef.nativeElement;
-        this.initDateTime();
     }
     Object.defineProperty(DateTimePickerComponent.prototype, "year", {
-        // ngAfterViewChecked() {
-        //   if (this.prevHour !== this.hour && this.prevMinute !== this.minute) {
-        //     this.changes.next({
-        //       selectedDate: this.selectedDate,
-        //       hour: this.hour,
-        //       minute: this.minute
-        //     });
-        //     this.cdRef.detectChanges();  // https://github.com/angular/angular/issues/6005, this is silly
-        //   }
-        // }
         /**
          * getters
          */
@@ -70,6 +59,7 @@ var DateTimePickerComponent = (function () {
         configurable: true
     });
     DateTimePickerComponent.prototype.initDateTime = function (date) {
+        console.log('initDateTime', date);
         if (typeof date === 'string') {
             date = new Date(date);
         }

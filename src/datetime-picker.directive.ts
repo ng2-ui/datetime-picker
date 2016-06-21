@@ -118,6 +118,7 @@ export class DateTimePickerDirective implements OnInit {
         datetimePickerEl.style.position = 'absolute';
         datetimePickerEl.style.zIndex = '1';
         datetimePickerEl.style.left = '0';
+        datetimePickerEl.style.transition = 'height 0.3s ease-in';
 
         datetimePickerEl.style.visibility = 'hidden';
         setTimeout(() => { //it needs time to have width and height

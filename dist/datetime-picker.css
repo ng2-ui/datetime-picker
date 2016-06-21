@@ -1,9 +1,20 @@
+@keyframes slideDown {
+  0% {
+    transform:  translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 .datetime-picker {
     color: #333;
     font: normal 14px sans-serif;
     border: 1px solid #ddd;
     display: inline-block;
     background: #fff;
+    animation: slideDown 0.1s ease-in-out;
+    animation-fill-mode: both;
 }
 .datetime-picker > .month {
     text-align: center;
