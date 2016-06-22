@@ -77,14 +77,17 @@ export class DateTimePickerDirective implements OnInit {
     this.hour   && (<Date>dateNgModel).setHours(this.hour);
     this.minute && (<Date>dateNgModel).setMinutes(this.minute);
 
+    // add a click listener to document, so that it can hide when others clicked
+    document.addEventListener('click', this.hideWhenOthersClicked);
+    
     // emit toString Modified(date formatted) instance
     // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
     //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
-    let newNgModel = this.dateTime.formatDate(<Date>dateNgModel, this.dateOnly);
-    this.ngModelChange.emit(newNgModel);
+    setTimeout(() => {
+      let newNgModel = this.dateTime.formatDate(<Date>dateNgModel, this.dateOnly);
+      this.ngModelChange.emit(newNgModel);
+    });
     
-    // add a click listener to document, so that it can hide when others clicked
-    document.addEventListener('click', this.hideWhenOthersClicked);
   }
   
   //show datetimePicker below the current element

@@ -32,6 +32,7 @@ var DateTimePickerDirective = (function () {
         this.el = this.viewContainerRef.element.nativeElement;
     }
     DateTimePickerDirective.prototype.ngOnInit = function () {
+        var _this = this;
         //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
         var divEl = document.createElement("div");
         divEl.className = 'ng2-datetime-picker';
@@ -52,13 +53,15 @@ var DateTimePickerDirective = (function () {
         this.day && dateNgModel.setDate(this.day);
         this.hour && dateNgModel.setHours(this.hour);
         this.minute && dateNgModel.setMinutes(this.minute);
+        // add a click listener to document, so that it can hide when others clicked
+        document.addEventListener('click', this.hideWhenOthersClicked);
         // emit toString Modified(date formatted) instance
         // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
         //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
-        var newNgModel = this.dateTime.formatDate(dateNgModel, this.dateOnly);
-        this.ngModelChange.emit(newNgModel);
-        // add a click listener to document, so that it can hide when others clicked
-        document.addEventListener('click', this.hideWhenOthersClicked);
+        setTimeout(function () {
+            var newNgModel = _this.dateTime.formatDate(dateNgModel, _this.dateOnly);
+            _this.ngModelChange.emit(newNgModel);
+        });
     };
     //show datetimePicker below the current element
     DateTimePickerDirective.prototype.showDatetimePicker = function ($event) {
