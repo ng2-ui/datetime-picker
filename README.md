@@ -1,7 +1,7 @@
 # ng2-datetime-picker
 AngularJS 2 DateTime Picker
 
-<a href="http://embed.plnkr.co/32syXF/">
+<a href="https://embed.plnkr.co/lbNRAh/">
   <img src="http://i.imgur.com/g5qbBBz.png" width="50%" style="border:1px solid grey" />
 </a>
 
