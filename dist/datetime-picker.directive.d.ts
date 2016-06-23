@@ -26,4 +26,5 @@ export declare class DateTimePickerDirective implements OnInit {
     showDatetimePicker($event: any): void;
     hideDatetimePicker(): Promise<any>;
     hideWhenOthersClicked: (event: any) => void;
+    private elementIn(el, containerEl);
 }

@@ -23,7 +23,9 @@ var DateTimePickerDirective = (function () {
         this.dateTime = dateTime;
         this.ngModelChange = new core_1.EventEmitter();
         this.hideWhenOthersClicked = function (event) {
-            if (event.target === _this.el || event.target === _this.datetimePickerEl) {
+            if (event.target === _this.el) {
+            }
+            else if (_this.elementIn(event.target, _this.datetimePickerEl)) {
             }
             else {
                 _this.hideDatetimePicker();
@@ -115,6 +117,13 @@ var DateTimePickerDirective = (function () {
         else {
             return Promise.resolve(true);
         }
+    };
+    DateTimePickerDirective.prototype.elementIn = function (el, containerEl) {
+        while (el = el.parentNode) {
+            if (el === containerEl)
+                return true;
+        }
+        return false;
     };
     __decorate([
         core_1.Input(), 

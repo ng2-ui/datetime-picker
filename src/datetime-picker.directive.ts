@@ -160,7 +160,7 @@ export class DateTimePickerDirective implements OnInit {
     }
   }
 
-  private elementIn(el: HTMLElement, containerEl: HTMLElement): boolean {
+  private elementIn(el: Node, containerEl: Node): boolean {
     while ( el = el.parentNode ) {
       if ( el === containerEl ) return true;
     }

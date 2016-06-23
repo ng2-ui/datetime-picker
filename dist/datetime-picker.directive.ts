@@ -151,11 +151,19 @@ export class DateTimePickerDirective implements OnInit {
   }
   
   hideWhenOthersClicked = (event): void => {
-    if (event.target === this.el || event.target === this.datetimePickerEl) {
+    if (event.target === this.el) {
+      // do nothing 
+    } else if (this.elementIn(event.target, this.datetimePickerEl)) {
       // Do Nothing
     } else {
       this.hideDatetimePicker();
     }
   }
 
+  private elementIn(el: Node, containerEl: Node): boolean {
+    while ( el = el.parentNode ) {
+      if ( el === containerEl ) return true;
+    }
+    return false;
+  }
 }
