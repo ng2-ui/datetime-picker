@@ -3,8 +3,6 @@
     "declaration": true,
     "module": "commonjs",
     "target": "es5",
-    "outDir": "dist",
-    "rootDir": "./src",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -15,6 +13,7 @@
     "typings/main",
     "node_modules",
     "test",
+    "src",
     "index.d.ts"
   ]
 }
