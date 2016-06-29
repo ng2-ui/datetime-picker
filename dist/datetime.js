@@ -81,16 +81,15 @@ var DateTime = (function () {
         return new Date(dateStr);
     };
     DateTime.prototype.formatDate = function (d, dateOnly) {
-        var hash = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
+        // return d.toLocaleString('en-us', hash); // IE11 does not understand this
+        var pad0 = function (number) {
+            return ("0" + number).slice(-2);
         };
+        var ret = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
         if (!dateOnly) {
-            hash.hour = '2-digit';
-            hash.minute = '2-digit';
+            ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
         }
-        return d.toLocaleString('en-us', hash);
+        return ret;
     };
     //remove timezone
     DateTime.prototype.removeTimezone = function (dateStr) {

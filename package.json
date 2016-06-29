@@ -1,11 +1,11 @@
 {
   "name": "ng2-datetime-picker",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Angular2 DateTime Picker",
   "license": "ISC",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf dist && ng2-inline tsc && cp src/* dist"
+    "build": "./build.sh"
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.1",
