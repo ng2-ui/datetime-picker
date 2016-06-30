@@ -18,7 +18,7 @@ import {DateTime} from "./datetime";
  * If the given string is not a valid date, it defaults back to today
  */
 @Directive({
-  selector: '[datetime-picker], [jui-datetime-picker]',
+  selector: '[datetime-picker], [ng2-datetime-picker]',
   providers: [DateTime],
   host: {
     '(click)': 'showDatetimePicker($event)'
