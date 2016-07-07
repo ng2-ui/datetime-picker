@@ -59,9 +59,9 @@ var DateTimePickerComponent = (function () {
         configurable: true
     });
     DateTimePickerComponent.prototype.initDateTime = function (date) {
-        console.log('initDateTime', date);
+        console.log('initDateTime', date, typeof date);
         if (typeof date === 'string') {
-            date = new Date(date);
+            date = this.dateTime.fromString(date);
         }
         this.selectedDate = date || new Date();
         this.hour = this.selectedDate.getHours();
@@ -79,6 +79,7 @@ var DateTimePickerComponent = (function () {
      * @param date {Date}
      */
     DateTimePickerComponent.prototype.selectDate = function (dayNum) {
+        console.log('dayNum', dayNum);
         if (dayNum) {
             this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
         }

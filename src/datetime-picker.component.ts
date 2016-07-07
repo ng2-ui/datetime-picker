@@ -73,9 +73,9 @@ export class DateTimePickerComponent {
   }
   
   initDateTime(date?: Date | String) {
-    console.log('initDateTime', date);
+    console.log('initDateTime', date, typeof date);
     if (typeof date === 'string') {
-      date = new Date((<string>date));
+      date = this.dateTime.fromString(<string>date);
     }
     this.selectedDate = (<Date>date) || new Date();
     this.hour = this.selectedDate.getHours();
@@ -96,6 +96,7 @@ export class DateTimePickerComponent {
    * @param date {Date}
    */
   selectDate(dayNum?: number) {
+    console.log('dayNum', dayNum);
     if (dayNum) {
       this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
     }
