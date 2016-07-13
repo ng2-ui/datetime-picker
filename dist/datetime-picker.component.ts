@@ -12,8 +12,8 @@ import {ChangeDetectorRef} from "@angular/core";
 @Component({
   providers: [DateTime],
   selector: 'datetime-picker',
-  moduleId: module.id,
-  template: `<div class="datetime-picker">
+  template: `
+<div class="datetime-picker">
 
   <!-- Month - Year  -->
   <div class="month">
@@ -88,11 +88,110 @@ import {ChangeDetectorRef} from "@angular/core";
 <!--<hr/>-->
 <!--Date: {{selectedDate}}<br/>-->
 <!--Hour: {{hour}} Minute: {{minute}}<br/>-->
-`,
-  styles: [`@keyframes slideDown {   0% {     transform:  translateY(-10px);   }   100% {     transform: translateY(0px);   } }  .datetime-picker {     color: #333;     font: normal 14px sans-serif;     border: 1px solid #ddd;     display: inline-block;     background: #fff;     animation: slideDown 0.1s ease-in-out;     animation-fill-mode: both; } .datetime-picker > .month {     text-align: center;     line-height: 22px;     padding: 10px;     background: #fcfcfc;     text-transform: uppercase;     font-weight: bold;     border-bottom: 1px solid #ddd;     position: relative; } .datetime-picker > .month > button {     color: #555;     font: normal 14px sans-serif;     outline: none;     position: absolute;     background: transparent;     border: none;     cursor: pointer; } .datetime-picker > .month > button:hover {     color: #333; } .datetime-picker > .month > button.prev {     left: 10px; } .datetime-picker > .month > button.next {     right: 10px; } .datetime-picker > .days {     width: 210px; /* 30 x 7 */     margin: 10px;     text-align: center; } .datetime-picker > .days .day-of-week, .datetime-picker > .days .day {     box-sizing: border-box;     -moz-box-sizing: border-box;     border: 1px solid transparent;     width: 30px;     line-height: 28px;     float: left; } .datetime-picker > .days .day-of-week {     font-weight: bold; } .datetime-picker > .days .day-of-week.weekend {     color: #ccc;     background-color: inherit; } .datetime-picker > .days .day:not(.selectable) {     color: #ccc;     cursor: default; } .datetime-picker > .days .weekend {     color: #ccc;     background-color: #eee; } .datetime-picker > .days .day.selectable  {     cursor: pointer; } .datetime-picker > .days .day.selected {     background: gray;     color: #fff; } .datetime-picker > .days .day:not(.selected).selectable:hover {     background: #eee; } .datetime-picker > .days:after {     content: '';     display: block;     clear: left;     height: 0; } .datetime-picker .hourLabel, .datetime-picker .minutesLabel {     display: inline-block;     width: 40px;     text-align: right; } .datetime-picker input[type=range] {     width: 150px; } `],
+  `,
+  styles: [`
+ @keyframes slideDown {
+  0% {
+    transform:  translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.datetime-picker {
+    color: #333;
+    font: normal 14px sans-serif;
+    border: 1px solid #ddd;
+    display: inline-block;
+    background: #fff;
+    animation: slideDown 0.1s ease-in-out;
+    animation-fill-mode: both;
+}
+.datetime-picker > .month {
+    text-align: center;
+    line-height: 22px;
+    padding: 10px;
+    background: #fcfcfc;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+}
+.datetime-picker > .month > button {
+    color: #555;
+    font: normal 14px sans-serif;
+    outline: none;
+    position: absolute;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.datetime-picker > .month > button:hover {
+    color: #333;
+}
+.datetime-picker > .month > button.prev {
+    left: 10px;
+}
+.datetime-picker > .month > button.next {
+    right: 10px;
+}
+.datetime-picker > .days {
+    width: 210px; /* 30 x 7 */
+    margin: 10px;
+    text-align: center;
+}
+.datetime-picker > .days .day-of-week,
+.datetime-picker > .days .day {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid transparent;
+    width: 30px;
+    line-height: 28px;
+    float: left;
+}
+.datetime-picker > .days .day-of-week {
+    font-weight: bold;
+}
+.datetime-picker > .days .day-of-week.weekend {
+    color: #ccc;
+    background-color: inherit;
+}
+.datetime-picker > .days .day:not(.selectable) {
+    color: #ccc;
+    cursor: default;
+}
+.datetime-picker > .days .weekend {
+    color: #ccc;
+    background-color: #eee;
+}
+.datetime-picker > .days .day.selectable  {
+    cursor: pointer;
+}
+.datetime-picker > .days .day.selected {
+    background: gray;
+    color: #fff;
+}
+.datetime-picker > .days .day:not(.selected).selectable:hover {
+    background: #eee;
+}
+.datetime-picker > .days:after {
+    content: '';
+    display: block;
+    clear: left;
+    height: 0;
+}
+.datetime-picker .hourLabel,
+.datetime-picker .minutesLabel {
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+}
+.datetime-picker input[type=range] {
+    width: 150px;
+}
+  `],
   encapsulation: ViewEncapsulation.None
-  // encapsulation: ViewEncapsulation.None
-  // encapsulation: ViewEncapsulation.Emulated is default
 })
 export class DateTimePickerComponent {
 

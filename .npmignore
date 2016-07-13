@@ -1,5 +1,0 @@
-# npm uses .gitignore by default when published. 
-# npm also uses .npmignore for files be ignored when publishing to npm
-src
-test
-typings

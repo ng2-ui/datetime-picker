@@ -9,8 +9,6 @@
     "moduleResolution": "node"
   },
   "exclude": [
-    "typings/main.d.ts",
-    "typings/main",
     "node_modules",
     "test",
     "src",
