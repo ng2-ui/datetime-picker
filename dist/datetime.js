@@ -78,7 +78,9 @@ var DateTime = (function () {
     DateTime.prototype.fromString = function (dateStr) {
         dateStr = this.removeTimezone(dateStr);
         dateStr = dateStr + this.addDSTOffset(dateStr);
-        return new Date(dateStr);
+        var tmp = dateStr.split(/[-:\ T]/); // split by dash, colon or space
+        console.log('dateStr', dateStr);
+        return new Date(tmp[0], tmp[1] - 1, tmp[2], tmp[3] || 0, tmp[4] || 0, tmp[5] || 0);
     };
     DateTime.prototype.formatDate = function (d, dateOnly) {
         // return d.toLocaleString('en-us', hash); // IE11 does not understand this
