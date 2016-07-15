@@ -1,6 +1,6 @@
 {
   "name": "ng2-datetime-picker",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Angular2 DateTime Picker",
   "license": "ISC",
   "main": "dist/index.js",
@@ -32,11 +32,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jsvalley/ng2-datetime-picker.git"
+    "url": "git+https://github.com/ng2-ui/ng2-datetime-picker.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/jsvalley/ng2-datetime-picker/issues"
+    "url": "https://github.com/ng2-ui/ng2-datetime-picker/issues"
   },
-  "homepage": "https://github.com/jsvalley/ng2-datetime-picker#readme"
+  "homepage": "https://github.com/ng2-ui/ng2-datetime-picker#readme"
 }
