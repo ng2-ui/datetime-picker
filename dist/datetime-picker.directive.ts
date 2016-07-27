@@ -64,7 +64,7 @@ export class DateTimePickerDirective implements OnInit {
     let dateNgModel: Date | String =  this.ngModel;
     if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
       console.error("datetime-picker directive requires ngModel");
-      this.ngModel = (new Date()).toString();
+      this.ngModel = this.dateTime.formatDate(new Date(), this.dateOnly);
     }
 
     if (typeof this.ngModel === 'string') { //remove timezone and respect day light saving time

@@ -45,7 +45,7 @@ var DateTimePickerDirective = (function () {
         var dateNgModel = this.ngModel;
         if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
             console.error("datetime-picker directive requires ngModel");
-            this.ngModel = (new Date()).toString();
+            this.ngModel = this.dateTime.formatDate(new Date(), this.dateOnly);
         }
         if (typeof this.ngModel === 'string') {
             dateNgModel = this.dateTime.fromString(this.ngModel);

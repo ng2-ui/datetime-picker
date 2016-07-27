@@ -6,28 +6,47 @@ import {DateTimePickerDirective} from "ng2-datetime-picker";
   template: `
   <div>
     <h1>Ng2 DateTime Picker Test</h1>
-    <!--<ng2-datetime-picker></ng2-datetime-picker>-->
-    &lt;input [(ngModel)]="date1" ng2-datetime-picker date-only="true" /&gt;<br/> 
-    <input [(ngModel)]="date1" ng2-datetime-picker date-only="true" /> <br/>
     
-    &lt;input [(ngModel)]="date2" ng2-datetime-picker date-only="true" /&gt;  <br/>
-    <input [(ngModel)]="date2" ng2-datetime-picker date-only="true" /> <br/>
+   <br/><br/> 
+    <input [(ngModel)]="myDate" ng2-datetime-picker />
+    myDate: {{myDate}}
+<pre><code class="language-markup"
+>&lt;input [(ngModel)]="myDate" ng2-datetime-picker /&gt;</code></pre>
     
-    &lt;input  [(ngModel)]="date3" ng2-datetime-picker close-on-select="false" /&gt;  <br/>
-    <input [(ngModel)]="date3" ng2-datetime-picker close-on-select="false" /> <br/>
+   <br/><br/> 
+    <input [(ngModel)]="date1" ng2-datetime-picker date-only="true" />
+<pre><code class="language-markup"
+>&lt;input [(ngModel)]="date1" ng2-datetime-picker date-only="true" /&gt;</code></pre>
     
-    &lt;input ng-model="date4" ng2-datetime-picker hour="23" minute='59'/&gt; <br/>
-    <input [(ngModel)]="date4" ng2-datetime-picker hour="23" minute='59'/><br/>
+   <br/><br/> 
+    <input [(ngModel)]="date2" ng2-datetime-picker date-only="true" />
+<pre><code class="language-markup"
+>&lt;input [(ngModel)]="date2" ng2-datetime-picker date-only="true" /&gt;</code></pre>
     
-    gmtDate : "2015-01-01T00:00:00.000Z" <br/>
-    &lt;input [(ngModel)]="gmtDate" ng2-datetime-picker /&gt; <br/>
-    <input [(ngModel)]="gmtDate" ng2-datetime-picker /><br/>
+   <br/><br/> 
+    <input [(ngModel)]="date3" ng2-datetime-picker close-on-select="false" />
+<pre><code class="language-markup"
+> &lt;input  [(ngModel)]="date3" ng2-datetime-picker close-on-select="false" /&gt;</code></pre>
     
+   <br/><br/> 
+    <input [(ngModel)]="date4" ng2-datetime-picker hour="23" minute='59'/>
+<pre><code class="language-markup"
+>&lt;input ng-model="date4" ng2-datetime-picker hour="23" minute='59'/&gt;
+</code></pre>
+    
+   <br/><br/> 
+    <input [(ngModel)]="gmtDate" ng2-datetime-picker />
+gmtDate : "2015-01-01T00:00:00.000Z" 
+<pre><code class="language-markup"
+>&lt;input [(ngModel)]="gmtDate" ng2-datetime-picker /&gt; </code></pre>
+    
+   <br/><br/> 
     <div style="position:fixed; bottom:0">
-    &lt;input [(ngModel)]="date5" ng2-datetime-picker
-       year="2014" month="12" day="31" hour="23" minute="59" /&gt;<br>
     <input [(ngModel)]="date5" ng2-datetime-picker
        year="2014" month="12" day="31" hour="23" minute="59" /><br/>
+<pre><code class="language-markup"
+>&lt;input [(ngModel)]="date5" ng2-datetime-picker
+   year="2014" month="12" day="31" hour="23" minute="59" /&gt;</code></pre>
   </div>
   `,
   
@@ -36,7 +55,7 @@ import {DateTimePickerDirective} from "ng2-datetime-picker";
   ],
   styles: [`
     div { font-family: Courier; font-size: 13px}
-    input { min-width: 200px; margin-bottom: 20px; font-size: 15px; }
+    input { min-width: 200px; font-size: 15px; }
   `]
 })
 export class AppComponent {
