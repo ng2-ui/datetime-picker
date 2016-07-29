@@ -48,3 +48,13 @@ AngularJS 2 DateTime Picker
     datetime-picker when select a date. default: true
 
 
+## For Developers
+
+### To start
+
+    $ git clone https://github.com/ng2-ui/ng2-map.git
+    $ cd ng2-popup
+    $ npm install
+    $ npm start
+
+
