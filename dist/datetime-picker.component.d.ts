@@ -1,7 +1,6 @@
-import { ElementRef } from '@angular/core';
+import { ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Subject } from "rxjs/Subject";
 import { DateTime } from './datetime';
-import { ChangeDetectorRef } from "@angular/core";
 /**
  * show a selected date in monthly calendar
  */
