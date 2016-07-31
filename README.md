@@ -13,15 +13,15 @@ AngularJS 2 DateTime Picker
 
 2. add `map` and `packages` to your `systemjs.config.js`
 
-        map['datetime-picker'] = 'node_modules/ng2-datetime-picker';
-        // map['datetime-picker'] = 'https://npmcdn.com/ng2-datetime-picker'; // or without npm installation
-        packages['datetime-picker'] = { main: 'dist/index.js', defaultExtension: 'js' 
+        map['ng2-datetime-picker'] = 'node_modules/ng2-datetime-picker';
+        // map['ng2-datetime-picker'] = 'https://npmcdn.com/ng2-datetime-picker'; // or without npm installation
+        packages['ng2-datetime-picker'] = { main: 'dist/index.js', defaultExtension: 'js'
 
 ## Usage it in your code
 
 1. import and add directive in your component
 
-        import {DateTimePickerDirective} from "datetime-picker";
+        import {DateTimePickerDirective} from "ng2-datetime-picker";
         ...
         @Component({
           directives: [DateTimePickerDirective],
@@ -52,9 +52,7 @@ AngularJS 2 DateTime Picker
 
 ### To start
 
-    $ git clone https://github.com/ng2-ui/ng2-map.git
-    $ cd ng2-popup
+    $ git clone https://github.com/ng2-ui/ng2-datetime-picker.git
+    $ cd ng2-datetime-picker
     $ npm install
     $ npm start
-
-
