@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {DateTimePickerDirective} from "ng2-datetime-picker";
 
 @Component({
   selector: 'my-app',
@@ -49,10 +48,6 @@ gmtDate : "2015-01-01T00:00:00.000Z"
    year="2014" month="12" day="31" hour="23" minute="59" /&gt;</code></pre>
   </div>
   `,
-  
-  directives: [
-    DateTimePickerDirective
-  ],
   styles: [`
     div { font-family: Courier; font-size: 13px}
     input { min-width: 200px; font-size: 15px; }

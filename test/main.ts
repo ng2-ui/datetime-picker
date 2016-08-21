@@ -1,4 +1,9 @@
-import { bootstrap }      from '@angular/platform-browser-dynamic';
-import { AppComponent }   from './app.component';
+// The browser platform with a compiler
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-bootstrap(AppComponent, []);
+// The app module
+import { AppModule } from './app.module';
+
+// Compile and launch the module
+platformBrowserDynamic().bootstrapModule(AppModule);
+

@@ -78,7 +78,7 @@ var DateTime = (function () {
     DateTime.prototype.fromString = function (dateStr) {
         dateStr = this.removeTimezone(dateStr);
         dateStr = dateStr + this.addDSTOffset(dateStr);
-        var tmp = dateStr.split(/[-:\ T]/); // split by dash, colon or space
+        var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
         console.log('dateStr', dateStr);
         return new Date((+tmp[0]), (+tmp[1]) - 1, (+tmp[2]), (+tmp[3]) || 0, (+tmp[4]) || 0, (+tmp[5]) || 0);
     };
@@ -113,6 +113,7 @@ var DateTime = (function () {
         var isDST = date.getTimezoneOffset() < stdTimezoneOffset;
         var offset = isDST ? stdTimezoneOffset - 60 : stdTimezoneOffset;
         var diff = offset >= 0 ? '-' : '+';
+        offset = Math.abs(offset);
         return diff +
             ('0' + (offset / 60)).slice(-2) + ':' +
             ('0' + (offset % 60)).slice(-2);
