@@ -76,7 +76,7 @@ export class DateTime {
     dateStr = this.removeTimezone(dateStr);
     dateStr = dateStr + this.addDSTOffset(dateStr);
 
-    let tmp = dateStr.split(/[-:\ T]/); // split by dash, colon or space
+    let tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
     console.log('dateStr', dateStr);
     return new Date(
       (+tmp[0]),
@@ -122,6 +122,7 @@ export class DateTime {
     let isDST = date.getTimezoneOffset() < stdTimezoneOffset;
     let offset = isDST ? stdTimezoneOffset - 60 : stdTimezoneOffset;
     let diff = offset >=0 ? '-' : '+';
+    offset = Math.abs(offset);
     return diff +
         ('0'+ (offset / 60)).slice(-2) + ':' +
         ('0'+ (offset % 60)).slice(-2);
