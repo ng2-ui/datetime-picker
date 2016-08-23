@@ -23,6 +23,9 @@ export declare class DateTimePickerDirective implements OnInit {
     datetimePickerEl: HTMLElement;
     constructor(dcl: DynamicComponentLoader, viewContainerRef: ViewContainerRef, dateTime: DateTime);
     ngOnInit(): void;
+    ngOnDestroy(): void;
+    registerEventListeners(): void;
+    keyEventListener: (evt: KeyboardEvent) => void;
     showDatetimePicker($event: any): void;
     hideDatetimePicker(): Promise<any>;
     hideWhenOthersClicked: (event: any) => void;

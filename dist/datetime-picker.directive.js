@@ -22,6 +22,11 @@ var DateTimePickerDirective = (function () {
         this.viewContainerRef = viewContainerRef;
         this.dateTime = dateTime;
         this.ngModelChange = new core_1.EventEmitter();
+        this.keyEventListener = function (evt) {
+            if (evt.keyCode === 27) {
+                _this.hideDatetimePicker();
+            }
+        };
         this.hideWhenOthersClicked = function (event) {
             if (event.target === _this.el) {
             }
@@ -55,8 +60,6 @@ var DateTimePickerDirective = (function () {
         this.day && dateNgModel.setDate(this.day);
         this.hour && dateNgModel.setHours(this.hour);
         this.minute && dateNgModel.setMinutes(this.minute);
-        // add a click listener to document, so that it can hide when others clicked
-        document.addEventListener('click', this.hideWhenOthersClicked);
         // emit toString Modified(date formatted) instance
         // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
         //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
@@ -64,6 +67,17 @@ var DateTimePickerDirective = (function () {
             var newNgModel = _this.dateTime.formatDate(dateNgModel, _this.dateOnly);
             _this.ngModelChange.emit(newNgModel);
         });
+        this.registerEventListeners();
+    };
+    DateTimePickerDirective.prototype.ngOnDestroy = function () {
+        // add a click listener to document, so that it can hide when others clicked
+        document.body.removeEventListener('click', this.hideWhenOthersClicked);
+        this.el.removeEventListener('keyup', this.keyEventListener);
+    };
+    DateTimePickerDirective.prototype.registerEventListeners = function () {
+        // add a click listener to document, so that it can hide when others clicked
+        document.body.addEventListener('click', this.hideWhenOthersClicked);
+        this.el.addEventListener('keyup', this.keyEventListener);
     };
     //show datetimePicker below the current element
     DateTimePickerDirective.prototype.showDatetimePicker = function ($event) {
@@ -73,6 +87,7 @@ var DateTimePickerDirective = (function () {
             _this.componentRef.then(function (componentRef) {
                 _this.datetimePickerEl = componentRef.location.nativeElement;
                 var datetimePickerEl = _this.datetimePickerEl;
+                //console.log('this.keyEventListener', this.keyEventListener);
                 componentRef.instance.initDateTime(_this.ngModel || new Date());
                 componentRef.instance.dateOnly = _this.dateOnly;
                 componentRef.instance.changes.subscribe(function (changes) {

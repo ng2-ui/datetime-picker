@@ -77,9 +77,6 @@ export class DateTimePickerDirective implements OnInit {
     this.hour   && (<Date>dateNgModel).setHours(this.hour);
     this.minute && (<Date>dateNgModel).setMinutes(this.minute);
 
-    // add a click listener to document, so that it can hide when others clicked
-    document.addEventListener('click', this.hideWhenOthersClicked);
-    
     // emit toString Modified(date formatted) instance
     // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
     //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
@@ -87,9 +84,29 @@ export class DateTimePickerDirective implements OnInit {
       let newNgModel = this.dateTime.formatDate(<Date>dateNgModel, this.dateOnly);
       this.ngModelChange.emit(newNgModel);
     });
-    
+
+    this.registerEventListeners();
   }
-  
+
+  ngOnDestroy(): void {
+    // add a click listener to document, so that it can hide when others clicked
+    document.body.removeEventListener('click', this.hideWhenOthersClicked);
+    this.el.removeEventListener('keyup', this.keyEventListener);
+  }
+
+
+  registerEventListeners() {
+    // add a click listener to document, so that it can hide when others clicked
+    document.body.addEventListener('click', this.hideWhenOthersClicked);
+    this.el.addEventListener('keyup', this.keyEventListener);
+  }
+
+  keyEventListener = (evt: KeyboardEvent): void => {
+    if (evt.keyCode === 27) { //ESC key
+      this.hideDatetimePicker();
+    }
+  };
+
   //show datetimePicker below the current element
   showDatetimePicker($event) {
     this.hideDatetimePicker().then(() => {
@@ -97,6 +114,7 @@ export class DateTimePickerDirective implements OnInit {
       this.componentRef.then( componentRef => {
         this.datetimePickerEl = componentRef.location.nativeElement;
         let datetimePickerEl = this.datetimePickerEl;
+        //console.log('this.keyEventListener', this.keyEventListener);
 
         componentRef.instance.initDateTime(this.ngModel || new Date());
         componentRef.instance.dateOnly = this.dateOnly;
