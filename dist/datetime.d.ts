@@ -32,4 +32,5 @@ export declare class DateTime {
     formatDate(d: Date, dateOnly: boolean): string;
     private removeTimezone(dateStr);
     private addDSTOffset(dateStr);
+    private getDate(dateStr);
 }

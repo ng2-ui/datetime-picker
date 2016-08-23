@@ -79,8 +79,7 @@ var DateTime = (function () {
         dateStr = this.removeTimezone(dateStr);
         dateStr = dateStr + this.addDSTOffset(dateStr);
         var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
-        console.log('dateStr', dateStr);
-        return new Date((+tmp[0]), (+tmp[1]) - 1, (+tmp[2]), (+tmp[3]) || 0, (+tmp[4]) || 0, (+tmp[5]) || 0);
+        return this.getDate(dateStr);
     };
     DateTime.prototype.formatDate = function (d, dateOnly) {
         // return d.toLocaleString('en-us', hash); // IE11 does not understand this
@@ -106,7 +105,7 @@ var DateTime = (function () {
             .replace(/000Z$/, '00'); //remove timezone
     };
     DateTime.prototype.addDSTOffset = function (dateStr) {
-        var date = new Date(dateStr);
+        var date = this.getDate(dateStr);
         var jan = new Date(date.getFullYear(), 0, 1);
         var jul = new Date(date.getFullYear(), 6, 1);
         var stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
@@ -119,6 +118,10 @@ var DateTime = (function () {
             ('0' + (offset % 60)).slice(-2);
     };
     ;
+    DateTime.prototype.getDate = function (dateStr) {
+        var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
+        return new Date(parseInt(tmp[0], 10), parseInt(tmp[1], 10) - 1, parseInt(tmp[2], 10), parseInt(tmp[3] || '0', 10), parseInt(tmp[4] || '0', 10), parseInt(tmp[5] || '0', 10));
+    };
     DateTime = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [])
