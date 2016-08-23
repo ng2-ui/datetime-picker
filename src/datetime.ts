@@ -77,15 +77,8 @@ export class DateTime {
     dateStr = dateStr + this.addDSTOffset(dateStr);
 
     let tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
-    console.log('dateStr', dateStr);
-    return new Date(
-      (+tmp[0]),
-      (+tmp[1])-1,
-      (+tmp[2]),
-      (+tmp[3])||0,
-      (+tmp[4])||0,
-      (+tmp[5])||0
-    )
+
+    return this.getDate(dateStr);
   }
 
   formatDate(d: Date, dateOnly: boolean): string {
@@ -115,7 +108,7 @@ export class DateTime {
   }
 
   private addDSTOffset(dateStr): string {
-    let date = new Date(dateStr);
+    let date = this.getDate(dateStr);
     let jan = new Date(date.getFullYear(), 0, 1);
     let jul = new Date(date.getFullYear(), 6, 1);
     let stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
@@ -127,6 +120,18 @@ export class DateTime {
         ('0'+ (offset / 60)).slice(-2) + ':' +
         ('0'+ (offset % 60)).slice(-2);
   };
+
+  private getDate(dateStr): Date {
+    let tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
+    return  new Date(
+      parseInt(tmp[0], 10),
+      parseInt(tmp[1], 10) - 1,
+      parseInt(tmp[2], 10),
+      parseInt(tmp[3]||'0', 10),
+      parseInt(tmp[4]||'0', 10),
+      parseInt(tmp[5]||'0', 10)
+    );
+  }
 
 }
 
