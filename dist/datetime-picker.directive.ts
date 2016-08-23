@@ -63,7 +63,7 @@ export class DateTimePickerDirective implements OnInit {
 
     let dateNgModel: Date | String =  this.ngModel;
     if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
-      console.error("datetime-picker directive requires ngModel");
+      // console.log("datetime-picker directive requires ngModel");
       this.ngModel = this.dateTime.formatDate(new Date(), this.dateOnly);
     }
 
