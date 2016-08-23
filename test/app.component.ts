@@ -54,7 +54,7 @@ gmtDate : "2015-01-01T00:00:00.000Z"
   `]
 })
 export class AppComponent {
-  public date1 = new Date("01-01-2015 00:00:00");
+  public date1 = "01-01-2015 00:00:00";
   public date2 = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
   public date3 = '2015-01-01T00:00:00-0400';
   public date4 = '2015-01-01';
