@@ -7,7 +7,7 @@ import {
   ComponentRef,
   ViewContainerRef,
   EventEmitter,
-  OnInit
+  OnInit, ComponentFactoryResolver
 } from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {DateTimePickerComponent} from "./datetime-picker.component";
@@ -38,13 +38,14 @@ export class DateTimePickerDirective implements OnInit {
 
   @Input() ngModel: String; //not Date, only String !!!
   @Output() ngModelChange = new EventEmitter();
-  
-  public componentRef: Promise<ComponentRef<any>>;
-  public el: HTMLElement;
-  public datetimePickerEl: HTMLElement; // datetime picker element
+
+  componentRef: ComponentRef<DateTimePickerComponent>;
+  el: HTMLElement;
+  datetimePickerEl: HTMLElement; // datetime picker element
   
   constructor(
-    public dcl: DynamicComponentLoader,
+    private resolver: ComponentFactoryResolver,
+    // public dcl: DynamicComponentLoader,
     public viewContainerRef: ViewContainerRef,
     public dateTime: DateTime
   ) {
@@ -64,11 +65,11 @@ export class DateTimePickerDirective implements OnInit {
     let dateNgModel: Date | String =  this.ngModel;
     if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
       // console.log("datetime-picker directive requires ngModel");
-      this.ngModel = this.dateTime.formatDate(new Date(), this.dateOnly);
+      this.ngModel = DateTime.formatDate(new Date(), this.dateOnly);
     }
 
     if (typeof this.ngModel === 'string') { //remove timezone and respect day light saving time
-      dateNgModel = this.dateTime.fromString((<string>this.ngModel));
+      dateNgModel = DateTime.fromString((<string>this.ngModel));
     }
     
     this.year   && (<Date>dateNgModel).setFullYear(this.year);
@@ -81,7 +82,7 @@ export class DateTimePickerDirective implements OnInit {
     // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
     //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
     setTimeout(() => {
-      let newNgModel = this.dateTime.formatDate(<Date>dateNgModel, this.dateOnly);
+      let newNgModel = DateTime.formatDate(<Date>dateNgModel, this.dateOnly);
       this.ngModelChange.emit(newNgModel);
     });
 
@@ -90,14 +91,13 @@ export class DateTimePickerDirective implements OnInit {
 
   ngOnDestroy(): void {
     // add a click listener to document, so that it can hide when others clicked
-    document.body.removeEventListener('click', this.hideWhenOthersClicked);
+    document.body.removeEventListener('click', this.hideDatetimePicker);
     this.el.removeEventListener('keyup', this.keyEventListener);
   }
 
-
   registerEventListeners() {
     // add a click listener to document, so that it can hide when others clicked
-    document.body.addEventListener('click', this.hideWhenOthersClicked);
+    document.body.addEventListener('click', this.hideDatetimePicker);
     this.el.addEventListener('keyup', this.keyEventListener);
   }
 
@@ -109,74 +109,74 @@ export class DateTimePickerDirective implements OnInit {
 
   //show datetimePicker below the current element
   showDatetimePicker($event) {
-    this.hideDatetimePicker().then(() => {
-      this.componentRef = this.dcl.loadNextToLocation(DateTimePickerComponent, this.viewContainerRef);
-      this.componentRef.then( componentRef => {
-        this.datetimePickerEl = componentRef.location.nativeElement;
-        let datetimePickerEl = this.datetimePickerEl;
-        //console.log('this.keyEventListener', this.keyEventListener);
 
-        componentRef.instance.initDateTime(this.ngModel || new Date());
-        componentRef.instance.dateOnly = this.dateOnly;
-        
-        componentRef.instance.changes.subscribe(changes => {
-          changes.selectedDate.setHours(changes.hour);
-          changes.selectedDate.setMinutes(changes.minute);
-          //let newNgModel = new DatePipe().transform(changes.selectedDate, this.dateFormat || 'yMd HH:mm');
-          let newNgModel = this.dateTime.formatDate(changes.selectedDate, this.dateOnly);
-          this.ngModelChange.emit(newNgModel);
-        });
-        
-        componentRef.instance.closing.subscribe(() => {
-          setTimeout(() => {
-            this.closeOnSelect !== "false" && this.hideDatetimePicker();
-          });
-        });
+    this.hideDatetimePicker();
 
-        /* setting width/height auto complete */
-        let thisElBCR = this.el.getBoundingClientRect();
-        datetimePickerEl.style.width = thisElBCR.width + 'px';
-        datetimePickerEl.style.position = 'absolute';
-        datetimePickerEl.style.zIndex = '1';
-        datetimePickerEl.style.left = '0';
-        datetimePickerEl.style.transition = 'height 0.3s ease-in';
+    let factory = this.resolver.resolveComponentFactory(DateTimePickerComponent);
 
-        datetimePickerEl.style.visibility = 'hidden';
-        setTimeout(() => { //it needs time to have width and height
-          let thisElBcr = this.el.getBoundingClientRect();
-          let datetimePickerElBcr = datetimePickerEl.getBoundingClientRect();
-          
-          if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) { // if not enough space to show on below, show above
-            datetimePickerEl.style.bottom = '0';
-          } else { // otherwise, show below
-            datetimePickerEl.style.top = thisElBcr.height + 'px';
-          }
-          datetimePickerEl.style.visibility = 'visible';
-        });
+    this.componentRef = this.viewContainerRef.createComponent(factory);
+    this.datetimePickerEl = this.componentRef.location.nativeElement;
+    let component = this.componentRef.instance;
 
-        //$event.stopPropagation();
-      })
+    component.initDateTime(this.ngModel || new Date());
+    component.dateOnly = this.dateOnly;
+    this.styleDatetimePicker();
+
+    component.changes.subscribe(changes => {
+      changes.selectedDate.setHours(changes.hour);
+      changes.selectedDate.setMinutes(changes.minute);
+      //let newNgModel = new DatePipe().transform(changes.selectedDate, this.dateFormat || 'yMd HH:mm');
+      let newNgModel = DateTime.formatDate(changes.selectedDate, this.dateOnly);
+      this.ngModelChange.emit(newNgModel);
     });
 
+    component.closing.subscribe(() => {
+      setTimeout(() => {
+        this.closeOnSelect !== "false" && this.hideDatetimePicker();
+      });
+    });
   }
 
-  hideDatetimePicker(): Promise<any> {
+  styleDatetimePicker = () => {
+
+    /* setting width/height auto complete */
+    let thisElBCR = this.el.getBoundingClientRect();
+    this.datetimePickerEl.style.width = thisElBCR.width + 'px';
+    this.datetimePickerEl.style.position = 'absolute';
+    this.datetimePickerEl.style.zIndex = '1';
+    this.datetimePickerEl.style.left = '0';
+    this.datetimePickerEl.style.transition = 'height 0.3s ease-in';
+
+    this.datetimePickerEl.style.visibility = 'hidden';
+    setTimeout(() => { //it needs time to have width and height
+      let thisElBcr = this.el.getBoundingClientRect();
+      let datetimePickerElBcr = this.datetimePickerEl.getBoundingClientRect();
+
+      if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) { // if not enough space to show on below, show above
+        this.datetimePickerEl.style.bottom = '0';
+      } else { // otherwise, show below
+        this.datetimePickerEl.style.top = thisElBcr.height + 'px';
+      }
+      this.datetimePickerEl.style.visibility = 'visible';
+    });
+
+  };
+
+  hideDatetimePicker = (event?): void =>  {
     if (this.componentRef) {
-      return this.componentRef.then(componentRef=> componentRef.destroy());
-    } else {
-      return Promise.resolve(true);
+      if (
+        event && event.type === 'click' &&
+        event.target !== this.el &&
+        !this.elementIn(event.target, this.datetimePickerEl)
+      ) {
+        this.componentRef.destroy();
+        this.componentRef = undefined;
+      } else if (!event) {
+        this.componentRef.destroy();
+        this.componentRef = undefined;
+      }
     }
-  }
-  
-  hideWhenOthersClicked = (event): void => {
-    if (event.target === this.el) {
-      // do nothing 
-    } else if (this.elementIn(event.target, this.datetimePickerEl)) {
-      // Do Nothing
-    } else {
-      this.hideDatetimePicker();
-    }
-  }
+  };
 
   private elementIn(el: Node, containerEl: Node): boolean {
     while ( el = el.parentNode ) {

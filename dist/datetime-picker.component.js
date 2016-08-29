@@ -60,7 +60,7 @@ var DateTimePickerComponent = (function () {
     DateTimePickerComponent.prototype.initDateTime = function (date) {
         console.log('initDateTime', date, typeof date);
         if (typeof date === 'string') {
-            date = this.dateTime.fromString(date);
+            date = datetime_1.DateTime.fromString(date);
         }
         this.selectedDate = date || new Date();
         this.hour = this.selectedDate.getHours();

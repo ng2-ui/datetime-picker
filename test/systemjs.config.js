@@ -19,8 +19,8 @@
 
   map['ng2-datetime-picker'] = '../dist';
   packages['ng2-datetime-picker'] = {main: 'index.js', defaultExtension: 'js'};
-  map['ng2-datetime-picker'] = '../src';
-  packages['ng2-datetime-picker'] = {main: 'index.ts', defaultExtension: 'ts'};
+  // map['ng2-datetime-picker'] = '../src';
+  // packages['ng2-datetime-picker'] = {main: 'index.ts', defaultExtension: 'ts'};
 
   System.config({
     transpiler: 'typescript', //use typescript for compilation

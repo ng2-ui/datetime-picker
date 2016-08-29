@@ -22,6 +22,7 @@ var Ng2DatetimePickerModule = (function () {
             imports: [platform_browser_1.BrowserModule, forms_1.FormsModule],
             declarations: [datetime_picker_component_1.DateTimePickerComponent, datetime_picker_directive_1.DateTimePickerDirective],
             exports: [datetime_picker_component_1.DateTimePickerComponent, datetime_picker_directive_1.DateTimePickerDirective],
+            entryComponents: [datetime_picker_component_1.DateTimePickerComponent],
             providers: [datetime_1.DateTime]
         }), 
         __metadata('design:paramtypes', [])

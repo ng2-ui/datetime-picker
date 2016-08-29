@@ -248,7 +248,7 @@ export class DateTimePickerComponent {
   initDateTime(date?: Date | String) {
     console.log('initDateTime', date, typeof date);
     if (typeof date === 'string') {
-      date = this.dateTime.fromString(<string>date);
+      date = DateTime.fromString(<string>date);
     }
     this.selectedDate = (<Date>date) || new Date();
     this.hour = this.selectedDate.getHours();

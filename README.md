@@ -7,6 +7,10 @@ AngularJS 2 DateTime Picker
 
 Plunker Example: https://plnkr.co/edit/A5ITtI
 
+
+DateTime.fromString()
+DateTime.format()
+
 ## Install
 
 1. install ng2-datetime-picker
@@ -42,6 +46,17 @@ For full example, please check `test` directory to see the example of;
   - `systemjs.config.js`
   - `app.module.ts`
   -  and `app.component.ts`.
+
+## Override default style
+
+The default style is written in `src/datetime-picker.component.ts`. 
+This can be overwritten by giving more details css seletor.
+ 
+e.g., 
+
+    #my-div .datetime-picker {
+      background-color: blue;
+    }
 
 ## **ng2-ui** welcomes new members and contributors
 

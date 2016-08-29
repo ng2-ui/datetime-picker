@@ -27,10 +27,10 @@ export declare class DateTime {
         fullName: string;
         shortName: string;
     })[];
+    static formatDate(d: Date, dateOnly: boolean): string;
     getMonthData(year: number, month: number): any;
-    fromString(dateStr: string): Date;
-    formatDate(d: Date, dateOnly: boolean): string;
-    private removeTimezone(dateStr);
-    private addDSTOffset(dateStr);
-    private getDate(dateStr);
+    static fromString(dateStr: string): Date;
+    static removeTimezone(dateStr: any): string;
+    static addDSTOffset(dateStr: any): string;
+    static getDateFromString(dateStr: any): Date;
 }

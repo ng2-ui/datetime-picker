@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'my-app',
   template: `
-  <div>
+  <div id="my-div">
     <h1>Ng2 DateTime Picker Test</h1>
     
    <br/><br/> 

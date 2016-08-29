@@ -10,6 +10,7 @@ import { DateTimePickerDirective } from './datetime-picker.directive';
   imports: [ BrowserModule, FormsModule ],
   declarations: [DateTimePickerComponent, DateTimePickerDirective],
   exports:  [DateTimePickerComponent, DateTimePickerDirective],
+  entryComponents: [DateTimePickerComponent],
   providers: [ DateTime ]
 })
 export class Ng2DatetimePickerModule {}
