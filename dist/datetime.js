@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var DateTime = (function () {
     function DateTime() {
+        this.initialize();
+    }
+    DateTime.prototype.initialize = function () {
         this.months = [
             { fullName: 'January', shortName: 'Jan' },
             { fullName: 'February', shortName: 'Feb' },
@@ -41,11 +44,27 @@ var DateTime = (function () {
             { fullName: 'Friday', shortName: 'Fr' },
             { fullName: 'Saturday', shortName: 'Sa', weekend: true }
         ];
+        /**
+         * if momentjs is available, use momentjs localized months, week, etc.
+         */
+        if (typeof moment !== 'undefined') {
+            this.months = this.months.map(function (el, index) {
+                el.fullName = moment.months()[index];
+                el.shortName = moment.monthsShort()[index];
+                return el;
+            });
+            this.daysOfWeek = this.daysOfWeek.map(function (el, index) {
+                el.fullName = moment.weekdays()[index];
+                el.shortName = moment.weekdaysShort()[index].substr(0, 2);
+                return el;
+            });
+            this.firstDayOfWeek = moment.localeData().firstDayOfWeek();
+        }
         this.firstDayOfWeek = 0;
         this.localizedDaysOfWeek = this.daysOfWeek
             .concat(this.daysOfWeek)
             .splice(this.firstDayOfWeek, 7);
-    }
+    };
     DateTime.prototype.getMonthData = function (year, month) {
         year = month > 11 ? year + 1 :
             month < 0 ? year - 1 :
@@ -74,13 +93,13 @@ var DateTime = (function () {
     };
     ;
     DateTime.momentFormatDate = function (d, dateFormat) {
-        if (!moment) {
+        if (typeof moment === 'undefined') {
             console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
         }
         return moment(d).format(dateFormat);
     };
     DateTime.momentParse = function (dateStr) {
-        if (!moment) {
+        if (typeof moment === 'undefined') {
             console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
         }
         return moment(dateStr).toDate();
