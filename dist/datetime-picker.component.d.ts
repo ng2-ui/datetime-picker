@@ -31,7 +31,7 @@ export declare class DateTimePickerComponent {
     month: number;
     day: number;
     today: Date;
-    initDateTime(date?: Date | String): void;
+    initDateTime(date?: Date): void;
     toDate(year: number, month: number, day: number): Date;
     toDateOnly(date: Date): Date;
     /**

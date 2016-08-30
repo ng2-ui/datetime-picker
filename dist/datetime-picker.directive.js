@@ -75,13 +75,17 @@ var DateTimePickerDirective = (function () {
         divEl.style.position = 'relative';
         this.el.parentElement.insertBefore(divEl, this.el.nextSibling);
         divEl.appendChild(this.el);
-        var dateNgModel = this.ngModel;
-        if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
-            // console.log("datetime-picker directive requires ngModel");
-            this.ngModel = datetime_1.DateTime.formatDate(new Date(), this.dateOnly);
-        }
+        var dateNgModel;
         if (typeof this.ngModel === 'string') {
-            dateNgModel = datetime_1.DateTime.fromString(this.ngModel);
+            dateNgModel = this.dateFormat ?
+                datetime_1.DateTime.momentParse('' + this.ngModel) :
+                datetime_1.DateTime.parse('' + this.ngModel);
+        }
+        else if (typeof this.ngModel === 'Date') {
+            dateNgModel = this.ngModel;
+        }
+        else {
+            dateNgModel = new Date();
         }
         this.year && dateNgModel.setFullYear(this.year);
         this.month && dateNgModel.setMonth(this.month - 1);
@@ -90,10 +94,18 @@ var DateTimePickerDirective = (function () {
         this.minute && dateNgModel.setMinutes(this.minute);
         // emit toString Modified(date formatted) instance
         // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
-        //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
         setTimeout(function () {
-            var newNgModel = datetime_1.DateTime.formatDate(dateNgModel, _this.dateOnly);
-            _this.ngModelChange.emit(newNgModel);
+            if (_this.dateFormat) {
+                dateNgModel.toString = function () {
+                    return datetime_1.DateTime.momentFormatDate(dateNgModel, _this.dateFormat);
+                };
+            }
+            else {
+                dateNgModel.toString = function () {
+                    return datetime_1.DateTime.formatDate(dateNgModel, _this.dateOnly);
+                };
+            }
+            _this.ngModelChange.emit(dateNgModel);
         });
         this.registerEventListeners();
     };
@@ -101,6 +113,8 @@ var DateTimePickerDirective = (function () {
         // add a click listener to document, so that it can hide when others clicked
         document.body.removeEventListener('click', this.hideDatetimePicker);
         this.el.removeEventListener('keyup', this.keyEventListener);
+        this.datetimePickerEl &&
+            this.datetimePickerEl.removeEventListener('keyup', this.keyEventListener);
     };
     DateTimePickerDirective.prototype.registerEventListeners = function () {
         // add a click listener to document, so that it can hide when others clicked
@@ -114,15 +128,32 @@ var DateTimePickerDirective = (function () {
         var factory = this.resolver.resolveComponentFactory(datetime_picker_component_1.DateTimePickerComponent);
         this.componentRef = this.viewContainerRef.createComponent(factory);
         this.datetimePickerEl = this.componentRef.location.nativeElement;
+        this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
         var component = this.componentRef.instance;
-        component.initDateTime(this.ngModel || new Date());
+        var initDate = this.ngModel || new Date();
+        console.log('initDate', initDate);
+        if (typeof initDate === 'string') {
+            initDate = this.dateFormat ?
+                datetime_1.DateTime.momentParse(initDate) : datetime_1.DateTime.parse(initDate);
+        }
+        console.log('initDate', initDate);
+        component.initDateTime(initDate);
         component.dateOnly = this.dateOnly;
         this.styleDatetimePicker();
         component.changes.subscribe(function (changes) {
             changes.selectedDate.setHours(changes.hour);
             changes.selectedDate.setMinutes(changes.minute);
-            //let newNgModel = new DatePipe().transform(changes.selectedDate, this.dateFormat || 'yMd HH:mm');
-            var newNgModel = datetime_1.DateTime.formatDate(changes.selectedDate, _this.dateOnly);
+            var newNgModel = changes.selectedDate;
+            if (_this.dateFormat) {
+                newNgModel.toString = function () {
+                    return datetime_1.DateTime.momentFormatDate(newNgModel, _this.dateFormat);
+                };
+            }
+            else {
+                newNgModel.toString = function () {
+                    return datetime_1.DateTime.formatDate(newNgModel, _this.dateOnly);
+                };
+            }
             _this.ngModelChange.emit(newNgModel);
         });
         component.closing.subscribe(function () {
@@ -172,10 +203,10 @@ var DateTimePickerDirective = (function () {
     ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', String)
+        __metadata('design:type', Date)
     ], DateTimePickerDirective.prototype, "ngModel", void 0);
     __decorate([
-        //not Date, only String !!!
+        //if string given, will be converted to Date
         core_1.Output(), 
         __metadata('design:type', Object)
     ], DateTimePickerDirective.prototype, "ngModelChange", void 0);

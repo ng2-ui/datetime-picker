@@ -27,9 +27,11 @@ export declare class DateTime {
         fullName: string;
         shortName: string;
     })[];
-    static formatDate(d: Date, dateOnly: boolean): string;
     getMonthData(year: number, month: number): any;
-    static fromString(dateStr: string): Date;
+    static momentFormatDate(d: Date, dateFormat: string): string;
+    static momentParse(dateStr: string): Date;
+    static formatDate(d: Date, dateOnly: boolean): string;
+    static parse(dateStr: string): Date;
     static removeTimezone(dateStr: any): string;
     static addDSTOffset(dateStr: any): string;
     static getDateFromString(dateStr: any): Date;

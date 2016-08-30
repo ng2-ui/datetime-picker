@@ -36,7 +36,7 @@ export class DateTimePickerDirective implements OnInit {
   @Input('date-only') dateOnly: boolean;
   @Input('close-on-select') closeOnSelect: string;
 
-  @Input() ngModel: String; //not Date, only String !!!
+  @Input()  ngModel: Date;  //if string given, will be converted to Date
   @Output() ngModelChange = new EventEmitter();
 
   componentRef: ComponentRef<DateTimePickerComponent>;
@@ -62,28 +62,36 @@ export class DateTimePickerDirective implements OnInit {
     this.el.parentElement.insertBefore(divEl, this.el.nextSibling);
     divEl.appendChild(this.el);
 
-    let dateNgModel: Date | String =  this.ngModel;
-    if (!(this.ngModel instanceof Date || typeof this.ngModel === 'string')) {
-      // console.log("datetime-picker directive requires ngModel");
-      this.ngModel = DateTime.formatDate(new Date(), this.dateOnly);
+    let dateNgModel: Date;
+    if (typeof this.ngModel === 'string') { //remove timezone and respect day light saving time
+      dateNgModel = this.dateFormat ?
+        DateTime.momentParse(''+this.ngModel) :
+        DateTime.parse(''+this.ngModel);
+    } else if (typeof this.ngModel === 'Date') {
+      dateNgModel = <Date>this.ngModel;
+    } else {
+      dateNgModel = new Date();
     }
 
-    if (typeof this.ngModel === 'string') { //remove timezone and respect day light saving time
-      dateNgModel = DateTime.fromString((<string>this.ngModel));
-    }
-    
-    this.year   && (<Date>dateNgModel).setFullYear(this.year);
-    this.month  && (<Date>dateNgModel).setMonth(this.month-1);
-    this.day    && (<Date>dateNgModel).setDate(this.day);
-    this.hour   && (<Date>dateNgModel).setHours(this.hour);
-    this.minute && (<Date>dateNgModel).setMinutes(this.minute);
+    this.year   && dateNgModel.setFullYear(this.year);
+    this.month  && dateNgModel.setMonth(this.month-1);
+    this.day    && dateNgModel.setDate(this.day);
+    this.hour   && dateNgModel.setHours(this.hour);
+    this.minute && dateNgModel.setMinutes(this.minute);
 
     // emit toString Modified(date formatted) instance
     // https://angular.io/docs/ts/latest/api/common/DatePipe-class.html
-    //let newNgModel = new DatePipe().transform(dateNgModel, this.dateFormat || 'yMd HH:mm');
     setTimeout(() => {
-      let newNgModel = DateTime.formatDate(<Date>dateNgModel, this.dateOnly);
-      this.ngModelChange.emit(newNgModel);
+      if (this.dateFormat) {
+        dateNgModel.toString = () => {
+          return DateTime.momentFormatDate(dateNgModel, this.dateFormat)
+        }
+      } else {
+        dateNgModel.toString = () => {
+          return DateTime.formatDate(dateNgModel, this.dateOnly);
+        }
+      }
+      this.ngModelChange.emit(dateNgModel);
     });
 
     this.registerEventListeners();
@@ -93,6 +101,8 @@ export class DateTimePickerDirective implements OnInit {
     // add a click listener to document, so that it can hide when others clicked
     document.body.removeEventListener('click', this.hideDatetimePicker);
     this.el.removeEventListener('keyup', this.keyEventListener);
+    this.datetimePickerEl &&
+      this.datetimePickerEl.removeEventListener('keyup', this.keyEventListener);
   }
 
   registerEventListeners() {
@@ -116,17 +126,34 @@ export class DateTimePickerDirective implements OnInit {
 
     this.componentRef = this.viewContainerRef.createComponent(factory);
     this.datetimePickerEl = this.componentRef.location.nativeElement;
+    this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
+
     let component = this.componentRef.instance;
 
-    component.initDateTime(this.ngModel || new Date());
+    let initDate: string | Date = this.ngModel || new Date();
+    console.log('initDate', initDate);
+    if (typeof initDate === 'string') {
+      initDate = this.dateFormat ?
+        DateTime.momentParse(<string>initDate) : DateTime.parse(<string>initDate);
+    }
+    console.log('initDate', initDate);
+    component.initDateTime(<Date>initDate);
     component.dateOnly = this.dateOnly;
     this.styleDatetimePicker();
 
     component.changes.subscribe(changes => {
       changes.selectedDate.setHours(changes.hour);
       changes.selectedDate.setMinutes(changes.minute);
-      //let newNgModel = new DatePipe().transform(changes.selectedDate, this.dateFormat || 'yMd HH:mm');
-      let newNgModel = DateTime.formatDate(changes.selectedDate, this.dateOnly);
+      let newNgModel = changes.selectedDate;
+      if (this.dateFormat) {
+        newNgModel.toString = () => {
+          return DateTime.momentFormatDate(newNgModel, this.dateFormat)
+        }
+      } else {
+        newNgModel.toString = () => {
+          return DateTime.formatDate(newNgModel, this.dateOnly);
+        }
+      }
       this.ngModelChange.emit(newNgModel);
     });
 

@@ -12,7 +12,7 @@ import {DateTime} from './datetime';
   providers: [DateTime],
   selector: 'datetime-picker',
   template: `
-<div class="datetime-picker">
+<div class="datetime-picker" tabindex="0">
 
   <!-- Month - Year  -->
   <div class="month">
@@ -100,6 +100,7 @@ import {DateTime} from './datetime';
 
 .datetime-picker {
     color: #333;
+    outline-width: 0;
     font: normal 14px sans-serif;
     border: 1px solid #ddd;
     display: inline-block;
@@ -245,11 +246,8 @@ export class DateTimePickerComponent {
     return dt;
   }
   
-  initDateTime(date?: Date | String) {
-    console.log('initDateTime', date, typeof date);
-    if (typeof date === 'string') {
-      date = DateTime.fromString(<string>date);
-    }
+  initDateTime(date?: Date) {
+    console.log('initDateTime', date);
     this.selectedDate = (<Date>date) || new Date();
     this.hour = this.selectedDate.getHours();
     this.minute = this.selectedDate.getMinutes();

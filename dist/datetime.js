@@ -46,17 +46,6 @@ var DateTime = (function () {
             .concat(this.daysOfWeek)
             .splice(this.firstDayOfWeek, 7);
     }
-    DateTime.formatDate = function (d, dateOnly) {
-        // return d.toLocaleString('en-us', hash); // IE11 does not understand this
-        var pad0 = function (number) {
-            return ("0" + number).slice(-2);
-        };
-        var ret = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
-        if (!dateOnly) {
-            ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
-        }
-        return ret;
-    };
     DateTime.prototype.getMonthData = function (year, month) {
         year = month > 11 ? year + 1 :
             month < 0 ? year - 1 :
@@ -84,12 +73,34 @@ var DateTime = (function () {
         return monthData;
     };
     ;
+    DateTime.momentFormatDate = function (d, dateFormat) {
+        if (!moment) {
+            console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
+        }
+        return moment(d).format(dateFormat);
+    };
+    DateTime.momentParse = function (dateStr) {
+        if (!moment) {
+            console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
+        }
+        return moment(dateStr).toDate();
+    };
+    DateTime.formatDate = function (d, dateOnly) {
+        // return d.toLocaleString('en-us', hash); // IE11 does not understand this
+        var pad0 = function (number) {
+            return ("0" + number).slice(-2);
+        };
+        var ret = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
+        if (!dateOnly) {
+            ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
+        }
+        return ret;
+    };
     //return date as given from given string
     // without considering timezone and day light saving time considered
-    DateTime.fromString = function (dateStr) {
+    DateTime.parse = function (dateStr) {
         dateStr = DateTime.removeTimezone(dateStr);
         dateStr = dateStr + DateTime.addDSTOffset(dateStr);
-        var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
         return DateTime.getDateFromString(dateStr);
     };
     //remove timezone

@@ -1,3 +1,5 @@
+declare var moment: any;
+
 import {Injectable} from "@angular/core";
 
 @Injectable()
@@ -39,23 +41,10 @@ export class DateTime {
       .concat(this.daysOfWeek)
       .splice(this.firstDayOfWeek, 7);
 
-  static formatDate(d: Date, dateOnly: boolean): string {
-    // return d.toLocaleString('en-us', hash); // IE11 does not understand this
-    let pad0 = function(number) {
-      return ("0"+number).slice(-2);
-    };
-
-    var ret = d.getFullYear() +'-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
-    if(!dateOnly) {
-      ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
-    }
-    return ret;
-  }
-
   getMonthData(year: number, month: number): any {
     year = month > 11 ? year+1 :
-           month < 0 ? year-1 :
-           year;
+      month < 0 ? year-1 :
+        year;
     month = (month + 12) % 12;
 
     let firstDayOfMonth = new Date(year, month, 1);
@@ -83,13 +72,40 @@ export class DateTime {
     return monthData;
   };
 
+  static momentFormatDate(d: Date, dateFormat: string): string {
+    if (!moment) {
+      console.error(`momentjs is required with dateFormat.
+        please add <script src="moment.min.js"></script>"> in your html.`)
+    }
+    return moment(d).format(dateFormat);
+  }
+
+  static momentParse(dateStr: string): Date {
+    if (!moment) {
+      console.error(`momentjs is required with dateFormat.
+        please add <script src="moment.min.js"></script>"> in your html.`)
+    }
+    return moment(dateStr).toDate();
+  }
+
+  static formatDate(d: Date, dateOnly: boolean): string {
+    // return d.toLocaleString('en-us', hash); // IE11 does not understand this
+    let pad0 = function(number) {
+      return ("0"+number).slice(-2);
+    };
+
+    var ret = d.getFullYear() +'-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
+    if(!dateOnly) {
+      ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
+    }
+    return ret;
+  }
+
   //return date as given from given string
   // without considering timezone and day light saving time considered
-  static fromString(dateStr: string): Date {
+  static parse(dateStr: string): Date {
     dateStr = DateTime.removeTimezone(dateStr);
     dateStr = dateStr + DateTime.addDSTOffset(dateStr);
-
-    let tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
 
     return DateTime.getDateFromString(dateStr);
   }

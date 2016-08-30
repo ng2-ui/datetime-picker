@@ -17,7 +17,7 @@ export declare class DateTimePickerDirective implements OnInit {
     dateFormat: string;
     dateOnly: boolean;
     closeOnSelect: string;
-    ngModel: String;
+    ngModel: Date;
     ngModelChange: EventEmitter<{}>;
     componentRef: ComponentRef<DateTimePickerComponent>;
     el: HTMLElement;

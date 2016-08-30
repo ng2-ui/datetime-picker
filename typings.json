@@ -2,7 +2,7 @@
   "globalDependencies": {
     "core-js": "registry:dt/core-js#0.0.0+20160602141332",
     "jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
+    "moment": "registry:dt/moment#2.11.1+20160829143156",
     "node": "registry:dt/node#4.0.0+20160423143914"
   }
 }
-

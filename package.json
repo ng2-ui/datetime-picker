@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "http-server": "^0.9.0",
+    "momentjs": "^1.1.15",
     "ng2-inline-template": "^0.1.1",
     "typescript": "^1.8.10",
     "typings": "^1.0.4"
