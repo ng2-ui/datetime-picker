@@ -3,7 +3,6 @@ import {
   ElementRef,
   Input,
   Output,
-  DynamicComponentLoader,
   ComponentRef,
   ViewContainerRef,
   EventEmitter,
@@ -45,7 +44,6 @@ export class DateTimePickerDirective implements OnInit {
   
   constructor(
     private resolver: ComponentFactoryResolver,
-    // public dcl: DynamicComponentLoader,
     public viewContainerRef: ViewContainerRef,
     public dateTime: DateTime
   ) {
