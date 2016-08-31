@@ -267,7 +267,6 @@ export class DateTimePickerComponent {
    * @param date {Date}
    */
   selectDate(dayNum?: number) {
-    console.log('dayNum', dayNum);
     if (dayNum) {
       this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
     }

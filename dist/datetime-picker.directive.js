@@ -16,9 +16,7 @@ var datetime_1 = require("./datetime");
  * If the given string is not a valid date, it defaults back to today
  */
 var DateTimePickerDirective = (function () {
-    function DateTimePickerDirective(resolver, 
-        // public dcl: DynamicComponentLoader,
-        viewContainerRef, dateTime) {
+    function DateTimePickerDirective(resolver, viewContainerRef, dateTime) {
         var _this = this;
         this.resolver = resolver;
         this.viewContainerRef = viewContainerRef;
@@ -141,9 +139,9 @@ var DateTimePickerDirective = (function () {
         component.dateOnly = this.dateOnly;
         this.styleDatetimePicker();
         component.changes.subscribe(function (changes) {
-            changes.selectedDate.setHours(changes.hour);
-            changes.selectedDate.setMinutes(changes.minute);
-            var newNgModel = changes.selectedDate;
+            var newNgModel = new Date(changes.selectedDate);
+            newNgModel.setHours(parseInt(changes.hour, 10));
+            newNgModel.setMinutes(parseInt(changes.minute, 10));
             if (_this.dateFormat) {
                 newNgModel.toString = function () {
                     return datetime_1.DateTime.momentFormatDate(newNgModel, _this.dateFormat);

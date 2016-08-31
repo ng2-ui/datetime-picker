@@ -75,7 +75,6 @@ var DateTimePickerComponent = (function () {
      * @param date {Date}
      */
     DateTimePickerComponent.prototype.selectDate = function (dayNum) {
-        console.log('dayNum', dayNum);
         if (dayNum) {
             this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
         }

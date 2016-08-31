@@ -3,7 +3,6 @@ import {
   ElementRef,
   Input,
   Output,
-  DynamicComponentLoader,
   ComponentRef,
   ViewContainerRef,
   EventEmitter,
@@ -45,7 +44,6 @@ export class DateTimePickerDirective implements OnInit {
   
   constructor(
     private resolver: ComponentFactoryResolver,
-    // public dcl: DynamicComponentLoader,
     public viewContainerRef: ViewContainerRef,
     public dateTime: DateTime
   ) {
@@ -142,9 +140,9 @@ export class DateTimePickerDirective implements OnInit {
     this.styleDatetimePicker();
 
     component.changes.subscribe(changes => {
-      changes.selectedDate.setHours(changes.hour);
-      changes.selectedDate.setMinutes(changes.minute);
-      let newNgModel = changes.selectedDate;
+      let newNgModel = new Date(changes.selectedDate);
+      newNgModel.setHours(parseInt(changes.hour, 10));
+      newNgModel.setMinutes(parseInt(changes.minute, 10));
       if (this.dateFormat) {
         newNgModel.toString = () => {
           return DateTime.momentFormatDate(newNgModel, this.dateFormat)
