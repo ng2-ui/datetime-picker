@@ -1,6 +1,6 @@
 {
   "name": "ng2-datetime-picker",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Angular2 DateTime Picker",
   "license": "ISC",
   "main": "dist/index.js",
