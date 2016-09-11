@@ -27,10 +27,10 @@ export declare class DateTimePickerComponent {
     /**
      * getters
      */
-    year: number;
-    month: number;
-    day: number;
-    today: Date;
+    readonly year: number;
+    readonly month: number;
+    readonly day: number;
+    readonly today: Date;
     initDateTime(date?: Date): void;
     toDate(year: number, month: number, day: number): Date;
     toDateOnly(date: Date): Date;

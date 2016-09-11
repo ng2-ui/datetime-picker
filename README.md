@@ -25,7 +25,7 @@ Plunker Example: https://plnkr.co/edit/A5ITtI
 2. add `map` and `packages` to your `systemjs.config.js`
 
         map[‘ng2-datetime-picker'] = 'node_modules/ng2-datetime-picker/dist';
-        packages[‘ng2-datetime-picker'] = { main: 'index.js', defaultExtension: 'js’ }
+        packages[‘ng2-datetime-picker'] = { main: 'ng2-datetime-picker.umd.js', defaultExtension: 'js’ }
 
 3. import Ng2AutoCompleteModule to your AppModule
 
