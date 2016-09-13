@@ -247,7 +247,6 @@ export class DateTimePickerComponent {
   }
   
   initDateTime(date?: Date) {
-    console.log('initDateTime', date);
     this.selectedDate = (<Date>date) || new Date();
     this.hour = this.selectedDate.getHours();
     this.minute = this.selectedDate.getMinutes();
