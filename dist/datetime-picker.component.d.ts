@@ -1,5 +1,4 @@
-import { ElementRef, ChangeDetectorRef } from '@angular/core';
-import { Subject } from "rxjs/Subject";
+import { ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { DateTime } from './datetime';
 /**
  * show a selected date in monthly calendar
@@ -16,22 +15,14 @@ export declare class DateTimePickerComponent {
     minute: number;
     el: HTMLElement;
     monthData: any;
-    changes: Subject<any>;
-    closing: Subject<any>;
-    /**
-     * constructor
-     */
+    changes: EventEmitter<any>;
+    closing: EventEmitter<any>;
     constructor(elementRef: ElementRef, dateTime: DateTime, cdRef: ChangeDetectorRef);
-    private prevHour;
-    private prevMinute;
-    /**
-     * getters
-     */
     readonly year: number;
     readonly month: number;
     readonly day: number;
     readonly today: Date;
-    initDateTime(date?: Date): void;
+    initDateTime(date: Date): void;
     toDate(year: number, month: number, day: number): Date;
     toDateOnly(date: Date): Date;
     /**
