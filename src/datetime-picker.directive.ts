@@ -21,7 +21,7 @@ import {DateTime} from './datetime';
 	selector : '[datetime-picker], [ng2-datetime-picker]',
 	providers: [DateTime],
 	host     : {
-		'(click)': 'showDatetimePicker($event)'
+		'(click)': 'showDatetimePicker()'
 	}
 })
 export class DateTimePickerDirective implements OnInit, OnChanges {
@@ -147,12 +147,27 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 		});
 	}
 
-	public hideDatetimePicker ():void {
+	public hideDatetimePicker = (event?):void => {
 		if (this._componentRef) {
-			this._componentRef.destroy();
-			this._componentRef = undefined;
+			if (
+				event && event.type === 'click' &&
+				event.target !== this._el && !this._elementIn(event.target, this._datetimePicker)
+			) {
+				this._componentRef.destroy();
+				this._componentRef = undefined;
+			} else if (!event) {
+				this._componentRef.destroy();
+				this._componentRef = undefined;
+			}
 		}
 	};
+
+	private _elementIn (el:Node, containerEl:Node):boolean {
+		while (el = el.parentNode) {
+			if (el === containerEl) return true;
+		}
+		return false;
+	}
 
 	private _initDate ():void {
 		if (this._componentRef) {
