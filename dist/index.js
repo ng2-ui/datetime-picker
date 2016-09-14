@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var forms_1 = require("@angular/forms");
-var platform_browser_1 = require('@angular/platform-browser');
+var common_1 = require('@angular/common');
 var datetime_1 = require('./datetime');
 exports.DateTime = datetime_1.DateTime;
 var datetime_picker_component_1 = require('./datetime-picker.component');
@@ -22,7 +22,7 @@ var Ng2DatetimePickerModule = (function () {
     }
     Ng2DatetimePickerModule = __decorate([
         core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule, forms_1.FormsModule],
+            imports: [common_1.CommonModule, forms_1.FormsModule],
             declarations: [datetime_picker_component_1.DateTimePickerComponent, datetime_picker_directive_1.DateTimePickerDirective],
             exports: [datetime_picker_component_1.DateTimePickerComponent, datetime_picker_directive_1.DateTimePickerDirective],
             entryComponents: [datetime_picker_component_1.DateTimePickerComponent],

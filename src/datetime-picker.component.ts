@@ -88,7 +88,7 @@ import {DateTime} from './datetime';
 <!--Hour: {{hour}} Minute: {{minute}}<br/>-->
   `,
   styles       : [
-	`
+    `
  @keyframes slideDown {
   0% {
     transform:  translateY(-10px);
@@ -211,43 +211,43 @@ export class DateTimePickerComponent {
   public closing:EventEmitter<any> = new EventEmitter();
 
   public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
-	this.el = elementRef.nativeElement;
+    this.el = elementRef.nativeElement;
   }
 
   public get year ():number {
-	return this.selectedDate.getFullYear();
+    return this.selectedDate.getFullYear();
   }
 
   public get month ():number {
-	return this.selectedDate.getMonth();
+    return this.selectedDate.getMonth();
   }
 
   public get day ():number {
-	return this.selectedDate.getDate();
+    return this.selectedDate.getDate();
   }
 
   public get today ():Date {
-	let dt = new Date();
-	dt.setHours(0);
-	dt.setMinutes(0);
-	dt.setSeconds(0);
-	dt.setMilliseconds(0);
-	return dt;
+    let dt = new Date();
+    dt.setHours(0);
+    dt.setMinutes(0);
+    dt.setSeconds(0);
+    dt.setMilliseconds(0);
+    return dt;
   }
 
   public initDateTime (date:Date) {
-	this.selectedDate = date;
-	this.hour         = this.selectedDate.getHours();
-	this.minute       = this.selectedDate.getMinutes();
-	this.monthData    = this.dateTime.getMonthData(this.year, this.month);
+    this.selectedDate = date;
+    this.hour         = this.selectedDate.getHours();
+    this.minute       = this.selectedDate.getMinutes();
+    this.monthData    = this.dateTime.getMonthData(this.year, this.month);
   }
 
   public toDate (year:number, month:number, day:number):Date {
-	return new Date(year, month, day);
+    return new Date(year, month, day);
   }
 
   public toDateOnly (date:Date) {
-	return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
   }
 
   /**
@@ -255,22 +255,22 @@ export class DateTimePickerComponent {
    * @param date {Date}
    */
   public selectDate (dayNum?:number) {
-	if (dayNum) {
-	  this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
-	}
-	this.changes.emit({
-	  selectedDate: this.selectedDate,
-	  hour        : this.hour,
-	  minute      : this.minute
-	});
-	this.closing.emit(true);
+    if (dayNum) {
+      this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+    }
+    this.changes.emit({
+      selectedDate: this.selectedDate,
+      hour        : this.hour,
+      minute      : this.minute
+    });
+    this.closing.emit(true);
   };
 
   /**
    * show prev/next month calendar
    */
   public updateMonthData (num:number) {
-	this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
+    this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
   }
 
 }

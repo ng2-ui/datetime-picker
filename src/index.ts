@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { BrowserModule  } from '@angular/platform-browser';
+import { CommonModule  } from '@angular/common';
 
 import { DateTime } from './datetime';
 import { DateTimePickerComponent } from './datetime-picker.component';
@@ -13,7 +13,7 @@ export {
 };
 
 @NgModule({
-  imports: [ BrowserModule, FormsModule ],
+  imports: [ CommonModule, FormsModule ],
   declarations: [DateTimePickerComponent, DateTimePickerDirective],
   exports:  [DateTimePickerComponent, DateTimePickerDirective],
   entryComponents: [DateTimePickerComponent],

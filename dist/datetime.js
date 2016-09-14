@@ -60,15 +60,14 @@ var DateTime = (function () {
             });
             this.firstDayOfWeek = moment.localeData().firstDayOfWeek();
         }
-        this.firstDayOfWeek = 0;
+        this.firstDayOfWeek = this.firstDayOfWeek || 0;
         this.localizedDaysOfWeek = this.daysOfWeek
             .concat(this.daysOfWeek)
             .splice(this.firstDayOfWeek, 7);
     };
     DateTime.prototype.getMonthData = function (year, month) {
         year = month > 11 ? year + 1 :
-            month < 0 ? year - 1 :
-                year;
+            month < 0 ? year - 1 : year;
         month = (month + 12) % 12;
         var firstDayOfMonth = new Date(year, month, 1);
         var lastDayOfMonth = new Date(year, month + 1, 0);
