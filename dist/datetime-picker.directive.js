@@ -20,6 +20,10 @@ var DateTimePickerDirective = (function () {
         var _this = this;
         this._resolver = _resolver;
         this._viewContainerRef = _viewContainerRef;
+        /**
+         * @deprecated
+         */
+        this.ngModelChange = new core_1.EventEmitter();
         this.valueChange = new core_1.EventEmitter();
         this._keyEventListener = function (e) {
             if (e.keyCode === 27) {
@@ -52,27 +56,47 @@ var DateTimePickerDirective = (function () {
         this._registerEventListeners();
     };
     DateTimePickerDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['value'] !== undefined) {
-            var dateNgModel = void 0;
+        var _this = this;
+        if (changes['value'] !== undefined || changes['ngModel'] !== undefined) {
+            if (changes['ngModel'] !== undefined) {
+                this.value = this.ngModel;
+            }
+            var dateNgModel_1;
             if (typeof this.value === 'string') {
                 //remove timezone and respect day light saving time
-                dateNgModel = this.dateFormat ?
+                dateNgModel_1 = this.dateFormat ?
                     datetime_1.DateTime.momentParse('' + this.value) :
                     datetime_1.DateTime.parse('' + this.value);
             }
             else if (this.value instanceof Date) {
-                dateNgModel = this.value;
+                dateNgModel_1 = this.value;
             }
             else {
-                dateNgModel = new Date();
+                dateNgModel_1 = new Date();
             }
+            var formatted = void 0;
             if (this.dateFormat) {
-                this._el['value'] = datetime_1.DateTime.momentFormatDate(dateNgModel, this.dateFormat);
+                formatted = datetime_1.DateTime.momentFormatDate(dateNgModel_1, this.dateFormat);
             }
             else {
-                this._el['value'] = datetime_1.DateTime.formatDate(dateNgModel, this.dateOnly);
+                formatted = datetime_1.DateTime.formatDate(dateNgModel_1, this.dateOnly);
             }
-            this._value = dateNgModel;
+            this._el['value'] = formatted;
+            this._value = dateNgModel_1;
+            // @deprecated
+            if (this.dateFormat) {
+                dateNgModel_1.toString = function () {
+                    return datetime_1.DateTime.momentFormatDate(dateNgModel_1, _this.dateFormat);
+                };
+            }
+            else {
+                dateNgModel_1.toString = function () {
+                    return datetime_1.DateTime.formatDate(dateNgModel_1, _this.dateOnly);
+                };
+            }
+            setTimeout(function () {
+                _this.ngModelChange.emit(dateNgModel_1);
+            });
             this._initDate();
         }
     };
@@ -101,14 +125,28 @@ var DateTimePickerDirective = (function () {
             var newNgModel = new Date(changes.selectedDate);
             newNgModel.setHours(parseInt(changes.hour, 10));
             newNgModel.setMinutes(parseInt(changes.minute, 10));
+            var formatted;
             if (_this.dateFormat) {
-                _this._el['value'] = datetime_1.DateTime.momentFormatDate(newNgModel, _this.dateFormat);
+                formatted = datetime_1.DateTime.momentFormatDate(newNgModel, _this.dateFormat);
             }
             else {
-                _this._el['value'] = datetime_1.DateTime.formatDate(newNgModel, _this.dateOnly);
+                formatted = datetime_1.DateTime.formatDate(newNgModel, _this.dateOnly);
             }
+            _this._el['value'] = formatted;
             _this._value = newNgModel;
             _this.valueChange.emit(newNgModel);
+            // @deprecated
+            if (_this.dateFormat) {
+                newNgModel.toString = function () {
+                    return datetime_1.DateTime.momentFormatDate(newNgModel, _this.dateFormat);
+                };
+            }
+            else {
+                newNgModel.toString = function () {
+                    return datetime_1.DateTime.formatDate(newNgModel, _this.dateOnly);
+                };
+            }
+            _this.ngModelChange.emit(newNgModel);
         });
         component.closing.subscribe(function () {
             if (_this.closeOnSelect !== "false") {
@@ -172,6 +210,14 @@ var DateTimePickerDirective = (function () {
         core_1.Input('close-on-select'), 
         __metadata('design:type', String)
     ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Date)
+    ], DateTimePickerDirective.prototype, "ngModel", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], DateTimePickerDirective.prototype, "ngModelChange", void 0);
     __decorate([
         core_1.Input('value'), 
         __metadata('design:type', Object)

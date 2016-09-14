@@ -195,7 +195,6 @@ import {DateTime} from './datetime';
 	encapsulation: ViewEncapsulation.None
 })
 export class DateTimePickerComponent {
-
 	/**
 	 * public variables
 	 */
