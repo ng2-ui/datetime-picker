@@ -8,9 +8,9 @@ import {DateTime} from './datetime';
  * show a selected date in monthly calendar
  */
 @Component({
-	providers    : [DateTime],
-	selector     : 'datetime-picker',
-	template     : `
+  providers    : [DateTime],
+  selector     : 'datetime-picker',
+  template     : `
 <div class="datetime-picker" tabindex="0">
 
   <!-- Month - Year  -->
@@ -87,8 +87,8 @@ import {DateTime} from './datetime';
 <!--Date: {{selectedDate}}<br/>-->
 <!--Hour: {{hour}} Minute: {{minute}}<br/>-->
   `,
-	styles       : [
-		`
+  styles       : [
+	`
  @keyframes slideDown {
   0% {
     transform:  translateY(-10px);
@@ -191,86 +191,86 @@ import {DateTime} from './datetime';
     width: 150px;
 }
   `
-	],
-	encapsulation: ViewEncapsulation.None
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class DateTimePickerComponent {
-	/**
-	 * public variables
-	 */
-	public dateOnly:boolean;
+  /**
+   * public variables
+   */
+  public dateOnly:boolean;
 
-	public selectedDate:Date; //currently selected date
-	public hour:number;
-	public minute:number;
+  public selectedDate:Date; //currently selected date
+  public hour:number;
+  public minute:number;
 
-	public el:HTMLElement; // this component element
-	public monthData:any;  // month calendar data
+  public el:HTMLElement; // this component element
+  public monthData:any;  // month calendar data
 
-	public changes:EventEmitter<any> = new EventEmitter();
-	public closing:EventEmitter<any> = new EventEmitter();
+  public changes:EventEmitter<any> = new EventEmitter();
+  public closing:EventEmitter<any> = new EventEmitter();
 
-	public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
-		this.el = elementRef.nativeElement;
+  public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
+	this.el = elementRef.nativeElement;
+  }
+
+  public get year ():number {
+	return this.selectedDate.getFullYear();
+  }
+
+  public get month ():number {
+	return this.selectedDate.getMonth();
+  }
+
+  public get day ():number {
+	return this.selectedDate.getDate();
+  }
+
+  public get today ():Date {
+	let dt = new Date();
+	dt.setHours(0);
+	dt.setMinutes(0);
+	dt.setSeconds(0);
+	dt.setMilliseconds(0);
+	return dt;
+  }
+
+  public initDateTime (date:Date) {
+	this.selectedDate = date;
+	this.hour         = this.selectedDate.getHours();
+	this.minute       = this.selectedDate.getMinutes();
+	this.monthData    = this.dateTime.getMonthData(this.year, this.month);
+  }
+
+  public toDate (year:number, month:number, day:number):Date {
+	return new Date(year, month, day);
+  }
+
+  public toDateOnly (date:Date) {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+  }
+
+  /**
+   * set the selected date and close it when closeOnSelect is true
+   * @param date {Date}
+   */
+  public selectDate (dayNum?:number) {
+	if (dayNum) {
+	  this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
 	}
+	this.changes.emit({
+	  selectedDate: this.selectedDate,
+	  hour        : this.hour,
+	  minute      : this.minute
+	});
+	this.closing.emit(true);
+  };
 
-	public get year ():number {
-		return this.selectedDate.getFullYear();
-	}
-
-	public get month ():number {
-		return this.selectedDate.getMonth();
-	}
-
-	public get day ():number {
-		return this.selectedDate.getDate();
-	}
-
-	public get today ():Date {
-		let dt = new Date();
-		dt.setHours(0);
-		dt.setMinutes(0);
-		dt.setSeconds(0);
-		dt.setMilliseconds(0);
-		return dt;
-	}
-
-	public initDateTime (date:Date) {
-		this.selectedDate = date;
-		this.hour         = this.selectedDate.getHours();
-		this.minute       = this.selectedDate.getMinutes();
-		this.monthData    = this.dateTime.getMonthData(this.year, this.month);
-	}
-
-	public toDate (year:number, month:number, day:number):Date {
-		return new Date(year, month, day);
-	}
-
-	public toDateOnly (date:Date) {
-		return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
-	}
-
-	/**
-	 * set the selected date and close it when closeOnSelect is true
-	 * @param date {Date}
-	 */
-	public selectDate (dayNum?:number) {
-		if (dayNum) {
-			this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
-		}
-		this.changes.emit({
-			selectedDate: this.selectedDate,
-			hour        : this.hour,
-			minute      : this.minute
-		});
-		this.closing.emit(true);
-	};
-
-	/**
-	 * show prev/next month calendar
-	 */
-	public updateMonthData (num:number) {
-		this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
-	}
+  /**
+   * show prev/next month calendar
+   */
+  public updateMonthData (num:number) {
+	this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
+  }
 
 }
