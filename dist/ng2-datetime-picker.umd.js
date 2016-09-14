@@ -469,7 +469,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //show datetimePicker below the current element
 	    DateTimePickerDirective.prototype.showDatetimePicker = function () {
 	        var _this = this;
-	        this.hideDatetimePicker();
+	        if (this._componentRef) {
+	            return;
+	        }
 	        var factory = this._resolver.resolveComponentFactory(datetime_picker_component_1.DateTimePickerComponent);
 	        this._componentRef = this._viewContainerRef.createComponent(factory);
 	        this._datetimePicker = this._componentRef.location.nativeElement;
@@ -557,7 +559,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __metadata('design:type', Object)
 	    ], DateTimePickerDirective.prototype, "value", void 0);
 	    __decorate([
-	        core_1.Output('onValueChange'), 
+	        core_1.Output('valueChange'), 
 	        __metadata('design:type', core_1.EventEmitter)
 	    ], DateTimePickerDirective.prototype, "valueChange", void 0);
 	    DateTimePickerDirective = __decorate([

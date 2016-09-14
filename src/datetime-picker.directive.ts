@@ -35,7 +35,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 	@Input('value')
 	public value:any;
 
-	@Output('onValueChange')
+	@Output('valueChange')
 	public valueChange:EventEmitter<Date> = new EventEmitter<Date>();
 
 	private _value:Date;
@@ -109,7 +109,9 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 
 	//show datetimePicker below the current element
 	public showDatetimePicker () {
-		this.hideDatetimePicker();
+		if (this._componentRef) {
+			return;
+		}
 
 		let factory = this._resolver.resolveComponentFactory(DateTimePickerComponent);
 
@@ -135,7 +137,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 			}
 
 			this._value = newNgModel;
-
 			this.valueChange.emit(newNgModel);
 		});
 
