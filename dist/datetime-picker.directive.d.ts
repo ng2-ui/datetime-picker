@@ -21,7 +21,8 @@ export declare class DateTimePickerDirective implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     showDatetimePicker(): void;
-    hideDatetimePicker(): void;
+    hideDatetimePicker: (event?: any) => void;
+    private _elementIn(el, containerEl);
     private _initDate();
     private _registerEventListeners();
     private _styleDatetimePicker();

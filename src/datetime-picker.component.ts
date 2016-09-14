@@ -215,9 +215,6 @@ export class DateTimePickerComponent {
 		this.el = elementRef.nativeElement;
 	}
 
-	private _prevHour:number;
-	private _prevMinute:number;
-
 	public get year ():number {
 		return this.selectedDate.getFullYear();
 	}
@@ -230,7 +227,7 @@ export class DateTimePickerComponent {
 		return this.selectedDate.getDate();
 	}
 
-	public get today () {
+	public get today ():Date {
 		let dt = new Date();
 		dt.setHours(0);
 		dt.setMinutes(0);

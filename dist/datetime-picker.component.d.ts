@@ -18,8 +18,6 @@ export declare class DateTimePickerComponent {
     changes: EventEmitter<any>;
     closing: EventEmitter<any>;
     constructor(elementRef: ElementRef, dateTime: DateTime, cdRef: ChangeDetectorRef);
-    private _prevHour;
-    private _prevMinute;
     readonly year: number;
     readonly month: number;
     readonly day: number;

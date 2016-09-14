@@ -421,6 +421,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _this.hideDatetimePicker();
 	            }
 	        };
+	        this.hideDatetimePicker = function (event) {
+	            if (_this._componentRef) {
+	                if (event && event.type === 'click' &&
+	                    event.target !== _this._el && !_this._elementIn(event.target, _this._datetimePicker)) {
+	                    _this._componentRef.destroy();
+	                    _this._componentRef = undefined;
+	                }
+	                else if (!event) {
+	                    _this._componentRef.destroy();
+	                    _this._componentRef = undefined;
+	                }
+	            }
+	        };
 	        this._el = this._viewContainerRef.element.nativeElement;
 	    }
 	    DateTimePickerDirective.prototype.ngOnInit = function () {
@@ -498,13 +511,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        });
 	    };
-	    DateTimePickerDirective.prototype.hideDatetimePicker = function () {
-	        if (this._componentRef) {
-	            this._componentRef.destroy();
-	            this._componentRef = undefined;
+	    DateTimePickerDirective.prototype._elementIn = function (el, containerEl) {
+	        while (el = el.parentNode) {
+	            if (el === containerEl)
+	                return true;
 	        }
+	        return false;
 	    };
-	    ;
 	    DateTimePickerDirective.prototype._initDate = function () {
 	        if (this._componentRef) {
 	            var component = this._componentRef.instance;
@@ -567,7 +580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            selector: '[datetime-picker], [ng2-datetime-picker]',
 	            providers: [datetime_1.DateTime],
 	            host: {
-	                '(click)': 'showDatetimePicker($event)'
+	                '(click)': 'showDatetimePicker()'
 	            }
 	        }), 
 	        __metadata('design:paramtypes', [core_1.ComponentFactoryResolver, core_1.ViewContainerRef])
