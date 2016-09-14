@@ -32,6 +32,18 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 	@Input('close-on-select')
 	public closeOnSelect:string;
 
+	/**
+	 * @deprecated
+	 */
+	@Input()
+	public ngModel:Date;
+
+	/**
+	 * @deprecated
+	 */
+	@Output()
+	public ngModelChange:EventEmitter<any> = new EventEmitter<any>();
+
 	@Input('value')
 	public value:any;
 
@@ -51,7 +63,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 	};
 
 	public constructor (private _resolver:ComponentFactoryResolver,
-						private _viewContainerRef:ViewContainerRef) {
+											private _viewContainerRef:ViewContainerRef) {
 		this._el = this._viewContainerRef.element.nativeElement;
 	}
 
@@ -68,7 +80,10 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 	}
 
 	public ngOnChanges (changes:SimpleChanges):void {
-		if (changes['value'] !== undefined) {
+		if (changes['value'] !== undefined || changes['ngModel'] !== undefined) {
+			if (changes['ngModel'] !== undefined) {
+				this.value = this.ngModel;
+			}
 			let dateNgModel:Date;
 
 			if (typeof this.value === 'string') {
@@ -84,14 +99,31 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 				dateNgModel = new Date();
 			}
 
+			let formatted:string;
 			if (this.dateFormat) {
-				this._el['value'] = DateTime.momentFormatDate(dateNgModel, this.dateFormat);
+				formatted = DateTime.momentFormatDate(dateNgModel, this.dateFormat);
 			}
 			else {
-				this._el['value'] = DateTime.formatDate(dateNgModel, this.dateOnly);
+				formatted = DateTime.formatDate(dateNgModel, this.dateOnly);
 			}
 
-			this._value = dateNgModel;
+			this._el['value'] = formatted;
+			this._value       = dateNgModel;
+
+			// @deprecated
+			if (this.dateFormat) {
+				dateNgModel.toString = () => {
+					return DateTime.momentFormatDate(dateNgModel, this.dateFormat)
+				}
+			}
+			else {
+				dateNgModel.toString = () => {
+					return DateTime.formatDate(dateNgModel, this.dateOnly);
+				}
+			}
+			setTimeout(() => {
+				this.ngModelChange.emit(dateNgModel);
+			});
 
 			this._initDate();
 		}
@@ -129,15 +161,31 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 			newNgModel.setHours(parseInt(changes.hour, 10));
 			newNgModel.setMinutes(parseInt(changes.minute, 10));
 
+			let formatted:string;
 			if (this.dateFormat) {
-				this._el['value'] = DateTime.momentFormatDate(newNgModel, this.dateFormat);
+				formatted = DateTime.momentFormatDate(newNgModel, this.dateFormat);
 			}
 			else {
-				this._el['value'] = DateTime.formatDate(newNgModel, this.dateOnly);
+				formatted = DateTime.formatDate(newNgModel, this.dateOnly);
 			}
 
-			this._value = newNgModel;
+			this._el['value'] = formatted;
+			this._value       = newNgModel;
+
 			this.valueChange.emit(newNgModel);
+
+			// @deprecated
+			if (this.dateFormat) {
+				newNgModel.toString = () => {
+					return DateTime.momentFormatDate(newNgModel, this.dateFormat)
+				}
+			}
+			else {
+				newNgModel.toString = () => {
+					return DateTime.formatDate(newNgModel, this.dateOnly);
+				}
+			}
+			this.ngModelChange.emit(newNgModel);
 		});
 
 		component.closing.subscribe(() => {
