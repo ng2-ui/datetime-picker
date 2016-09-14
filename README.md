@@ -10,11 +10,11 @@ Plunker Example: https://plnkr.co/edit/A5ITtI
 
 ## How Does It Work
 
-1. Get a Date or string type `ngModel` value from input field.
-2. If `ngModel` is string, convert it to Date object.
-3. When the input field is clicked, show date time picker with `ngModel` value.
+1. Get a Date or string type `value` value from input field.
+2. If `value` is string, convert it to Date object.
+3. When the input field is clicked, show date time picker with `value` value.
 4. When date time is selected, set `toString` function of selected date for formatting.
-5. Set `ngModel` with the selected value.
+5. Set `value` with the selected value.
 
 ## Install
 
@@ -44,7 +44,7 @@ Plunker Example: https://plnkr.co/edit/A5ITtI
 
 ## Usage it in your code
 
-        <input [(ngModel)]="date1" datetime-picker date-only="true" />
+        <input [value]="date1" (valueChange)="onValueChange($event)" datetime-picker date-only="true" />
 
 For full example, please check `test` directory to see the example of;
 
@@ -109,14 +109,9 @@ If you are interested in becoming a contributor and/or a member of ng-ui,
 please send me email to `allenhwkim AT gmail.com` with your github id. 
 
 ## attributes
-  All options are optional except ngModel
+  All options are optional except value
 
-  * **ngModel**, date or string type of variable
-  * **year**, e.g., 2016, default: current year
-  * **month**, e.g.,  6, default: current month
-  * **day**, e.g., 13, default: current day
-  * **hour**, e.g. 23, default: current hour
-  * **minute** e.g. 59, default: current minute
+  * **value**, date or string type of variable
   * **date-only**,  true or false, default is false
   * **close-on-select**, true or false. indicates to close
     datetime-picker when select a date. default: true
