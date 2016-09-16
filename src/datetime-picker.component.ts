@@ -1,4 +1,12 @@
-import {Component, ElementRef, ViewEncapsulation, ChangeDetectorRef, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewEncapsulation,
+  ChangeDetectorRef,
+  EventEmitter,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
 import {DateTime} from './datetime';
 
 //@TODO
@@ -73,11 +81,11 @@ import {DateTime} from './datetime';
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
     </span><br/>
     <label class="hourLabel">Hour:</label>
-    <input class="hourInput"
+    <input #hours class="hourInput"
            (change)="selectDate()"
            type="range" min="0" max="23" [(ngModel)]="hour" />
     <label class="minutesLabel">Min:</label>
-    <input class="minutesInput"
+    <input #minutes class="minutesInput"
            (change)="selectDate()"
            type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
   </div>
@@ -194,7 +202,7 @@ import {DateTime} from './datetime';
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class DateTimePickerComponent {
+export class DateTimePickerComponent implements AfterViewInit {
   /**
    * public variables
    */
@@ -210,8 +218,30 @@ export class DateTimePickerComponent {
   public changes:EventEmitter<any> = new EventEmitter();
   public closing:EventEmitter<any> = new EventEmitter();
 
+  @ViewChild('hours')
+  private _hours:ElementRef;
+  @ViewChild('minutes')
+  private _minutes:ElementRef;
+
   public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
     this.el = elementRef.nativeElement;
+  }
+
+  public ngAfterViewInit ():void {
+    if (!this.dateOnly) {
+      this._hours.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+      this._hours.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+      this._minutes.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+      this._minutes.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+    }
   }
 
   public get year ():number {

@@ -1,9 +1,9 @@
-import { ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { DateTime } from './datetime';
+import { ElementRef, ChangeDetectorRef, EventEmitter, AfterViewInit } from "@angular/core";
+import { DateTime } from "./datetime";
 /**
  * show a selected date in monthly calendar
  */
-export declare class DateTimePickerComponent {
+export declare class DateTimePickerComponent implements AfterViewInit {
     dateTime: DateTime;
     cdRef: ChangeDetectorRef;
     /**
@@ -17,7 +17,10 @@ export declare class DateTimePickerComponent {
     monthData: any;
     changes: EventEmitter<any>;
     closing: EventEmitter<any>;
+    private _hours;
+    private _minutes;
     constructor(elementRef: ElementRef, dateTime: DateTime, cdRef: ChangeDetectorRef);
+    ngAfterViewInit(): void;
     readonly year: number;
     readonly month: number;
     readonly day: number;
