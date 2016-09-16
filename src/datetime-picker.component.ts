@@ -6,8 +6,8 @@ import {
   EventEmitter,
   ViewChild,
   AfterViewInit
-} from '@angular/core';
-import {DateTime} from './datetime';
+} from "@angular/core";
+import {DateTime} from "./datetime";
 
 //@TODO
 // . display currently selected day
@@ -16,9 +16,9 @@ import {DateTime} from './datetime';
  * show a selected date in monthly calendar
  */
 @Component({
-  providers    : [DateTime],
-  selector     : 'datetime-picker',
-  template     : `
+  providers: [DateTime],
+  selector: 'datetime-picker',
+  template: `
 <div class="datetime-picker" tabindex="0">
 
   <!-- Month - Year  -->
@@ -95,7 +95,7 @@ import {DateTime} from './datetime';
 <!--Date: {{selectedDate}}<br/>-->
 <!--Hour: {{hour}} Minute: {{minute}}<br/>-->
   `,
-  styles       : [
+  styles: [
     `
  @keyframes slideDown {
   0% {
@@ -228,18 +228,20 @@ export class DateTimePickerComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit ():void {
-    this._hours.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
-      e.stopPropagation();
-    });
-    this._hours.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
-      e.stopPropagation();
-    });
-    this._minutes.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
-      e.stopPropagation();
-    });
-    this._minutes.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
-      e.stopPropagation();
-    });
+    if (!this.dateOnly) {
+      this._hours.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+      this._hours.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+      this._minutes.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+      this._minutes.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
+        e.stopPropagation();
+      });
+    }
   }
 
   public get year ():number {
@@ -265,9 +267,9 @@ export class DateTimePickerComponent implements AfterViewInit {
 
   public initDateTime (date:Date) {
     this.selectedDate = date;
-    this.hour         = this.selectedDate.getHours();
-    this.minute       = this.selectedDate.getMinutes();
-    this.monthData    = this.dateTime.getMonthData(this.year, this.month);
+    this.hour = this.selectedDate.getHours();
+    this.minute = this.selectedDate.getMinutes();
+    this.monthData = this.dateTime.getMonthData(this.year, this.month);
   }
 
   public toDate (year:number, month:number, day:number):Date {
@@ -288,8 +290,8 @@ export class DateTimePickerComponent implements AfterViewInit {
     }
     this.changes.emit({
       selectedDate: this.selectedDate,
-      hour        : this.hour,
-      minute      : this.minute
+      hour: this.hour,
+      minute: this.minute
     });
     this.closing.emit(true);
   };

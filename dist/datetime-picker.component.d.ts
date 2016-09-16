@@ -1,5 +1,5 @@
-import { ElementRef, ChangeDetectorRef, EventEmitter, AfterViewInit } from '@angular/core';
-import { DateTime } from './datetime';
+import { ElementRef, ChangeDetectorRef, EventEmitter, AfterViewInit } from "@angular/core";
+import { DateTime } from "./datetime";
 /**
  * show a selected date in monthly calendar
  */

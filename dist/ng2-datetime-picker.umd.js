@@ -305,18 +305,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.el = elementRef.nativeElement;
 	    }
 	    DateTimePickerComponent.prototype.ngAfterViewInit = function () {
-	        this._hours.nativeElement.addEventListener('keyup', function (e) {
-	            e.stopPropagation();
-	        });
-	        this._hours.nativeElement.addEventListener('mousedown', function (e) {
-	            e.stopPropagation();
-	        });
-	        this._minutes.nativeElement.addEventListener('keyup', function (e) {
-	            e.stopPropagation();
-	        });
-	        this._minutes.nativeElement.addEventListener('mousedown', function (e) {
-	            e.stopPropagation();
-	        });
+	        if (!this.dateOnly) {
+	            this._hours.nativeElement.addEventListener('keyup', function (e) {
+	                e.stopPropagation();
+	            });
+	            this._hours.nativeElement.addEventListener('mousedown', function (e) {
+	                e.stopPropagation();
+	            });
+	            this._minutes.nativeElement.addEventListener('keyup', function (e) {
+	                e.stopPropagation();
+	            });
+	            this._minutes.nativeElement.addEventListener('mousedown', function (e) {
+	                e.stopPropagation();
+	            });
+	        }
 	    };
 	    Object.defineProperty(DateTimePickerComponent.prototype, "year", {
 	        get: function () {

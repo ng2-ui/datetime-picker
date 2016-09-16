@@ -8,8 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var datetime_1 = require('./datetime');
+var core_1 = require("@angular/core");
+var datetime_1 = require("./datetime");
 //@TODO
 // . display currently selected day
 /**
@@ -24,18 +24,20 @@ var DateTimePickerComponent = (function () {
         this.el = elementRef.nativeElement;
     }
     DateTimePickerComponent.prototype.ngAfterViewInit = function () {
-        this._hours.nativeElement.addEventListener('keyup', function (e) {
-            e.stopPropagation();
-        });
-        this._hours.nativeElement.addEventListener('mousedown', function (e) {
-            e.stopPropagation();
-        });
-        this._minutes.nativeElement.addEventListener('keyup', function (e) {
-            e.stopPropagation();
-        });
-        this._minutes.nativeElement.addEventListener('mousedown', function (e) {
-            e.stopPropagation();
-        });
+        if (!this.dateOnly) {
+            this._hours.nativeElement.addEventListener('keyup', function (e) {
+                e.stopPropagation();
+            });
+            this._hours.nativeElement.addEventListener('mousedown', function (e) {
+                e.stopPropagation();
+            });
+            this._minutes.nativeElement.addEventListener('keyup', function (e) {
+                e.stopPropagation();
+            });
+            this._minutes.nativeElement.addEventListener('mousedown', function (e) {
+                e.stopPropagation();
+            });
+        }
     };
     Object.defineProperty(DateTimePickerComponent.prototype, "year", {
         get: function () {
