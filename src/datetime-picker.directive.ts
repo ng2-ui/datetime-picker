@@ -5,66 +5,40 @@ import {
   ComponentRef,
   ViewContainerRef,
   EventEmitter,
-  OnInit,
   ComponentFactoryResolver,
-  SimpleChanges,
-  OnChanges
+  SimpleChanges
 } from '@angular/core';
 import {DateTimePickerComponent} from './datetime-picker.component';
 import {DateTime} from './datetime';
 
 /**
- * To simplify the implementation, it limits the type if value to string only, not a date
  * If the given string is not a valid date, it defaults back to today
  */
 @Directive({
   selector : '[datetime-picker], [ng2-datetime-picker]',
   providers: [DateTime],
   host     : {
-    '(click)': 'showDatetimePicker()'
+    '(click)': 'showDatetimePicker()',
+    '(focus)': 'showDatetimePicker()'
   }
 })
-export class DateTimePickerDirective implements OnInit, OnChanges {
-  @Input('date-format')
-  public dateFormat:string;
-  @Input('date-only')
-  public dateOnly:boolean;
-  @Input('close-on-select')
-  public closeOnSelect:string;
+export class DateTimePickerDirective {
+  @Input('date-format')     dateFormat:string;
+  @Input('date-only')       dateOnly:boolean;
+  @Input('close-on-select') closeOnSelect:string;
+  @Input('ngModel')         ngModel:Date;
 
-  /**
-   * @deprecated
-   */
-  @Input()
-  public ngModel:Date;
+  @Output('ngModelcChange') ngModelChange:EventEmitter<any> = new EventEmitter<any>();
 
-  /**
-   * @deprecated
-   */
-  @Output()
-  public ngModelChange:EventEmitter<any> = new EventEmitter<any>();
+  private el: HTMLInputElement;                               /* input element */
+  private datetimePickerEl: HTMLElement;                      /* dropdown element */
+  private componentRef:ComponentRef<DateTimePickerComponent>; /* dropdown component reference */
 
-  @Input('value')
-  public value:any;
-
-  @Output('valueChange')
-  public valueChange:EventEmitter<Date> = new EventEmitter<Date>();
-
-  private _value:Date;
-
-  private _componentRef:ComponentRef<DateTimePickerComponent>;
-  private _el:HTMLElement;
-  private _datetimePicker:HTMLElement;
-
-  private _keyEventListener = (e:KeyboardEvent):void => {
-    if (e.keyCode === 27) { //ESC key
-      this.hideDatetimePicker();
-    }
-  };
-
-  public constructor (private _resolver:ComponentFactoryResolver,
-                      private _viewContainerRef:ViewContainerRef) {
-    this._el = this._viewContainerRef.element.nativeElement;
+  public constructor (
+    private resolver:ComponentFactoryResolver,
+    private viewContainerRef:ViewContainerRef
+  ) {
+    this.el = this.viewContainerRef.element.nativeElement;
   }
 
   public ngOnInit ():void {
@@ -73,188 +47,140 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     wrapper.className      = 'ng2-datetime-picker';
     wrapper.style.display  = 'inline-block';
     wrapper.style.position = 'relative';
-    this._el.parentElement.insertBefore(wrapper, this._el.nextSibling);
-    wrapper.appendChild(this._el);
+    this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
+    wrapper.appendChild(this.el);
 
-    this._registerEventListeners();
-  }
-
-  public ngOnChanges (changes: SimpleChanges):void {
-    if (changes['value'] !== undefined || changes['ngModel'] !== undefined) {
-      if (changes['ngModel'] !== undefined) {
-        this.value = this.ngModel;
-      }
-      let dateNgModel:Date;
-
-      if (typeof this.value === 'string') {
-        //remove timezone and respect day light saving time
-        dateNgModel = this.dateFormat ?
-          DateTime.momentParse('' + this.value) :
-          DateTime.parse('' + this.value);
-      }
-      else if (this.value instanceof Date) {
-        dateNgModel = this.value;
-      }
-      else {
-        dateNgModel = new Date();
-      }
-
-      let formatted:string;
-      if (this.dateFormat) {
-        formatted = DateTime.momentFormatDate(dateNgModel, this.dateFormat);
-      }
-      else {
-        formatted = DateTime.formatDate(dateNgModel, this.dateOnly);
-      }
-
-      this._el['value'] = formatted;
-      this._value       = dateNgModel;
-
-      // @deprecated
-      if (this.dateFormat) {
-        dateNgModel.toString = () => {
-          return DateTime.momentFormatDate(dateNgModel, this.dateFormat)
-        }
-      }
-      else {
-        dateNgModel.toString = () => {
-          return DateTime.formatDate(dateNgModel, this.dateOnly);
-        }
-      }
-      setTimeout(() => {
-        this.ngModelChange.emit(dateNgModel);
-      });
-
-      this._initDate();
-    }
+    // add a click listener to document, so that it can hide when others clicked
+    document.body.addEventListener('click', this.hideDatetimePicker);
+    this.el.addEventListener('keyup', this.keyEventListener);
   }
 
   public ngOnDestroy ():void {
     // add a click listener to document, so that it can hide when others clicked
     document.body.removeEventListener('click', this.hideDatetimePicker);
-    this._el.removeEventListener('keyup', this._keyEventListener);
+    this.el.removeEventListener('keyup', this.keyEventListener);
 
-    if (this._datetimePicker) {
-      this._datetimePicker.removeEventListener('keyup', this._keyEventListener);
+    if (this.datetimePickerEl) {
+      this.datetimePickerEl.removeEventListener('keyup', this.keyEventListener);
     }
   }
 
-  //show datetimePicker below the current element
+  public ngOnChanges (changes: SimpleChanges):void {
+    if (changes['ngModel'] && changes['ngModel']['currentValue']) {
+      console.log('ngModel is changed, ngOnChanges is called. ngModel is', changes['ngModel']['currentValue']);
+      let dateNgModel: Date = changes['ngModel']['currentValue'];
+      this.ngModel = typeof dateNgModel === 'string' ? this.getDate(''+dateNgModel) : dateNgModel;
+      this.ngModel.toString = this.getToStringFunction(this.dateFormat, this.dateOnly);
+      //this.ngModelChange.emit(dateNgModel);
+      this.componentRef && this.componentRef.instance.initDateTime(this.ngModel);
+    }
+  }
+
+  //show datetimePicker element below the current element
   public showDatetimePicker () {
-    if (this._componentRef) {
+    if (this.componentRef) { /* if already shown, do nothing */
       return;
     }
 
-    let factory = this._resolver.resolveComponentFactory(DateTimePickerComponent);
+    let factory = this.resolver.resolveComponentFactory(DateTimePickerComponent);
 
-    this._componentRef   = this._viewContainerRef.createComponent(factory);
-    this._datetimePicker = this._componentRef.location.nativeElement;
-    this._datetimePicker.addEventListener('keyup', this._keyEventListener);
+    this.componentRef   = this.viewContainerRef.createComponent(factory);
+    this.datetimePickerEl = this.componentRef.location.nativeElement;
+    this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
-    this._initDate();
-    this._styleDatetimePicker();
+    let component = this.componentRef.instance;
+    component.initDateTime(this.ngModel);
+    component.dateOnly = this.dateOnly;
 
-    let component = this._componentRef.instance;
+    this.styleDatetimePicker();
 
-    component.changes.subscribe(changes => {
-      let newNgModel = new Date(changes.selectedDate);
-      newNgModel.setHours(parseInt(changes.hour, 10));
-      newNgModel.setMinutes(parseInt(changes.minute, 10));
-
-      let formatted:string;
-      if (this.dateFormat) {
-        formatted = DateTime.momentFormatDate(newNgModel, this.dateFormat);
-      }
-      else {
-        formatted = DateTime.formatDate(newNgModel, this.dateOnly);
-      }
-
-      this._el['value'] = formatted;
-      this._value       = newNgModel;
-
-      this.valueChange.emit(newNgModel);
-
-      // @deprecated
-      if (this.dateFormat) {
-        newNgModel.toString = () => {
-          return DateTime.momentFormatDate(newNgModel, this.dateFormat)
-        }
-      } else {
-        newNgModel.toString = () => {
-          return DateTime.formatDate(newNgModel, this.dateOnly);
-        }
-      }
-      this.ngModelChange.emit(newNgModel);
+    component.changes.subscribe(newDate => {
+      this.ngModel = newDate;
+      this.ngModel.toString = this.getToStringFunction(this.dateFormat, this.dateOnly);
+      this.ngModelChange.emit(this.ngModel);
     });
 
     component.closing.subscribe(() => {
-      if (this.closeOnSelect !== "false") {
-        this.hideDatetimePicker();
-      }
+      this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
   }
 
   public hideDatetimePicker = (event?):void => {
-    if (this._componentRef) {
-      if (
-        event && event.type === 'click' &&
-        event.target !== this._el && !this._elementIn(event.target, this._datetimePicker)
+    if (this.componentRef) {
+      if (  /* invoked by clicking on somewhere in document */
+        event &&
+        event.type === 'click' &&
+        event.target !== this.el &&
+        !this.elementIn(event.target, this.datetimePickerEl)
       ) {
-        this._componentRef.destroy();
-        this._componentRef = undefined;
-      } else if (!event) {
-        this._componentRef.destroy();
-        this._componentRef = undefined;
+        this.componentRef.destroy();
+        this.componentRef = undefined;
+      } else if (!event) {  /* invoked by function call */
+        this.componentRef.destroy();
+        this.componentRef = undefined;
       }
     }
   };
 
-  private _elementIn (el:Node, containerEl:Node):boolean {
+  private keyEventListener = (e:KeyboardEvent):void => {
+    if (e.keyCode === 27) { //ESC key
+      this.hideDatetimePicker();
+    }
+  };
+
+  private elementIn (el:Node, containerEl:Node):boolean {
     while (el = el.parentNode) {
       if (el === containerEl) return true;
     }
     return false;
   }
 
-  private _initDate ():void {
-    if (this._componentRef) {
-      let component = this._componentRef.instance;
-      component.initDateTime(this._value);
-      component.dateOnly = this.dateOnly;
-    }
-  }
+  private styleDatetimePicker () {
+    // setting position, width, and height of auto complete dropdown
+    let thisElBCR                         = this.el.getBoundingClientRect();
+    this.datetimePickerEl.style.width      = thisElBCR.width + 'px';
+    this.datetimePickerEl.style.position   = 'absolute';
+    this.datetimePickerEl.style.zIndex     = '1000';
+    this.datetimePickerEl.style.left       = '0';
+    this.datetimePickerEl.style.transition = 'height 0.3s ease-in';
 
-  private _registerEventListeners () {
-    // add a click listener to document, so that it can hide when others clicked
-    document.body.addEventListener('click', this.hideDatetimePicker);
-    this._el.addEventListener('keyup', this._keyEventListener);
-  }
-
-  private _styleDatetimePicker () {
-    // setting width/height auto complete
-    let thisElBCR                         = this._el.getBoundingClientRect();
-    this._datetimePicker.style.width      = thisElBCR.width + 'px';
-    this._datetimePicker.style.position   = 'absolute';
-    this._datetimePicker.style.zIndex     = '1000';
-    this._datetimePicker.style.left       = '0';
-    this._datetimePicker.style.transition = 'height 0.3s ease-in';
-
-    this._datetimePicker.style.visibility = 'hidden';
+    this.datetimePickerEl.style.visibility = 'hidden';
 
     setTimeout(() => {
-      let thisElBcr           = this._el.getBoundingClientRect();
-      let datetimePickerElBcr = this._datetimePicker.getBoundingClientRect();
+      let thisElBcr           = this.el.getBoundingClientRect();
+      let datetimePickerElBcr = this.datetimePickerEl.getBoundingClientRect();
 
       if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) {
         // if not enough space to show on below, show above
-        this._datetimePicker.style.bottom = '0';
+        this.datetimePickerEl.style.bottom = '0';
       }
       else {
         // otherwise, show below
-        this._datetimePicker.style.top = thisElBcr.height + 'px';
+        this.datetimePickerEl.style.top = thisElBcr.height + 'px';
       }
-      this._datetimePicker.style.visibility = 'visible';
+      this.datetimePickerEl.style.visibility = 'visible';
     });
-
   };
+
+  /**
+   *  returns toString function of date object
+   */
+  private getToStringFunction(dateFormat: string, dateOnly: boolean): any {
+    if (dateFormat) {
+      return function() { return  DateTime.momentFormatDate(this, dateFormat); }
+    } else {
+      return function() { return DateTime.formatDate(this, dateOnly) }
+    }
+  }
+
+  private getDate(str: string): Date {
+    let date: Date;
+    if (this.dateFormat) {
+      date = DateTime.momentParse(str);
+    } else {
+      //remove timezone and respect day light saving time
+      date = DateTime.parse(str);
+    }
+    return date;
+  }
 }
