@@ -127,4 +127,5 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
     $ git clone https://github.com/ng2-ui/ng2-datetime-picker.git
     $ cd ng2-datetime-picker
     $ npm install
+    $ npm run build
     $ npm start
