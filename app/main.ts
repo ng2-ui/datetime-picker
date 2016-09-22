@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { NgModule }       from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
-import { FormsModule }    from "@angular/forms";
+import { FormsModule, ReactiveFormsModule }    from "@angular/forms";
 
 import { AppComponent }   from './app.component';
 
@@ -15,7 +15,7 @@ export {
 }
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, Ng2DatetimePickerModule],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, Ng2DatetimePickerModule],
   declarations: [AppComponent],
   bootstrap: [ AppComponent ]
 })

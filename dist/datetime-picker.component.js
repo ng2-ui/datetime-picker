@@ -73,6 +73,7 @@ var DateTimePickerComponent = (function () {
         configurable: true
     });
     DateTimePickerComponent.prototype.initDateTime = function (date) {
+        date = date || new Date();
         this.selectedDate = date;
         this.hour = this.selectedDate.getHours();
         this.minute = this.selectedDate.getMinutes();
@@ -92,11 +93,9 @@ var DateTimePickerComponent = (function () {
         if (dayNum) {
             this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
         }
-        this.changes.emit({
-            selectedDate: this.selectedDate,
-            hour: this.hour,
-            minute: this.minute
-        });
+        this.selectedDate.setHours(parseInt('' + this.hour || '0', 10));
+        this.selectedDate.setMinutes(parseInt('' + this.minute || '0', 10));
+        this.changes.emit(this.selectedDate);
         this.closing.emit(true);
     };
     ;
