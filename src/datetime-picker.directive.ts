@@ -28,6 +28,7 @@ export class DateTimePickerDirective {
   @Input('date-only')       dateOnly:boolean;
   @Input('close-on-select') closeOnSelect:string;
 
+  @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
 
   private el: HTMLInputElement;                               /* input element */
@@ -69,31 +70,22 @@ export class DateTimePickerDirective {
   }
 
   /* input element string value is changed */
-  valueChanged = (dateStr: string): void =>  {
-    console.log('value is changed to', dateStr);
-    if (dateStr) {
-      this.el.value = dateStr;
-      this.el.dateValue = this.getDate(dateStr);
-
-      this.ngModel = this.el.dateValue;
-      this.ngModel.toString = () => { return this.el.value; }
-      this.ngModelChange.emit(this.ngModel);
+  valueChanged = (date: string | Date): void => {
+    if (typeof date === 'string' && date) {
+      this.el['dateValue'] = this.getDate(date);
+    } else if (typeof date === 'object') {
+      this.el['dateValue'] = date;
     }
-  };
 
-  /* input element new date is selected(clicked) */
-  valueSelected = (newDate: Date): void => {
-    console.log('value is selected as', newDate);
-    this.el.dateValue = newDate;
-    this.el.value = this.formattedValue();
+    this.el.value = this.getFormattedDateStr();
 
-    this.ngModel = this.el.dateValue;
-    this.ngModel.toString = () => { return this.el.value; }
+    this.ngModel = this.el['dateValue'];
+    this.ngModel.toString = () => { return this.el.value; };
     this.ngModelChange.emit(this.ngModel);
   };
 
   //show datetimePicker element below the current element
-  public showDatetimePicker () {
+  public showDatetimePicker() {
     if (this.componentRef) { /* if already shown, do nothing */
       return;
     }
@@ -105,12 +97,12 @@ export class DateTimePickerDirective {
     this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
     let component = this.componentRef.instance;
-    component.initDateTime(<Date>this.el.dateValue);
+    component.initDateTime(<Date>this.el['dateValue']);
     component.dateOnly = this.dateOnly;
 
     this.styleDatetimePicker();
 
-    component.changes.subscribe(this.valueSelected);
+    component.changes.subscribe(this.valueChanged);
     component.closing.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
@@ -176,11 +168,16 @@ export class DateTimePickerDirective {
   /**
    *  returns toString function of date object
    */
-  private formattedValue() {
-    if (this.dateFormat) {
-      return  DateTime.momentFormatDate(this.el.dateValue, this.dateFormat);
+  private getFormattedDateStr(): string {
+
+    if (this.el['dateValue']) {
+      if (this.dateFormat) {
+        return  DateTime.momentFormatDate(this.el['dateValue'], this.dateFormat);
+      } else {
+        return DateTime.formatDate(this.el['dateValue'], this.dateOnly);
+      }
     } else {
-      return DateTime.formatDate(this.el.dateValue, this.dateOnly);
+      return null;
     }
   }
 
@@ -194,7 +191,7 @@ export class DateTimePickerDirective {
         date = DateTime.parse(arg);
       }
     } else {
-      date = param;
+      date = <Date>arg;
     }
     return date;
   }

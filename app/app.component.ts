@@ -8,7 +8,7 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
   <div id="my-div">
     <h1>Ng2 DateTime Picker Test</h1>
     
-   <br/><br/> 
+    <br/><br/> 
     <input [(ngModel)]="myDate" 
       required
       ng2-datetime-picker
