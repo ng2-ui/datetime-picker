@@ -5,16 +5,16 @@ AngularJS 2 DateTime Picker
   <img src="http://i.imgur.com/g5qbBBz.png" width="50%" style="border:1px solid grey" />
 </a>
 
-Plunker Example: https://plnkr.co/edit/A5ITtI
+Plunker Example:https://plnkr.co/edit/su2aiL
 
 
 ## How Does It Work
 
-1. Get a Date or string type `value` value from input field.
-2. If `value` is string, convert it to Date object.
-3. When the input field is clicked, show date time picker with `value` value.
+1. Get a Date or string from input field.
+2. If input value is string, convert it to Date object and save it internally.
+3. When the input field is clicked, show date time picker with date value.
 4. When date time is selected, set `toString` function of selected date for formatting.
-5. Set `value` with the selected value.
+5. Set input field with the selected value.
 
 ## Install
 
@@ -44,8 +44,31 @@ Plunker Example: https://plnkr.co/edit/A5ITtI
 
 ## Usage it in your code
 
-        <input [value]="date1" (valueChange)="onValueChange($event)" datetime-picker date-only="true" />
+        
+       <input
+          [(ngModel)]="myDate"
+          ng2-datetime-picker 
+          date-only="true" />
 
+       <form [formGroup]="myForm">
+         <input 
+           required
+           [(ngModel)]='myVar' 
+           formControlName="date" 
+           ng2-datetime-picker
+            date-only="true"/>
+       </form>
+       
+       <input 
+          [(ngModel)]="date2" ng2-datetime-picker
+          date-format="DD-MM-YYYY hh:mm"
+          year="2014"
+          month="12"
+          day="31"
+          hour="23"
+          minute='59'
+          close-on-select="false"  />
+          
 For full example, please check `test` directory to see the example of;
 
   - `systemjs.config.js`
@@ -111,7 +134,6 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
 ## attributes
   All options are optional except value
 
-  * **value**, date or string type of variable
   * **date-only**,  true or false, default is false
   * **close-on-select**, true or false. indicates to close
     datetime-picker when select a date. default: true

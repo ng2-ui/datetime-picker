@@ -33,7 +33,7 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
    <a href="#" (click)="myVar='2015-12-31'">2015-12-31</a>
 <pre><code class="language-markup"
 >&lt;form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm)">
-  &lt;input ng2-datetime-picker date-only="true" /&gt;
+  &lt;input required [(ngModel)]="myVar" formControlName="date" ng2-datetime-picker date-only="true" /&gt;
 &lt;/form>
 </code></pre>
 
@@ -69,6 +69,7 @@ gmtDate : "2015-01-01T00:00:00.000Z"
   styles: [`
     div { font-family: Courier; font-size: 13px}
     input { min-width: 200px; font-size: 15px; }
+    .ng-dirty { background: #ddd; }
   `]
 })
 export class AppComponent {

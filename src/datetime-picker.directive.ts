@@ -71,17 +71,22 @@ export class DateTimePickerDirective {
 
   /* input element string value is changed */
   valueChanged = (date: string | Date): void => {
+    console.log('value is changed to', date, typeof date);
     if (typeof date === 'string' && date) {
       this.el['dateValue'] = this.getDate(date);
     } else if (typeof date === 'object') {
       this.el['dateValue'] = date;
+    } else if (typeof date === 'undefined') {
+      this.el['dateValue'] = null;
     }
 
     this.el.value = this.getFormattedDateStr();
 
     this.ngModel = this.el['dateValue'];
-    this.ngModel.toString = () => { return this.el.value; };
-    this.ngModelChange.emit(this.ngModel);
+    if (this.ngModel) {
+      this.ngModel.toString = () => { return this.el.value; };
+      this.ngModelChange.emit(this.ngModel);
+    }
   };
 
   //show datetimePicker element below the current element
