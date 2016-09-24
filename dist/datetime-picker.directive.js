@@ -77,6 +77,15 @@ var DateTimePickerDirective = (function () {
             _this.valueChanged(_this.el.value);
         });
     };
+    DateTimePickerDirective.prototype.ngOnChanges = function (changes) {
+        var newNgModel = changes['ngModel'].currentValue;
+        if (typeof newNgModel === 'string') {
+            this.el['dateValue'] = this.getDate(newNgModel);
+        }
+        else if (newNgModel instanceof Date) {
+            this.el['dateValue'] = newNgModel;
+        }
+    };
     DateTimePickerDirective.prototype.ngOnDestroy = function () {
         // add a click listener to document, so that it can hide when others clicked
         document.body.removeEventListener('click', this.hideDatetimePicker);

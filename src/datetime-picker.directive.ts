@@ -35,14 +35,14 @@ export class DateTimePickerDirective {
   private datetimePickerEl: HTMLElement;                      /* dropdown element */
   private componentRef:ComponentRef<DateTimePickerComponent>; /* dropdown component reference */
 
-  public constructor (
+  constructor (
     private resolver:ComponentFactoryResolver,
     private viewContainerRef:ViewContainerRef
   ) {
     this.el = this.viewContainerRef.element.nativeElement;
   }
 
-  public ngOnInit ():void {
+  ngOnInit ():void {
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
     let wrapper            = document.createElement("div");
     wrapper.className      = 'ng2-datetime-picker';
@@ -59,7 +59,16 @@ export class DateTimePickerDirective {
     });
   }
 
-  public ngOnDestroy ():void {
+  ngOnChanges(changes: SimpleChanges) {
+    let newNgModel = changes['ngModel'].currentValue;
+    if (typeof newNgModel === 'string') {
+      this.el['dateValue'] = this.getDate(newNgModel);
+    } else if (newNgModel instanceof Date) {
+      this.el['dateValue'] = newNgModel
+    }
+  }
+
+  ngOnDestroy ():void {
     // add a click listener to document, so that it can hide when others clicked
     document.body.removeEventListener('click', this.hideDatetimePicker);
     this.el.removeEventListener('keyup', this.keyEventListener);
@@ -90,7 +99,7 @@ export class DateTimePickerDirective {
   };
 
   //show datetimePicker element below the current element
-  public showDatetimePicker() {
+  showDatetimePicker() {
     if (this.componentRef) { /* if already shown, do nothing */
       return;
     }
@@ -113,7 +122,7 @@ export class DateTimePickerDirective {
     });
   }
 
-  public hideDatetimePicker = (event?):void => {
+  hideDatetimePicker = (event?):void => {
     if (this.componentRef) {
       if (  /* invoked by clicking on somewhere in document */
         event &&

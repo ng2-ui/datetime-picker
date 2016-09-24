@@ -1,4 +1,4 @@
-import { ViewContainerRef, EventEmitter, ComponentFactoryResolver } from '@angular/core';
+import { ViewContainerRef, EventEmitter, ComponentFactoryResolver, SimpleChanges } from '@angular/core';
 /**
  * If the given string is not a valid date, it defaults back to today
  */
@@ -15,6 +15,7 @@ export declare class DateTimePickerDirective {
     private componentRef;
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef);
     ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     valueChanged: (date: string | Date) => void;
     showDatetimePicker(): void;
