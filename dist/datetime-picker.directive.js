@@ -8,17 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var core_1 = require('@angular/core');
+var forms_1 = require('@angular/forms');
 var datetime_picker_component_1 = require('./datetime-picker.component');
 var datetime_1 = require('./datetime');
 /**
  * If the given string is not a valid date, it defaults back to today
  */
 var DateTimePickerDirective = (function () {
-    function DateTimePickerDirective(resolver, viewContainerRef) {
+    function DateTimePickerDirective(resolver, viewContainerRef, parent) {
         var _this = this;
         this.resolver = resolver;
         this.viewContainerRef = viewContainerRef;
+        this.parent = parent;
         this.ngModelChange = new core_1.EventEmitter();
         /* input element string value is changed */
         this.valueChanged = function (date) {
@@ -62,6 +67,12 @@ var DateTimePickerDirective = (function () {
     }
     DateTimePickerDirective.prototype.ngOnInit = function () {
         var _this = this;
+        if (this.parent && this.parent["form"] && this.formControlName) {
+            this.ctrl = this.parent["form"].get(this.formControlName);
+            this.sub = this.ctrl.valueChanges.subscribe(function (newNgModel) {
+                _this.triggerChange(newNgModel);
+            });
+        }
         //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
         var wrapper = document.createElement("div");
         wrapper.className = 'ng2-datetime-picker';
@@ -77,7 +88,16 @@ var DateTimePickerDirective = (function () {
         });
     };
     DateTimePickerDirective.prototype.ngOnChanges = function (changes) {
-        var newNgModel = changes['ngModel'].currentValue;
+        var newNgModel;
+        if (changes && changes['ngModel']) {
+            newNgModel = changes['ngModel'].currentValue;
+        }
+        this.triggerChange(newNgModel);
+    };
+    DateTimePickerDirective.prototype.triggerChange = function (newNgModel) {
+        if (this.ctrl) {
+            this.ctrl.markAsDirty();
+        }
         if (typeof newNgModel === 'string') {
             this.el['dateValue'] = this.getDate(newNgModel);
         }
@@ -86,6 +106,9 @@ var DateTimePickerDirective = (function () {
         }
     };
     DateTimePickerDirective.prototype.ngOnDestroy = function () {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
         // add a click listener to document, so that it can hide when others clicked
         document.body.removeEventListener('click', this.hideDatetimePicker);
         this.el.removeEventListener('keyup', this.keyEventListener);
@@ -189,6 +212,10 @@ var DateTimePickerDirective = (function () {
         __metadata('design:type', String)
     ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', String)
+    ], DateTimePickerDirective.prototype, "formControlName", void 0);
+    __decorate([
         core_1.Input('ngModel'), 
         __metadata('design:type', Object)
     ], DateTimePickerDirective.prototype, "ngModel", void 0);
@@ -205,8 +232,11 @@ var DateTimePickerDirective = (function () {
                 '(focus)': 'showDatetimePicker()',
                 '(change)': 'valueChanged()'
             }
-        }), 
-        __metadata('design:paramtypes', [core_1.ComponentFactoryResolver, core_1.ViewContainerRef])
+        }),
+        __param(2, core_1.Optional()),
+        __param(2, core_1.Host()),
+        __param(2, core_1.SkipSelf()), 
+        __metadata('design:paramtypes', [core_1.ComponentFactoryResolver, core_1.ViewContainerRef, forms_1.ControlContainer])
     ], DateTimePickerDirective);
     return DateTimePickerDirective;
 }());

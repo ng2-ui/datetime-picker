@@ -2,12 +2,18 @@ import {
   Directive,
   Input,
   Output,
+  OnInit,
+  OnChanges,
   ComponentRef,
   ViewContainerRef,
   EventEmitter,
   ComponentFactoryResolver,
-  SimpleChanges
+  Optional,
+  SimpleChanges,
+  SkipSelf,
+  Host
 } from '@angular/core';
+import {AbstractControl, ControlContainer, FormGroup} from '@angular/forms';
 import {DateTimePickerComponent} from './datetime-picker.component';
 import {DateTime} from './datetime';
 
@@ -23,10 +29,11 @@ import {DateTime} from './datetime';
     '(change)': 'valueChanged()'
   }
 })
-export class DateTimePickerDirective {
+export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')     dateFormat:string;
   @Input('date-only')       dateOnly:boolean;
   @Input('close-on-select') closeOnSelect:string;
+  @Input() formControlName:string;
 
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
@@ -34,15 +41,25 @@ export class DateTimePickerDirective {
   private el: HTMLInputElement;                               /* input element */
   private datetimePickerEl: HTMLElement;                      /* dropdown element */
   private componentRef:ComponentRef<DateTimePickerComponent>; /* dropdown component reference */
+  private ctrl: AbstractControl;
+  private sub: any;
 
   constructor (
     private resolver:ComponentFactoryResolver,
-    private viewContainerRef:ViewContainerRef
+    private viewContainerRef:ViewContainerRef,
+    @Optional() @Host() @SkipSelf() private parent: ControlContainer
   ) {
     this.el = this.viewContainerRef.element.nativeElement;
   }
 
   ngOnInit ():void {
+    if(this.parent && this.parent["form"] && this.formControlName) {
+      this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
+      this.sub = this.ctrl.valueChanges.subscribe((newNgModel) => {
+        this.triggerChange(newNgModel)
+      })
+    }
+
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
     let wrapper            = document.createElement("div");
     wrapper.className      = 'ng2-datetime-picker';
@@ -60,7 +77,18 @@ export class DateTimePickerDirective {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    let newNgModel = changes['ngModel'].currentValue;
+    let newNgModel;
+    if(changes && changes['ngModel']) {
+      newNgModel = changes['ngModel'].currentValue;
+    } 
+
+    this.triggerChange(newNgModel);
+  }
+
+  triggerChange(newNgModel) {
+    if(this.ctrl) {
+      this.ctrl.markAsDirty();
+    }
     if (typeof newNgModel === 'string') {
       this.el['dateValue'] = this.getDate(newNgModel);
     } else if (newNgModel instanceof Date) {
@@ -69,6 +97,9 @@ export class DateTimePickerDirective {
   }
 
   ngOnDestroy ():void {
+    if(this.sub) {
+      this.sub.unsubscribe();
+    }
     // add a click listener to document, so that it can hide when others clicked
     document.body.removeEventListener('click', this.hideDatetimePicker);
     this.el.removeEventListener('keyup', this.keyEventListener);
@@ -94,7 +125,7 @@ export class DateTimePickerDirective {
     if (this.ngModel) {
       this.ngModel.toString = () => { return this.el.value; };
       this.ngModelChange.emit(this.ngModel);
-    }
+    } 
   };
 
   //show datetimePicker element below the current element
