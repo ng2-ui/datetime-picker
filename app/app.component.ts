@@ -18,24 +18,43 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 >&lt;input [(ngModel)]="myDate" ng2-datetime-picker date-only="true" /&gt;</code></pre>
     
    <br/><br/> 
-   <form [formGroup]="myForm">
+   <form [formGroup]="myForm1">
      <input 
        required
        [(ngModel)]='myVar' 
-       formControlName="date" 
+       formControlName="date1" 
        ng2-datetime-picker
         date-only="true"/>
    </form>
-   myForm.controls.date: {{myForm.controls.date.value}}
+   myForm1.controls.date1: {{myForm1.controls.date1.value}}
    <br/>
    <a href="#" (click)="myVar='2015-06-30'">2015-06-30</a>
    <a href="#" (click)="myVar='2015-07-19'">2015-07-19</a>
    <a href="#" (click)="myVar='2015-12-31'">2015-12-31</a>
 <pre><code class="language-markup"
->&lt;form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm)">
-  &lt;input required [(ngModel)]="myVar" formControlName="date" ng2-datetime-picker date-only="true" /&gt;
+>&lt;form [formGroup]="myForm1" novalidate (ngSubmit)="save(myForm1)">
+  &lt;input required [(ngModel)]="myVar" formControlName="date1" ng2-datetime-picker date-only="true" /&gt;
 &lt;/form>
 </code></pre>
+
+    <br/><br/> 
+    <form [formGroup]="myForm2">
+        <input 
+        required
+        formControlName="date2" 
+        ng2-datetime-picker
+            date-only="true"/>
+    </form>
+    myForm2.controls.date2: {{myForm2.controls.date2.value}}
+    <br/>
+    <a href="#" (click)="myForm2.controls.date2.patchValue('2015-06-30')">2015-06-30</a>
+    <a href="#" (click)="myForm2.controls.date2.patchValue('2015-07-19')">2015-07-19</a>
+    <a href="#" (click)="myForm2.controls.date2.patchValue('2015-12-31')">2015-12-31</a>
+    <pre><code class="language-markup"
+    >&lt;form [formGroup]="myForm2" novalidate (ngSubmit)="save(myForm2)">
+    &lt;input required formControlName="date2" ng2-datetime-picker date-only="true" /&gt;
+    &lt;/form>
+    </code></pre>
 
    <br/><br/> 
     <input [(ngModel)]="date2" ng2-datetime-picker 
@@ -57,13 +76,13 @@ gmtDate : "2015-01-01T00:00:00.000Z"
 >&lt;input [(ngModel)]="gmtDate" ng2-datetime-picker date-format="MM-DD-YYYY" /&gt; </code></pre>
     
    <br/><br/> 
-   <div style="position:fixed; bottom:0">
+   
      <input [(ngModel)]="date5" ng2-datetime-picker
         year="2014" month="12" day="31" hour="23" minute="59" /><br/>
     <pre><code class="language-markup"
   >&lt;input [(ngModel)]="date5" ng2-datetime-picker
      year="2014" month="12" day="31" hour="23" minute="59" /&gt;</code></pre>
-    </div>
+
 </div>
   `,
   styles: [`
@@ -80,8 +99,11 @@ export class AppComponent {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.myForm = this.fb.group({
-      date: [null, [Validators.required]],
+    this.myForm1 = this.fb.group({
+      date1: [null, [Validators.required]],
+    });
+     this.myForm2 = this.fb.group({
+      date2: [null, [Validators.required]],
     });
   }
 
