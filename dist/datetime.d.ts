@@ -8,7 +8,7 @@ export declare class DateTime {
     initialize(): void;
     getMonthData(year: number, month: number): any;
     static momentFormatDate(d: Date, dateFormat: string): string;
-    static momentParse(dateStr: string): Date;
+    static momentParse(dateStr: string, dateFormat: string): Date;
     static formatDate(d: Date, dateOnly: boolean): string;
     static parse(dateStr: string): Date;
     static removeTimezone(dateStr: any): string;

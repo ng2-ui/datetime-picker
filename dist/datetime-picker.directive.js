@@ -22,7 +22,6 @@ var DateTimePickerDirective = (function () {
         this.ngModelChange = new core_1.EventEmitter();
         /* input element string value is changed */
         this.valueChanged = function (date) {
-            console.log('value is changed to', date, typeof date);
             if (typeof date === 'string' && date) {
                 _this.el['dateValue'] = _this.getDate(date);
             }
@@ -165,7 +164,7 @@ var DateTimePickerDirective = (function () {
         var date;
         if (typeof arg === 'string') {
             if (this.dateFormat) {
-                date = datetime_1.DateTime.momentParse(arg);
+                date = datetime_1.DateTime.momentParse(arg, this.dateFormat);
             }
             else {
                 //remove timezone and respect day light saving time

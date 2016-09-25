@@ -80,7 +80,6 @@ export class DateTimePickerDirective {
 
   /* input element string value is changed */
   valueChanged = (date: string | Date): void => {
-    console.log('value is changed to', date, typeof date);
     if (typeof date === 'string' && date) {
       this.el['dateValue'] = this.getDate(date);
     } else if (typeof date === 'object') {
@@ -199,7 +198,7 @@ export class DateTimePickerDirective {
     let date: Date;
     if (typeof arg === 'string') {
       if (this.dateFormat) {
-        date = DateTime.momentParse(arg);
+        date = DateTime.momentParse(arg, this.dateFormat);
       } else {
         //remove timezone and respect day light saving time
         date = DateTime.parse(arg);

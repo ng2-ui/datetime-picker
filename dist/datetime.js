@@ -97,11 +97,16 @@ var DateTime = (function () {
         }
         return moment(d).format(dateFormat);
     };
-    DateTime.momentParse = function (dateStr) {
+    DateTime.momentParse = function (dateStr, dateFormat) {
         if (typeof moment === 'undefined') {
             console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
         }
-        return moment(dateStr).toDate();
+        //return moment(dateStr).toDate();
+        var date = moment(dateStr, dateFormat).toDate();
+        if (isNaN(date.getTime())) {
+            date = moment(dateStr).toDate(); //parse as ISO format
+        }
+        return date;
     };
     DateTime.formatDate = function (d, dateOnly) {
         // return d.toLocaleString('en-us', hash); // IE11 does not understand this

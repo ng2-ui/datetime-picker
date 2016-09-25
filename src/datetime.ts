@@ -109,12 +109,17 @@ export class DateTime {
     return moment(d).format(dateFormat);
   }
 
-  static momentParse(dateStr: string): Date {
+  static momentParse(dateStr: string, dateFormat: string): Date {
     if (typeof moment === 'undefined') {
       console.error(`momentjs is required with dateFormat.
         please add <script src="moment.min.js"></script>"> in your html.`)
     }
-    return moment(dateStr).toDate();
+    //return moment(dateStr).toDate();
+    let date = moment(dateStr, dateFormat).toDate();
+    if (isNaN(date.getTime())) { // if dateFormat and dateStr does not match
+      date = moment(dateStr).toDate(); //parse as ISO format
+    }
+    return date;
   }
 
   static formatDate(d: Date, dateOnly: boolean): string {
