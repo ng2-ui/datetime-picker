@@ -95,14 +95,10 @@ For example,
     import { Ng2DatetimePickerModule, DateTime } from 'ng2-datetime-picker';
 
     // Override Date object formatter
-    DateTime.formatDate = function(date: Date) {
-      moment(date).format('YYYY-MM-DD hh:mm:ss');
-    };
+    DateTime.formatDate = (date: Date) => moment(date).format('YYYY-MM-DD hh:mm:ss');
 
-    // // Override Date object parser
-    DateTime.parse = function(str: string) {
-      moment(str).toDate();
-    };
+    // Override Date object parser
+    DateTime.parse = (str: any) => moment(str).toDate();
 
     @NgModule({
       imports: [BrowserModule, FormsModule, Ng2DatetimePickerModule],
