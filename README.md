@@ -85,12 +85,19 @@ e.g.,
     #my-div .datetime-picker {
       background-color: blue;
     }
-
 ## Override built-in date parser and date formatter
 
-The default date parser and formatter can only handle 'YYYY-MM-DD HH:MM' format.
-If you want to have your own please override `DateTime.parser` and `DateTime.formatDate` function.
+The default date parser and formatter can only handle 'YYYY-MM-DD HH:MM' format if you are not using momentjs.
+If you use momentjs, you can use momentjs dateformat by adding the following in your html.
+
+    <script src="moment-with-locales.min.js"></script>
+
+If you want to have your dateformat without using momentjs, 
+please override `DateTime.parser` and `DateTime.formatDate` function.
 For example, 
+
+    import { Ng2DatetimePickerModule, DateTime } from 'ng2-datetime-picker';
+
 
     import { Ng2DatetimePickerModule, DateTime } from 'ng2-datetime-picker';
 
