@@ -55,8 +55,8 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   ngOnInit ():void {
     if(this.parent && this.parent["form"] && this.formControlName) {
       this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
-      this.sub = this.ctrl.valueChanges.subscribe((newNgModel) => {
-        this.triggerChange(newNgModel)
+      this.sub = this.ctrl.valueChanges.subscribe((date) => {
+        this.setElement(date)
       })
     }
 
@@ -73,26 +73,32 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.el.addEventListener('keyup', this.keyEventListener);
     setTimeout( () => { // after [(ngModel)] is applied
       this.valueChanged(this.el.value);
+      if(this.ctrl) {
+        this.ctrl.markAsPristine();
+      }
     });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    let newNgModel;
+    let date;
     if(changes && changes['ngModel']) {
-      newNgModel = changes['ngModel'].currentValue;
+      date = changes['ngModel'].currentValue;
     } 
 
-    this.triggerChange(newNgModel);
+    this.setElement(date);
   }
 
-  triggerChange(newNgModel) {
+  setElement(date) {
+    if (typeof date === 'string' && date) {
+      this.el['dateValue'] = this.getDate(date);
+    } else if (typeof date === 'object') {
+      this.el['dateValue'] = date
+    } else if (typeof date === 'undefined') {
+      this.el['dateValue'] = null;
+    }
+
     if(this.ctrl) {
       this.ctrl.markAsDirty();
-    }
-    if (typeof newNgModel === 'string') {
-      this.el['dateValue'] = this.getDate(newNgModel);
-    } else if (newNgModel instanceof Date) {
-      this.el['dateValue'] = newNgModel
     }
   }
 
@@ -111,13 +117,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 
   /* input element string value is changed */
   valueChanged = (date: string | Date): void => {
-    if (typeof date === 'string' && date) {
-      this.el['dateValue'] = this.getDate(date);
-    } else if (typeof date === 'object') {
-      this.el['dateValue'] = date;
-    } else if (typeof date === 'undefined') {
-      this.el['dateValue'] = null;
-    }
+    this.setElement(date);
 
     this.el.value = this.getFormattedDateStr();
 

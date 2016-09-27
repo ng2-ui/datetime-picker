@@ -29,5 +29,6 @@ module.exports = {
         loaders: ['ts', 'angular2-template-loader']
       }
     ]
-  }
+  },
+  watch: true
 };
