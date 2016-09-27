@@ -27,15 +27,7 @@ var DateTimePickerDirective = (function () {
         this.ngModelChange = new core_1.EventEmitter();
         /* input element string value is changed */
         this.valueChanged = function (date) {
-            if (typeof date === 'string' && date) {
-                _this.el['dateValue'] = _this.getDate(date);
-            }
-            else if (typeof date === 'object') {
-                _this.el['dateValue'] = date;
-            }
-            else if (typeof date === 'undefined') {
-                _this.el['dateValue'] = null;
-            }
+            _this.setElement(date);
             _this.el.value = _this.getFormattedDateStr();
             _this.ngModel = _this.el['dateValue'];
             if (_this.ngModel) {
@@ -69,8 +61,8 @@ var DateTimePickerDirective = (function () {
         var _this = this;
         if (this.parent && this.parent["form"] && this.formControlName) {
             this.ctrl = this.parent["form"].get(this.formControlName);
-            this.sub = this.ctrl.valueChanges.subscribe(function (newNgModel) {
-                _this.triggerChange(newNgModel);
+            this.sub = this.ctrl.valueChanges.subscribe(function (date) {
+                _this.setElement(date);
             });
         }
         //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
@@ -85,24 +77,30 @@ var DateTimePickerDirective = (function () {
         this.el.addEventListener('keyup', this.keyEventListener);
         setTimeout(function () {
             _this.valueChanged(_this.el.value);
+            if (_this.ctrl) {
+                _this.ctrl.markAsPristine();
+            }
         });
     };
     DateTimePickerDirective.prototype.ngOnChanges = function (changes) {
-        var newNgModel;
+        var date;
         if (changes && changes['ngModel']) {
-            newNgModel = changes['ngModel'].currentValue;
+            date = changes['ngModel'].currentValue;
         }
-        this.triggerChange(newNgModel);
+        this.setElement(date);
     };
-    DateTimePickerDirective.prototype.triggerChange = function (newNgModel) {
+    DateTimePickerDirective.prototype.setElement = function (date) {
+        if (typeof date === 'string' && date) {
+            this.el['dateValue'] = this.getDate(date);
+        }
+        else if (typeof date === 'object') {
+            this.el['dateValue'] = date;
+        }
+        else if (typeof date === 'undefined') {
+            this.el['dateValue'] = null;
+        }
         if (this.ctrl) {
             this.ctrl.markAsDirty();
-        }
-        if (typeof newNgModel === 'string') {
-            this.el['dateValue'] = this.getDate(newNgModel);
-        }
-        else if (newNgModel instanceof Date) {
-            this.el['dateValue'] = newNgModel;
         }
     };
     DateTimePickerDirective.prototype.ngOnDestroy = function () {
