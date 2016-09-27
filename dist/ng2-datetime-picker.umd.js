@@ -576,8 +576,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var thisElBcr = _this.el.getBoundingClientRect();
 	            var datetimePickerElBcr = _this.datetimePickerEl.getBoundingClientRect();
 	            if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) {
-	                // if not enough space to show on below, show above
-	                _this.datetimePickerEl.style.bottom = '0';
+	                _this.datetimePickerEl.style.bottom =
+	                    (thisElBcr.bottom - window.innerHeight + 15) + 'px';
 	            }
 	            else {
 	                // otherwise, show below

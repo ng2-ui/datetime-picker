@@ -198,8 +198,8 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
       let datetimePickerElBcr = this.datetimePickerEl.getBoundingClientRect();
 
       if (thisElBcr.bottom + datetimePickerElBcr.height > window.innerHeight) {
-        // if not enough space to show on below, show above
-        this.datetimePickerEl.style.bottom = '0';
+        this.datetimePickerEl.style.bottom =
+          (thisElBcr.bottom - window.innerHeight + 15) + 'px';
       }
       else {
         // otherwise, show below
