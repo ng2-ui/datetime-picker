@@ -25,7 +25,13 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
         ng2-datetime-picker
             date-only="true"/>
     </form>
-    myForm.controls.date: {{myForm.controls.date.value}}
+    myForm.controls.date.value: {{myForm.controls.date.value}}
+    <br/>
+    myForm.value: {{myForm.value | json}}
+    <br/>
+    myForm.dirty: {{myForm.dirty}}
+    <br/>
+    myForm.controls.date.dirty: {{myForm.controls.date.dirty}}
     <br/>
     <a href="#" (click)="myForm.controls.date.patchValue('2015-06-30')">2015-06-30</a>
     <a href="#" (click)="myForm.controls.date.patchValue('2015-07-19')">2015-07-19</a>

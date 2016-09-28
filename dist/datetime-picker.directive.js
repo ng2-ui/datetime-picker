@@ -29,6 +29,9 @@ var DateTimePickerDirective = (function () {
         this.valueChanged = function (date) {
             _this.setElement(date);
             _this.el.value = _this.getFormattedDateStr();
+            if (_this.ctrl) {
+                _this.ctrl.patchValue(_this.el.value);
+            }
             _this.ngModel = _this.el['dateValue'];
             if (_this.ngModel) {
                 _this.ngModel.toString = function () { return _this.el.value; };

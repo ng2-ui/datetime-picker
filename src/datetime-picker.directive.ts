@@ -120,6 +120,9 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.setElement(date);
 
     this.el.value = this.getFormattedDateStr();
+    if(this.ctrl) {
+      this.ctrl.patchValue(this.el.value);
+    }
 
     this.ngModel = this.el['dateValue'];
     if (this.ngModel) {
