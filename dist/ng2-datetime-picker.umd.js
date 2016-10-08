@@ -476,7 +476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        };
 	        this.keyEventListener = function (e) {
-	            if (e.keyCode === 27) {
+	            if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) {
 	                _this.hideDatetimePicker();
 	            }
 	        };
@@ -652,8 +652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            providers: [datetime_1.DateTime],
 	            host: {
 	                '(click)': 'showDatetimePicker()',
-	                '(focus)': 'showDatetimePicker()',
-	                '(change)': 'valueChanged()'
+	                '(focus)': 'showDatetimePicker()'
 	            }
 	        }),
 	        __param(2, core_1.Optional()),
