@@ -23,7 +23,7 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
         required
         formControlName="date" 
         ng2-datetime-picker
-            date-only="true"/>
+        close-on-select="false"/>
     </form>
     myForm.controls.date.value: {{myForm.controls.date.value}}
     <br/>
@@ -38,7 +38,7 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
     <a href="#" (click)="myForm.controls.date.patchValue('2015-12-31')">2015-12-31</a>
     <pre><code class="language-markup"
     >&lt;form [formGroup]="myForm" (ngSubmit)="save(myForm)">
-    &lt;input required formControlName="date" ng2-datetime-picker date-only="true" /&gt;
+    &lt;input required formControlName="date" ng2-datetime-picker close-on-select="false" /&gt;
 &lt;/form>
     </code></pre>
 

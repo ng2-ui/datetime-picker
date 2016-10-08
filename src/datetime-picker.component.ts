@@ -24,8 +24,8 @@ import {DateTime} from './datetime';
   <!-- Month - Year  -->
   <div class="month">
     <button type="button" class="prev" (click)="updateMonthData(-1)">&laquo;</button>
-     <span title="{{dateTime.months[monthData.month].fullName}}">
-           {{dateTime.months[monthData.month].shortName}}
+     <span title="{{dateTime.months[monthData.month]?.fullName}}">
+           {{dateTime.months[monthData.month]?.shortName}}
      </span>
     {{monthData.year}}
     <button type="button" class="next" (click)="updateMonthData(+1)">&raquo;</button>
