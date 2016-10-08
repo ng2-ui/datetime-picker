@@ -25,8 +25,7 @@ import {DateTime} from './datetime';
   providers: [DateTime],
   host     : {
     '(click)': 'showDatetimePicker()',
-    '(focus)': 'showDatetimePicker()',
-    '(change)': 'valueChanged()'
+    '(focus)': 'showDatetimePicker()'
   }
 })
 export class DateTimePickerDirective implements OnInit, OnChanges {
@@ -63,8 +62,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
     let wrapper            = document.createElement("div");
     wrapper.className      = 'ng2-datetime-picker';
-    wrapper.style.display  = 'inline-block';
-    wrapper.style.position = 'relative';
     this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
     wrapper.appendChild(this.el);
 
@@ -173,7 +170,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   };
 
   private keyEventListener = (e:KeyboardEvent):void => {
-    if (e.keyCode === 27) { //ESC key
+    if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
       this.hideDatetimePicker();
     }
   };

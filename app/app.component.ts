@@ -74,7 +74,7 @@ gmtDate : "2015-01-01T00:00:00.000Z"
   styles: [`
     div { font-family: Courier; font-size: 13px}
     input { min-width: 200px; font-size: 15px; }
-    .ng-dirty { background: #ddd; }
+    input.ng-dirty { background: #ddd; }
   `]
 })
 export class AppComponent {
