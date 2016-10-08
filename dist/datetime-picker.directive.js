@@ -54,7 +54,7 @@ var DateTimePickerDirective = (function () {
             }
         };
         this.keyEventListener = function (e) {
-            if (e.keyCode === 27) {
+            if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) {
                 _this.hideDatetimePicker();
             }
         };
@@ -71,8 +71,6 @@ var DateTimePickerDirective = (function () {
         //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
         var wrapper = document.createElement("div");
         wrapper.className = 'ng2-datetime-picker';
-        wrapper.style.display = 'inline-block';
-        wrapper.style.position = 'relative';
         this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
         wrapper.appendChild(this.el);
         // add a click listener to document, so that it can hide when others clicked
@@ -230,8 +228,7 @@ var DateTimePickerDirective = (function () {
             providers: [datetime_1.DateTime],
             host: {
                 '(click)': 'showDatetimePicker()',
-                '(focus)': 'showDatetimePicker()',
-                '(change)': 'valueChanged()'
+                '(focus)': 'showDatetimePicker()'
             }
         }),
         __param(2, core_1.Optional()),
