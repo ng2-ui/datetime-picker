@@ -106,6 +106,11 @@ import {DateTime} from './datetime';
   }
 }
 
+.ng2-datetime-picker {
+    display: inline-block;
+    position: relative;
+}
+
 .datetime-picker {
     color: #333;
     outline-width: 0;

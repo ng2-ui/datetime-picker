@@ -62,8 +62,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
     let wrapper            = document.createElement("div");
     wrapper.className      = 'ng2-datetime-picker';
-    wrapper.style.display  = 'inline-block';
-    wrapper.style.position = 'relative';
     this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
     wrapper.appendChild(this.el);
 
