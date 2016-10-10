@@ -488,6 +488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.ctrl = this.parent["form"].get(this.formControlName);
 	            this.sub = this.ctrl.valueChanges.subscribe(function (date) {
 	                _this.setElement(date);
+	                _this.updateDatepicker();
 	            });
 	        }
 	        //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
@@ -511,6 +512,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            date = changes['ngModel'].currentValue;
 	        }
 	        this.setElement(date);
+	        this.updateDatepicker();
+	    };
+	    DateTimePickerDirective.prototype.updateDatepicker = function () {
+	        if (this.componentRef) {
+	            var component = this.componentRef.instance;
+	            component.initDateTime(this.el['dateValue']);
+	        }
 	    };
 	    DateTimePickerDirective.prototype.setElement = function (date) {
 	        if (typeof date === 'string' && date) {

@@ -21,6 +21,7 @@ export declare class DateTimePickerDirective implements OnInit, OnChanges {
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, parent: ControlContainer);
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
+    updateDatepicker(): void;
     setElement(date: any): void;
     ngOnDestroy(): void;
     valueChanged: (date: string | Date) => void;
