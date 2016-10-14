@@ -1,9 +1,10 @@
 {
     "name": "ng2-datetime-picker",
-    "version": "0.9.7",
+    "version": "0.9.8",
     "description": "Angular2 DateTime Picker",
     "license": "ISC",
     "main": "dist/ng2-datetime-picker.umd.js",
+    "module": "dist/index.js",
     "typings": "dist/index.d.ts",
     "scripts": {
         "start": "http-server -o",
