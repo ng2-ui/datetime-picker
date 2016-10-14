@@ -10,7 +10,6 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
     
     <br/><br/> 
     <input [(ngModel)]="myDate" 
-      required
       ng2-datetime-picker
       date-only="true"/>
     myDate: {{myDate}}

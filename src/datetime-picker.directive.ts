@@ -56,6 +56,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
       this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
       this.sub = this.ctrl.valueChanges.subscribe((date) => {
         this.setElement(date)
+        this.updateDatepicker();
       })
     }
 
@@ -83,6 +84,14 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     } 
 
     this.setElement(date);
+    this.updateDatepicker();
+  }
+
+  updateDatepicker() {
+    if(this.componentRef) {
+      let component = this.componentRef.instance;
+      component.initDateTime(<Date>this.el['dateValue']);
+    }
   }
 
   setElement(date) {
