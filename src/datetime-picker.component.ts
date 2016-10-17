@@ -269,6 +269,11 @@ export class DateTimePickerComponent implements AfterViewInit {
     dt.setMilliseconds(0);
     return dt;
   }
+  
+  public set year (year) {}
+  public set month (month) {}
+  public set day (day) {}
+  public set today (today) {}
 
   public initDateTime (date:Date) {
     date = date || new Date();
