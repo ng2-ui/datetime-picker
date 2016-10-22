@@ -1,4 +1,6 @@
 # ng2-datetime-picker
+
+[![Join the chat at https://gitter.im/ng2-ui/ng2-datetime-picker](https://badges.gitter.im/ng2-ui/ng2-datetime-picker.svg)](https://gitter.im/ng2-ui/ng2-datetime-picker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 AngularJS 2 DateTime Picker
 
 <a href="https://ng2-ui.github.io/#/datetime-picker">
