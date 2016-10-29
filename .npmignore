@@ -1,6 +1,5 @@
 .idea
 test
-src
 build.sh
 tsconfig.json
 node_modules
