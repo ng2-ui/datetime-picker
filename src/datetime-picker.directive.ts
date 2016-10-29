@@ -112,13 +112,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     if(this.sub) {
       this.sub.unsubscribe();
     }
-    // add a click listener to document, so that it can hide when others clicked
     document.body.removeEventListener('click', this.hideDatetimePicker);
-    this.el.removeEventListener('keyup', this.keyEventListener);
-
-    if (this.datetimePickerEl) {
-      this.datetimePickerEl.removeEventListener('keyup', this.keyEventListener);
-    }
   }
 
   /* input element string value is changed */
@@ -138,7 +132,8 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   };
 
   //show datetimePicker element below the current element
-  showDatetimePicker() {
+  showDatetimePicker(event?) {
+    console.log('hiding')
     if (this.componentRef) { /* if already shown, do nothing */
       return;
     }
@@ -155,13 +150,17 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 
     this.styleDatetimePicker();
 
-    component.changes.subscribe(this.valueChanged);
     component.closing.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
+    
+    //Hack not to fire tab keyup event
+    this.justShown = true;
+    setTimeout(() => this.justShown = false, 100);
   }
 
   hideDatetimePicker = (event?):void => {
+    console.log('hiding');
     if (this.componentRef) {
       if (  /* invoked by clicking on somewhere in document */
         event &&
@@ -176,11 +175,14 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
         this.componentRef = undefined;
       }
     }
+    event && event.stopPropagation();
   };
 
   private keyEventListener = (e:KeyboardEvent):void => {
     if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
-      this.hideDatetimePicker();
+      if (!this.justShown) {
+        this.hideDatetimePicker();
+      }
     }
   };
 
