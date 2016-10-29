@@ -84,7 +84,7 @@ This can be overwritten by giving more details css seletor.
  
 e.g., 
 
-    #my-div .datetime-picker {
+    #my-div .ng2-datetime-picker {
       background-color: blue;
     }
 ## Override built-in date parser and date formatter
