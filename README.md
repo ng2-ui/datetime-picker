@@ -29,7 +29,7 @@ Plunker Example:https://plnkr.co/edit/su2aiL
         map[‘ng2-datetime-picker'] = 'node_modules/ng2-datetime-picker/dist';
         packages[‘ng2-datetime-picker'] = { main: 'ng2-datetime-picker.umd.js', defaultExtension: 'js’ }
 
-3. import Ng2AutoCompleteModule to your AppModule
+3. import Ng2DatetimePickerModule to your AppModule
 
         import { NgModule } from '@angular/core';
         import { FormsModule } from "@angular/forms";
