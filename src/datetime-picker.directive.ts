@@ -42,6 +42,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   private componentRef:ComponentRef<DateTimePickerComponent>; /* dropdown component reference */
   private ctrl: AbstractControl;
   private sub: any;
+  private justShown: boolean;
 
   constructor (
     private resolver:ComponentFactoryResolver,
@@ -150,6 +151,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 
     this.styleDatetimePicker();
 
+    component.changes.subscribe(this.valueChanged);
     component.closing.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });

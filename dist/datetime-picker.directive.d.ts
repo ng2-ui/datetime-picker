@@ -18,6 +18,7 @@ export declare class DateTimePickerDirective implements OnInit, OnChanges {
     private componentRef;
     private ctrl;
     private sub;
+    private justShown;
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, parent: ControlContainer);
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
@@ -25,7 +26,7 @@ export declare class DateTimePickerDirective implements OnInit, OnChanges {
     setElement(date: any): void;
     ngOnDestroy(): void;
     valueChanged: (date: string | Date) => void;
-    showDatetimePicker(): void;
+    showDatetimePicker(event?: any): void;
     hideDatetimePicker: (event?: any) => void;
     private keyEventListener;
     private elementIn(el, containerEl);

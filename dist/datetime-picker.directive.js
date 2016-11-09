@@ -39,6 +39,7 @@ var DateTimePickerDirective = (function () {
             }
         };
         this.hideDatetimePicker = function (event) {
+            console.log('hiding');
             if (_this.componentRef) {
                 if (event &&
                     event.type === 'click' &&
@@ -52,10 +53,13 @@ var DateTimePickerDirective = (function () {
                     _this.componentRef = undefined;
                 }
             }
+            event && event.stopPropagation();
         };
         this.keyEventListener = function (e) {
             if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) {
-                _this.hideDatetimePicker();
+                if (!_this.justShown) {
+                    _this.hideDatetimePicker();
+                }
             }
         };
         this.el = this.viewContainerRef.element.nativeElement;
@@ -116,16 +120,12 @@ var DateTimePickerDirective = (function () {
         if (this.sub) {
             this.sub.unsubscribe();
         }
-        // add a click listener to document, so that it can hide when others clicked
         document.body.removeEventListener('click', this.hideDatetimePicker);
-        this.el.removeEventListener('keyup', this.keyEventListener);
-        if (this.datetimePickerEl) {
-            this.datetimePickerEl.removeEventListener('keyup', this.keyEventListener);
-        }
     };
     //show datetimePicker element below the current element
-    DateTimePickerDirective.prototype.showDatetimePicker = function () {
+    DateTimePickerDirective.prototype.showDatetimePicker = function (event) {
         var _this = this;
+        console.log('hiding');
         if (this.componentRef) {
             return;
         }
@@ -141,6 +141,9 @@ var DateTimePickerDirective = (function () {
         component.closing.subscribe(function () {
             _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
         });
+        //Hack not to fire tab keyup event
+        this.justShown = true;
+        setTimeout(function () { return _this.justShown = false; }, 100);
     };
     DateTimePickerDirective.prototype.elementIn = function (el, containerEl) {
         while (el = el.parentNode) {
