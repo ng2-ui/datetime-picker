@@ -461,7 +461,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        };
 	        this.hideDatetimePicker = function (event) {
-	            console.log('hiding');
 	            if (_this.componentRef) {
 	                if (event &&
 	                    event.type === 'click' &&
@@ -547,7 +546,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //show datetimePicker element below the current element
 	    DateTimePickerDirective.prototype.showDatetimePicker = function (event) {
 	        var _this = this;
-	        console.log('hiding');
 	        if (this.componentRef) {
 	            return;
 	        }

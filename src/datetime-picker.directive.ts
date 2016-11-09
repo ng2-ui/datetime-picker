@@ -134,7 +134,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 
   //show datetimePicker element below the current element
   showDatetimePicker(event?) {
-    console.log('hiding')
     if (this.componentRef) { /* if already shown, do nothing */
       return;
     }
@@ -162,7 +161,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   }
 
   hideDatetimePicker = (event?):void => {
-    console.log('hiding');
     if (this.componentRef) {
       if (  /* invoked by clicking on somewhere in document */
         event &&

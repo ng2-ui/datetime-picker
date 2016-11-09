@@ -39,7 +39,6 @@ var DateTimePickerDirective = (function () {
             }
         };
         this.hideDatetimePicker = function (event) {
-            console.log('hiding');
             if (_this.componentRef) {
                 if (event &&
                     event.type === 'click' &&
@@ -125,7 +124,6 @@ var DateTimePickerDirective = (function () {
     //show datetimePicker element below the current element
     DateTimePickerDirective.prototype.showDatetimePicker = function (event) {
         var _this = this;
-        console.log('hiding');
         if (this.componentRef) {
             return;
         }
