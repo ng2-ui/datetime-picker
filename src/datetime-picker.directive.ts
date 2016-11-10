@@ -32,7 +32,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')     dateFormat:string;
   @Input('date-only')       dateOnly:boolean;
   @Input('close-on-select') closeOnSelect:string;
-  @Input('default-value')   defaultValue:any;
+  @Input('default-value')   defaultValue:Date;
   @Input() formControlName:string;
 
   @Input('ngModel')        ngModel: any;

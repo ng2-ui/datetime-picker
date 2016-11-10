@@ -644,7 +644,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
 	    __decorate([
 	        core_1.Input('default-value'), 
-	        __metadata('design:type', Object)
+	        __metadata('design:type', Date)
 	    ], DateTimePickerDirective.prototype, "defaultValue", void 0);
 	    __decorate([
 	        core_1.Input(), 
