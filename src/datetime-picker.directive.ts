@@ -32,6 +32,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')     dateFormat:string;
   @Input('date-only')       dateOnly:boolean;
   @Input('close-on-select') closeOnSelect:string;
+  @Input('default-value')   defaultValue:Date;
   @Input() formControlName:string;
 
   @Input('ngModel')        ngModel: any;
@@ -91,7 +92,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   updateDatepicker() {
     if(this.componentRef) {
       let component = this.componentRef.instance;
-      component.initDateTime(<Date>this.el['dateValue']);
+      component.initDateTime(<Date>this.el['dateValue'], this.defaultValue);
     }
   }
 
@@ -145,7 +146,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
     let component = this.componentRef.instance;
-    component.initDateTime(<Date>this.el['dateValue']);
+    component.initDateTime(<Date>this.el['dateValue'], this.defaultValue);
     component.dateOnly = this.dateOnly;
 
     this.styleDatetimePicker();

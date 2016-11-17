@@ -358,8 +358,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        enumerable: true,
 	        configurable: true
 	    });
-	    DateTimePickerComponent.prototype.initDateTime = function (date) {
-	        date = date || new Date();
+	    DateTimePickerComponent.prototype.initDateTime = function (date, defaultValue) {
+	        defaultValue = defaultValue || new Date();
+	        date = date || defaultValue;
 	        this.selectedDate = date;
 	        this.hour = this.selectedDate.getHours();
 	        this.minute = this.selectedDate.getMinutes();
@@ -520,7 +521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    DateTimePickerDirective.prototype.updateDatepicker = function () {
 	        if (this.componentRef) {
 	            var component = this.componentRef.instance;
-	            component.initDateTime(this.el['dateValue']);
+	            component.initDateTime(this.el['dateValue'], this.defaultValue);
 	        }
 	    };
 	    DateTimePickerDirective.prototype.setElement = function (date) {
@@ -554,7 +555,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.datetimePickerEl = this.componentRef.location.nativeElement;
 	        this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 	        var component = this.componentRef.instance;
-	        component.initDateTime(this.el['dateValue']);
+	        component.initDateTime(this.el['dateValue'], this.defaultValue);
 	        component.dateOnly = this.dateOnly;
 	        this.styleDatetimePicker();
 	        component.changes.subscribe(this.valueChanged);
@@ -641,6 +642,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Input('close-on-select'), 
 	        __metadata('design:type', String)
 	    ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
+	    __decorate([
+	        core_1.Input('default-value'), 
+	        __metadata('design:type', Date)
+	    ], DateTimePickerDirective.prototype, "defaultValue", void 0);
 	    __decorate([
 	        core_1.Input(), 
 	        __metadata('design:type', String)

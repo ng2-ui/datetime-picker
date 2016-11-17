@@ -270,8 +270,9 @@ export class DateTimePickerComponent implements AfterViewInit {
     return dt;
   }
 
-  public initDateTime (date:Date) {
-    date = date || new Date();
+  public initDateTime (date:Date, defaultValue:Date) {
+    defaultValue = defaultValue ||  new Date();
+    date = date || defaultValue;
     this.selectedDate = date;
     this.hour         = this.selectedDate.getHours();
     this.minute       = this.selectedDate.getMinutes();
