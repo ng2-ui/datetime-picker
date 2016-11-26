@@ -9,6 +9,7 @@ export class DateTime {
   firstDayOfWeek: number;
   daysOfWeek: any[];
   localizedDaysOfWeek: any[];
+  public static customFirstDayOfWeek: number = 0;
 
   constructor() {
     this.initialize();
@@ -66,6 +67,11 @@ export class DateTime {
     }
 
     this.firstDayOfWeek = this.firstDayOfWeek || 0;
+
+    if (DateTime.customFirstDayOfWeek !== undefined) {
+      this.firstDayOfWeek = DateTime.customFirstDayOfWeek;
+    }
+
     this.localizedDaysOfWeek = this.daysOfWeek
       .concat(this.daysOfWeek)
       .splice(this.firstDayOfWeek, 7);
@@ -183,5 +189,8 @@ export class DateTime {
     );
   }
 
+  static setFirstDayOfWeek(firstDayOfWeek: number) {
+    DateTime.customFirstDayOfWeek = firstDayOfWeek;
+  }
 }
 
