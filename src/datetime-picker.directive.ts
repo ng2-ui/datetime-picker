@@ -176,7 +176,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
         this.componentRef = undefined;
       }
     }
-    event && event.stopPropagation();
   };
 
   private keyEventListener = (e:KeyboardEvent):void => {
