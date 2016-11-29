@@ -474,8 +474,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    _this.componentRef.destroy();
 	                    _this.componentRef = undefined;
 	                }
+	                event && event.stopPropagation();
 	            }
-	            event && event.stopPropagation();
 	        };
 	        this.keyEventListener = function (e) {
 	            if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) {
