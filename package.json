@@ -11,7 +11,8 @@
     "clean": "rimraf dist",
     "build": "npm-run-all --serial clean build:ts build:umd",
     "build:ts": "tsc --declaration",
-    "build:umd": "webpack"
+    "build:umd": "webpack",
+    "ngc": "./node_modules/.bin/ngc"
   },
   "repository": {
     "type": "git",
@@ -24,15 +25,16 @@
   "homepage": "https://github.com/ng2-ui/ng2-datetime-picker#readme",
   "dependencies": {},
   "devDependencies": {
-    "@angular/common": "2.0.0",
-    "@angular/compiler": "2.0.0",
-    "@angular/core": "2.0.0",
-    "@angular/forms": "2.0.0",
-    "@angular/http": "2.0.0",
-    "@angular/platform-browser": "2.0.0",
-    "@angular/platform-browser-dynamic": "2.0.0",
-    "@angular/router": "3.0.0",
-    "@angular/upgrade": "2.0.0",
+    "@angular/common": "2.2.2",
+    "@angular/compiler": "2.2.2",
+    "@angular/compiler-cli": "^2.2.2",
+    "@angular/core": "2.2.2",
+    "@angular/forms": "2.2.2",
+    "@angular/http": "2.2.2",
+    "@angular/platform-browser": "2.2.2",
+    "@angular/platform-browser-dynamic": "2.2.2",
+    "@angular/router": "3.2.2",
+    "@angular/upgrade": "2.2.2",
     "@types/google-maps": "^3.1.27",
     "@types/hammerjs": "^2.0.32",
     "@types/node": "^6.0.31",
@@ -45,7 +47,7 @@
     "rxjs": "5.0.0-beta.12",
     "systemjs": "0.19.27",
     "ts-loader": "^0.8.2",
-    "typescript": "^2.0.0",
+    "typescript": "2.0.10",
     "webpack": "^1.13.0",
     "zone.js": "^0.6.21"
   }

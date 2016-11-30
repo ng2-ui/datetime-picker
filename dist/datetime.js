@@ -1,15 +1,5 @@
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var core_1 = require("@angular/core");
-var DateTime = (function () {
+import { Injectable } from "@angular/core";
+export var DateTime = (function () {
     function DateTime() {
         this.initialize();
     }
@@ -156,11 +146,11 @@ var DateTime = (function () {
         var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
         return new Date(parseInt(tmp[0], 10), parseInt(tmp[1], 10) - 1, parseInt(tmp[2], 10), parseInt(tmp[3] || '0', 10), parseInt(tmp[4] || '0', 10), parseInt(tmp[5] || '0', 10));
     };
-    DateTime = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
-    ], DateTime);
+    DateTime.decorators = [
+        { type: Injectable },
+    ];
+    /** @nocollapse */
+    DateTime.ctorParameters = [];
     return DateTime;
 }());
-exports.DateTime = DateTime;
 //# sourceMappingURL=datetime.js.map
