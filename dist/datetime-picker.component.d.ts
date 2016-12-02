@@ -25,7 +25,7 @@ export declare class DateTimePickerComponent implements AfterViewInit {
     readonly month: number;
     readonly day: number;
     readonly today: Date;
-    initDateTime(date: Date): void;
+    initDateTime(date: Date, defaultValue: Date): void;
     toDate(year: number, month: number, day: number): Date;
     toDateOnly(date: Date): Date;
     /**

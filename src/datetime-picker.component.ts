@@ -201,7 +201,7 @@ import {DateTime} from './datetime';
     text-align: right;
 }
 .datetime-picker input[type=range] {
-    width: 150px;
+    width: 200px;
 }
   `
   ],
