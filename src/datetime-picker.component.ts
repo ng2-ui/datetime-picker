@@ -109,7 +109,6 @@ import {DateTime} from './datetime';
 }
 
 .ng2-datetime-picker {
-    display: inline-block;
     position: relative;
 }
 
