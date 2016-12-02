@@ -32,6 +32,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')     dateFormat:string;
   @Input('date-only')       dateOnly:boolean;
   @Input('close-on-select') closeOnSelect:string;
+  @Input('first-day-of-week') firstDayOfWeek:string;
   @Input('default-value')   defaultValue:Date;
   @Input() formControlName:string;
 
@@ -54,6 +55,9 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnInit ():void {
+    if (this.firstDayOfWeek !== undefined) {
+      DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
+    }
     if(this.parent && this.parent["form"] && this.formControlName) {
       this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
       this.sub = this.ctrl.valueChanges.subscribe((date) => {

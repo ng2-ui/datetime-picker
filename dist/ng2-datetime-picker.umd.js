@@ -176,6 +176,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.firstDayOfWeek = moment.localeData().firstDayOfWeek();
 	        }
 	        this.firstDayOfWeek = this.firstDayOfWeek || 0;
+	        if (DateTime.customFirstDayOfWeek !== undefined) {
+	            this.firstDayOfWeek = DateTime.customFirstDayOfWeek;
+	        }
 	        this.localizedDaysOfWeek = this.daysOfWeek
 	            .concat(this.daysOfWeek)
 	            .splice(this.firstDayOfWeek, 7);
@@ -271,6 +274,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
 	        return new Date(parseInt(tmp[0], 10), parseInt(tmp[1], 10) - 1, parseInt(tmp[2], 10), parseInt(tmp[3] || '0', 10), parseInt(tmp[4] || '0', 10), parseInt(tmp[5] || '0', 10));
 	    };
+	    DateTime.setFirstDayOfWeek = function (firstDayOfWeek) {
+	        DateTime.customFirstDayOfWeek = firstDayOfWeek;
+	    };
+	    DateTime.customFirstDayOfWeek = 0;
 	    DateTime = __decorate([
 	        core_1.Injectable(), 
 	        __metadata('design:paramtypes', [])
@@ -488,6 +495,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    DateTimePickerDirective.prototype.ngOnInit = function () {
 	        var _this = this;
+	        if (this.firstDayOfWeek !== undefined) {
+	            datetime_1.DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
+	        }
 	        if (this.parent && this.parent["form"] && this.formControlName) {
 	            this.ctrl = this.parent["form"].get(this.formControlName);
 	            this.sub = this.ctrl.valueChanges.subscribe(function (date) {
@@ -642,6 +652,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Input('close-on-select'), 
 	        __metadata('design:type', String)
 	    ], DateTimePickerDirective.prototype, "closeOnSelect", void 0);
+	    __decorate([
+	        core_1.Input('first-day-of-week'), 
+	        __metadata('design:type', String)
+	    ], DateTimePickerDirective.prototype, "firstDayOfWeek", void 0);
 	    __decorate([
 	        core_1.Input('default-value'), 
 	        __metadata('design:type', Date)
