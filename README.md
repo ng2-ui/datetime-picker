@@ -3,11 +3,11 @@
 [![Join the chat at https://gitter.im/ng2-ui/ng2-datetime-picker](https://badges.gitter.im/ng2-ui/ng2-datetime-picker.svg)](https://gitter.im/ng2-ui/ng2-datetime-picker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 AngularJS 2 DateTime Picker
 
-<a href="https://ng2-ui.github.io/#/datetime-picker">
+<a href="https://rawgit.com/ng2-ui/ng2-datetime-picker/master/app/index.html">
   <img src="http://i.imgur.com/g5qbBBz.png" width="50%" style="border:1px solid grey" />
 </a>
 
-Plunker Example:https://plnkr.co/edit/su2aiL
+[Plunker Example](https://plnkr.co/edit/su2aiL)
 
 
 ## How Does It Work
@@ -151,8 +151,16 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
     $ git clone https://github.com/ng2-ui/ng2-datetime-picker.git
     $ cd ng2-datetime-picker
     $ npm install
-    $ npm install -g typescript@beta  # for tsc command
-    $ npm install -g webpack          # for webpack command
-    $ npm install -g http-server      # for http-server command
-    $ http-server -o
-  
+    $ npm start
+ 
+### List of available npm tasks
+
+  * `npm run` : List all available tasks
+  * `npm start`: Run `app` directory for development using `webpack-dev-server` with port 9001
+  * `npm run clean`: Remove dist folder
+  * `npm run clean:dist`: Clean up unnecessary dist folder within dist and app directory
+  * `npm run lint`: Lint TypeScript code
+  * `npm run build:ngc`: build ES module
+  * `npm run build:umd`: Build UMD module `ng2-map.umd.js`
+  * `npm run build:app`: Build `app/build/app.js` for runnable examples
+  * `npm run build`: Build all(build:ngc, build:umc, build:app, and clean:dist)

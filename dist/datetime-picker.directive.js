@@ -1,17 +1,18 @@
-import { Directive, Input, Output, ViewContainerRef, EventEmitter, ComponentFactoryResolver, Optional, SkipSelf, Host } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
-import { DateTimePickerComponent } from './datetime-picker.component';
-import { DateTime } from './datetime';
+"use strict";
+var core_1 = require('@angular/core');
+var forms_1 = require('@angular/forms');
+var datetime_picker_component_1 = require('./datetime-picker.component');
+var datetime_1 = require('./datetime');
 /**
  * If the given string is not a valid date, it defaults back to today
  */
-export var DateTimePickerDirective = (function () {
+var DateTimePickerDirective = (function () {
     function DateTimePickerDirective(resolver, viewContainerRef, parent) {
         var _this = this;
         this.resolver = resolver;
         this.viewContainerRef = viewContainerRef;
         this.parent = parent;
-        this.ngModelChange = new EventEmitter();
+        this.ngModelChange = new core_1.EventEmitter();
         /* input element string value is changed */
         this.valueChanged = function (date) {
             _this.setElement(date);
@@ -38,8 +39,8 @@ export var DateTimePickerDirective = (function () {
                     _this.componentRef.destroy();
                     _this.componentRef = undefined;
                 }
+                event && event.stopPropagation();
             }
-            event && event.stopPropagation();
         };
         this.keyEventListener = function (e) {
             if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) {
@@ -52,6 +53,9 @@ export var DateTimePickerDirective = (function () {
     }
     DateTimePickerDirective.prototype.ngOnInit = function () {
         var _this = this;
+        if (this.firstDayOfWeek !== undefined) {
+            datetime_1.DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
+        }
         if (this.parent && this.parent["form"] && this.formControlName) {
             this.ctrl = this.parent["form"].get(this.formControlName);
             this.sub = this.ctrl.valueChanges.subscribe(function (date) {
@@ -114,7 +118,7 @@ export var DateTimePickerDirective = (function () {
         if (this.componentRef) {
             return;
         }
-        var factory = this.resolver.resolveComponentFactory(DateTimePickerComponent);
+        var factory = this.resolver.resolveComponentFactory(datetime_picker_component_1.DateTimePickerComponent);
         this.componentRef = this.viewContainerRef.createComponent(factory);
         this.datetimePickerEl = this.componentRef.location.nativeElement;
         this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
@@ -168,10 +172,10 @@ export var DateTimePickerDirective = (function () {
     DateTimePickerDirective.prototype.getFormattedDateStr = function () {
         if (this.el['dateValue']) {
             if (this.dateFormat) {
-                return DateTime.momentFormatDate(this.el['dateValue'], this.dateFormat);
+                return datetime_1.DateTime.momentFormatDate(this.el['dateValue'], this.dateFormat);
             }
             else {
-                return DateTime.formatDate(this.el['dateValue'], this.dateOnly);
+                return datetime_1.DateTime.formatDate(this.el['dateValue'], this.dateOnly);
             }
         }
         else {
@@ -182,11 +186,11 @@ export var DateTimePickerDirective = (function () {
         var date;
         if (typeof arg === 'string') {
             if (this.dateFormat) {
-                date = DateTime.momentParse(arg, this.dateFormat);
+                date = datetime_1.DateTime.momentParse(arg, this.dateFormat);
             }
             else {
                 //remove timezone and respect day light saving time
-                date = DateTime.parse(arg);
+                date = datetime_1.DateTime.parse(arg);
             }
         }
         else {
@@ -195,9 +199,9 @@ export var DateTimePickerDirective = (function () {
         return date;
     };
     DateTimePickerDirective.decorators = [
-        { type: Directive, args: [{
+        { type: core_1.Directive, args: [{
                     selector: '[datetime-picker], [ng2-datetime-picker]',
-                    providers: [DateTime],
+                    providers: [datetime_1.DateTime],
                     host: {
                         '(click)': 'showDatetimePicker()',
                         '(focus)': 'showDatetimePicker()'
@@ -206,19 +210,21 @@ export var DateTimePickerDirective = (function () {
     ];
     /** @nocollapse */
     DateTimePickerDirective.ctorParameters = [
-        { type: ComponentFactoryResolver, },
-        { type: ViewContainerRef, },
-        { type: ControlContainer, decorators: [{ type: Optional }, { type: Host }, { type: SkipSelf },] },
+        { type: core_1.ComponentFactoryResolver, },
+        { type: core_1.ViewContainerRef, },
+        { type: forms_1.ControlContainer, decorators: [{ type: core_1.Optional }, { type: core_1.Host }, { type: core_1.SkipSelf },] },
     ];
     DateTimePickerDirective.propDecorators = {
-        'dateFormat': [{ type: Input, args: ['date-format',] },],
-        'dateOnly': [{ type: Input, args: ['date-only',] },],
-        'closeOnSelect': [{ type: Input, args: ['close-on-select',] },],
-        'defaultValue': [{ type: Input, args: ['default-value',] },],
-        'formControlName': [{ type: Input },],
-        'ngModel': [{ type: Input, args: ['ngModel',] },],
-        'ngModelChange': [{ type: Output, args: ['ngModelChange',] },],
+        'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
+        'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
+        'closeOnSelect': [{ type: core_1.Input, args: ['close-on-select',] },],
+        'firstDayOfWeek': [{ type: core_1.Input, args: ['first-day-of-week',] },],
+        'defaultValue': [{ type: core_1.Input, args: ['default-value',] },],
+        'formControlName': [{ type: core_1.Input },],
+        'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
+        'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
     };
     return DateTimePickerDirective;
 }());
+exports.DateTimePickerDirective = DateTimePickerDirective;
 //# sourceMappingURL=datetime-picker.directive.js.map

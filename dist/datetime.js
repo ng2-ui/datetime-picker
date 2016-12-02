@@ -1,5 +1,6 @@
-import { Injectable } from "@angular/core";
-export var DateTime = (function () {
+"use strict";
+var core_1 = require("@angular/core");
+var DateTime = (function () {
     function DateTime() {
         this.initialize();
     }
@@ -51,6 +52,9 @@ export var DateTime = (function () {
             this.firstDayOfWeek = moment.localeData().firstDayOfWeek();
         }
         this.firstDayOfWeek = this.firstDayOfWeek || 0;
+        if (DateTime.customFirstDayOfWeek !== undefined) {
+            this.firstDayOfWeek = DateTime.customFirstDayOfWeek;
+        }
         this.localizedDaysOfWeek = this.daysOfWeek
             .concat(this.daysOfWeek)
             .splice(this.firstDayOfWeek, 7);
@@ -146,11 +150,16 @@ export var DateTime = (function () {
         var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
         return new Date(parseInt(tmp[0], 10), parseInt(tmp[1], 10) - 1, parseInt(tmp[2], 10), parseInt(tmp[3] || '0', 10), parseInt(tmp[4] || '0', 10), parseInt(tmp[5] || '0', 10));
     };
+    DateTime.setFirstDayOfWeek = function (firstDayOfWeek) {
+        DateTime.customFirstDayOfWeek = firstDayOfWeek;
+    };
+    DateTime.customFirstDayOfWeek = 0;
     DateTime.decorators = [
-        { type: Injectable },
+        { type: core_1.Injectable },
     ];
     /** @nocollapse */
     DateTime.ctorParameters = [];
     return DateTime;
 }());
+exports.DateTime = DateTime;
 //# sourceMappingURL=datetime.js.map

@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["es2015", "dom"],
-    "module": "es2015",
+    "lib": ["es5", "es6", "dom"],
+    "module": "commonjs",
     "moduleResolution": "node",
-    "noEmitHelpers": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
@@ -17,9 +16,15 @@
     "allowSyntheticDefaultImports": true,
     "suppressExcessPropertyErrors": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "dist",
     "skipDefaultLibCheck": true,
-    "strictNullChecks": false
+    "noEmitHelpers": false,
+    "isolatedModules": false,
+    "strictNullChecks": false,
+    "outDir": "dist",
+    "baseUrl": "src",
+    "paths": {
+      "ng2-datetime-picker": ["./index"]
+    }
   },
   "files": [
     "src/index.ts"
@@ -32,5 +37,9 @@
     "skipMetadataEmit" : true
   },
   "compileOnSave": false,
-  "buildOnSave": false
+  "buildOnSave": false,
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true
+  }
 }

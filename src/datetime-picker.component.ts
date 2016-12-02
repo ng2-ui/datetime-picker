@@ -23,12 +23,14 @@ import {DateTime} from './datetime';
 
   <!-- Month - Year  -->
   <div class="month">
-    <button type="button" class="prev" (click)="updateMonthData(-1)">&laquo;</button>
+    <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
+    <b class="prev_next prev" (click)="updateMonthData(-1)">&lsaquo;</b>
      <span title="{{dateTime.months[monthData.month]?.fullName}}">
            {{dateTime.months[monthData.month]?.shortName}}
      </span>
     {{monthData.year}}
-    <button type="button" class="next" (click)="updateMonthData(+1)">&raquo;</button>
+    <b class="prev_next next" (click)="updateMonthData(+12)">&raquo;</b>
+    <b class="prev_next next" (click)="updateMonthData(+1)">&rsaquo;</b>
   </div>
 
   <div class="days">
@@ -131,23 +133,26 @@ import {DateTime} from './datetime';
     border-bottom: 1px solid #ddd;
     position: relative;
 }
-.datetime-picker > .month > button {
+.datetime-picker > .month > .prev_next {
     color: #555;
-    font: normal 14px sans-serif;
+    display: block;
+    font: normal 24px sans-serif;
     outline: none;
-    position: absolute;
     background: transparent;
     border: none;
     cursor: pointer;
+    width: 15px;
+    text-align: center;
 }
-.datetime-picker > .month > button:hover {
-    color: #333;
+.datetime-picker > .month > .prev_next:hover {
+  background-color: #333;
+  color: #fff;
 }
-.datetime-picker > .month > button.prev {
-    left: 10px;
+.datetime-picker > .month > .prev_next.prev {
+  float: left;
 }
-.datetime-picker > .month > button.next {
-    right: 10px;
+.datetime-picker > .month > .prev_next.next {
+  float: right;
 }
 .datetime-picker > .days {
     width: 210px; /* 30 x 7 */
