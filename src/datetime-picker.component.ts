@@ -1,4 +1,5 @@
 import {
+  Input,
   Component,
   ElementRef,
   ViewEncapsulation,
@@ -22,7 +23,7 @@ import {DateTime} from './datetime';
 <div class="datetime-picker" tabindex="0">
 
   <!-- Month - Year  -->
-  <div class="month">
+  <div class="month" *ngIf="!timeOnly">
     <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
     <b class="prev_next prev" (click)="updateMonthData(-1)">&lsaquo;</b>
      <span title="{{dateTime.months[monthData.month]?.fullName}}">
@@ -33,7 +34,8 @@ import {DateTime} from './datetime';
     <b class="prev_next next" (click)="updateMonthData(+1)">&rsaquo;</b>
   </div>
 
-  <div class="days">
+  <!-- Date -->
+  <div class="days" *ngIf="!timeOnly">
 
     <!-- Su Mo Tu We Th Fr Sa -->
     <div class="day-of-week"
@@ -212,14 +214,12 @@ import {DateTime} from './datetime';
   encapsulation: ViewEncapsulation.None
 })
 export class DateTimePickerComponent implements AfterViewInit {
-  /**
-   * public variables
-   */
-  public dateOnly:boolean;
-
-  public selectedDate:Date; //currently selected date
-  public hour:number;
-  public minute:number;
+  @Input('date-only')         dateOnly: boolean;
+  @Input('time-only')         timeOnly: boolean;
+  @Input('selected-date')     selectedDate: Date;
+  @Input('hour')              hour: number;
+  @Input('minute')            minute: number;
+  @Input('first-day-of-week') firstDayOfWeek: string;
 
   public el:HTMLElement; // this component element
   public monthData:any;  // month calendar data
@@ -234,6 +234,9 @@ export class DateTimePickerComponent implements AfterViewInit {
 
   public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
     this.el = elementRef.nativeElement;
+    if (this.firstDayOfWeek !== undefined) {
+      DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
+    }
   }
 
   public ngAfterViewInit ():void {

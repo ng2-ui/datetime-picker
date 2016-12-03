@@ -29,12 +29,13 @@ import {DateTime} from './datetime';
   }
 })
 export class DateTimePickerDirective implements OnInit, OnChanges {
-  @Input('date-format')     dateFormat:string;
-  @Input('date-only')       dateOnly:boolean;
-  @Input('close-on-select') closeOnSelect:string;
-  @Input('first-day-of-week') firstDayOfWeek:string;
-  @Input('default-value')   defaultValue:Date;
-  @Input() formControlName:string;
+  @Input('date-format')     dateFormat: string;
+  @Input('date-only')       dateOnly: boolean;
+  @Input('time-only')       timeOnly: boolean;
+  @Input('close-on-select') closeOnSelect: string;
+  @Input('first-day-of-week') firstDayOfWeek: string;
+  @Input('default-value')   defaultValue: Date;
+  @Input() formControlName: string;
 
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
@@ -55,9 +56,6 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnInit ():void {
-    if (this.firstDayOfWeek !== undefined) {
-      DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
-    }
     if(this.parent && this.parent["form"] && this.formControlName) {
       this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
       this.sub = this.ctrl.valueChanges.subscribe((date) => {
@@ -152,6 +150,8 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     let component = this.componentRef.instance;
     component.initDateTime(<Date>this.el['dateValue'], this.defaultValue);
     component.dateOnly = this.dateOnly;
+    component.timeOnly = this.timeOnly;
+    component.firstDayOfWeek = this.firstDayOfWeek;
 
     this.styleDatetimePicker();
 
