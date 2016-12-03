@@ -45,14 +45,12 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
     <input [(ngModel)]="date" ng2-datetime-picker 
       date-format="DD-MM-YYYY hh:mm"
       time-only="true"
-      hour="23"
-      minute='59'
+      minute-step="5"
       close-on-select="false" />
 <pre><code class="language-markup"
 >&lt;input [(ngModel)]="date" ng2-datetime-picker
    date-format="DD-MM-YYYY hh:mm"
-   hour="23"
-   minute='59'
+   minute-step="5"
    close-on-select="false"  /&gt;</code></pre>
     
    <br/><br/> 

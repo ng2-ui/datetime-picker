@@ -35,6 +35,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('close-on-select') closeOnSelect: string;
   @Input('first-day-of-week') firstDayOfWeek: string;
   @Input('default-value')   defaultValue: Date;
+  @Input('minute-step')     minuteStep: number;
   @Input() formControlName: string;
 
   @Input('ngModel')        ngModel: any;
@@ -151,6 +152,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     component.initDateTime(<Date>this.el['dateValue'], this.defaultValue);
     component.dateOnly = this.dateOnly;
     component.timeOnly = this.timeOnly;
+    component.minuteStep = this.minuteStep;
     component.firstDayOfWeek = this.firstDayOfWeek;
 
     this.styleDatetimePicker();

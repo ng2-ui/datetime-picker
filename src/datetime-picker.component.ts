@@ -90,6 +90,7 @@ import {DateTime} from './datetime';
            type="range" min="0" max="23" [(ngModel)]="hour" />
     <label class="minutesLabel">Min:</label>
     <input #minutes class="minutesInput"
+           step="{{minuteStep}}"
            (change)="selectDate()"
            type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
   </div>
@@ -219,6 +220,7 @@ export class DateTimePickerComponent implements AfterViewInit {
   @Input('selected-date')     selectedDate: Date;
   @Input('hour')              hour: number;
   @Input('minute')            minute: number;
+  @Input('minuteStep')        minuteStep: number = 1;
   @Input('first-day-of-week') firstDayOfWeek: string;
 
   public el:HTMLElement; // this component element
