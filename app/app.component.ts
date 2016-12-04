@@ -62,10 +62,10 @@ gmtDate : "2015-01-01T00:00:00.000Z"
    <br/><br/> 
    
      <input [(ngModel)]="date5" ng2-datetime-picker
-        year="2014" month="12" day="31" hour="23" minute="59" /><br/>
+        [default-value]="date5DefaultValue" /><br/>
     <pre><code class="language-markup"
-  >&lt;input [(ngModel)]="date5" ng2-datetime-picker
-     year="2014" month="12" day="31" hour="23" minute="59" /&gt;</code></pre>
+  >&lt;input [(ngModel)]="date5" ng2-datetime-picker 
+     [defaultValue]="date5DefaultValue" /&gt;</code></pre>
 
 </div>
   `,
@@ -79,6 +79,7 @@ export class AppComponent {
   myForm: FormGroup; // our form model
   date = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
   gmtDate = '2015-01-01T00:00:00.000Z';
+  date5DefaultValue = new Date(2014, 11, 31, 21, 45, 59);
 
   constructor(private fb: FormBuilder) { }
 

@@ -222,6 +222,7 @@ export class DateTimePickerComponent implements AfterViewInit {
   @Input('minute')            minute: number;
   @Input('minuteStep')        minuteStep: number = 1;
   @Input('first-day-of-week') firstDayOfWeek: string;
+  @Input('default-value')     defaultValue: Date;
 
   public el:HTMLElement; // this component element
   public monthData:any;  // month calendar data
@@ -284,10 +285,9 @@ export class DateTimePickerComponent implements AfterViewInit {
   public set day (day) {}
   public set today (today) {}
 
-  public initDateTime (date:Date, defaultValue:Date) {
-    defaultValue = defaultValue ||  new Date();
-    date = date || defaultValue;
-    this.selectedDate = date;
+  public initDateTime (date:Date) {
+    console.log('this.defaultValue', this.defaultValue);
+    this.selectedDate = date || this.defaultValue || new Date();
     this.hour         = this.selectedDate.getHours();
     this.minute       = this.selectedDate.getMinutes();
     this.monthData    = this.dateTime.getMonthData(this.year, this.month);

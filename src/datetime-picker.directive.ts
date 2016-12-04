@@ -95,7 +95,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   updateDatepicker() {
     if(this.componentRef) {
       let component = this.componentRef.instance;
-      component.initDateTime(<Date>this.el['dateValue'], this.defaultValue);
+      component.initDateTime(<Date>this.el['dateValue']);
     }
   }
 
@@ -149,12 +149,13 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
     let component = this.componentRef.instance;
-    component.initDateTime(<Date>this.el['dateValue'], this.defaultValue);
+    component.defaultValue = this.defaultValue;
     component.dateOnly = this.dateOnly;
     component.timeOnly = this.timeOnly;
     component.minuteStep = this.minuteStep;
     component.firstDayOfWeek = this.firstDayOfWeek;
 
+    component.initDateTime(<Date>this.el['dateValue']);
     this.styleDatetimePicker();
 
     component.changes.subscribe(this.valueChanged);
