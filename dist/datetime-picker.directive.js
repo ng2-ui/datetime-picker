@@ -53,9 +53,6 @@ var DateTimePickerDirective = (function () {
     }
     DateTimePickerDirective.prototype.ngOnInit = function () {
         var _this = this;
-        if (this.firstDayOfWeek !== undefined) {
-            datetime_1.DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
-        }
         if (this.parent && this.parent["form"] && this.formControlName) {
             this.ctrl = this.parent["form"].get(this.formControlName);
             this.sub = this.ctrl.valueChanges.subscribe(function (date) {
@@ -89,7 +86,7 @@ var DateTimePickerDirective = (function () {
     DateTimePickerDirective.prototype.updateDatepicker = function () {
         if (this.componentRef) {
             var component = this.componentRef.instance;
-            component.initDateTime(this.el['dateValue'], this.defaultValue);
+            component.initDateTime(this.el['dateValue']);
         }
     };
     DateTimePickerDirective.prototype.setElement = function (date) {
@@ -123,8 +120,12 @@ var DateTimePickerDirective = (function () {
         this.datetimePickerEl = this.componentRef.location.nativeElement;
         this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
         var component = this.componentRef.instance;
-        component.initDateTime(this.el['dateValue'], this.defaultValue);
+        component.defaultValue = this.defaultValue;
         component.dateOnly = this.dateOnly;
+        component.timeOnly = this.timeOnly;
+        component.minuteStep = this.minuteStep;
+        component.firstDayOfWeek = this.firstDayOfWeek;
+        component.initDateTime(this.el['dateValue']);
         this.styleDatetimePicker();
         component.changes.subscribe(this.valueChanged);
         component.closing.subscribe(function () {
@@ -217,9 +218,11 @@ var DateTimePickerDirective = (function () {
     DateTimePickerDirective.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
+        'timeOnly': [{ type: core_1.Input, args: ['time-only',] },],
         'closeOnSelect': [{ type: core_1.Input, args: ['close-on-select',] },],
         'firstDayOfWeek': [{ type: core_1.Input, args: ['first-day-of-week',] },],
         'defaultValue': [{ type: core_1.Input, args: ['default-value',] },],
+        'minuteStep': [{ type: core_1.Input, args: ['minute-step',] },],
         'formControlName': [{ type: core_1.Input },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
