@@ -1,6 +1,17 @@
 import { Component } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 
+//
+// The following is tested for custom DateTime parser/formatter
+//
+// DateTime.formatDate = function(d: Date) {
+//   return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + pad0(d.getDate());
+// };
+//
+// DateTime.parse = function(s: string) {
+//   let tmp = dateStr.split('/');
+//   return  new Date( parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2]) );
+// };
 
 @Component({
   selector: 'my-app',
@@ -81,7 +92,9 @@ export class AppComponent {
   gmtDate = '2015-01-01T00:00:00.000Z';
   date5DefaultValue = new Date(2014, 11, 31, 21, 45, 59);
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+
+  }
 
   ngOnInit() {
     this.myForm = this.fb.group({

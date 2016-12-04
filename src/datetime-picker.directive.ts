@@ -17,6 +17,8 @@ import {AbstractControl, ControlContainer, FormGroup} from '@angular/forms';
 import {DateTimePickerComponent} from './datetime-picker.component';
 import {DateTime} from './datetime';
 
+declare var moment: any;
+
 /**
  * If the given string is not a valid date, it defaults back to today
  */
@@ -232,9 +234,8 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
    *  returns toString function of date object
    */
   private getFormattedDateStr(): string {
-
     if (this.el['dateValue']) {
-      if (this.dateFormat) {
+      if (this.dateFormat && typeof moment !== 'undefined') {
         return  DateTime.momentFormatDate(this.el['dateValue'], this.dateFormat);
       } else {
         return DateTime.formatDate(this.el['dateValue'], this.dateOnly);
@@ -247,7 +248,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   private getDate(arg: string): Date {
     let date: Date;
     if (typeof arg === 'string') {
-      if (this.dateFormat) {
+      if (this.dateFormat && typeof moment !== 'undefined') {
         date = DateTime.momentParse(arg, this.dateFormat);
       } else {
         //remove timezone and respect day light saving time
