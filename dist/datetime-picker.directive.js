@@ -124,6 +124,11 @@ var DateTimePickerDirective = (function () {
         component.dateOnly = this.dateOnly;
         component.timeOnly = this.timeOnly;
         component.minuteStep = this.minuteStep;
+        component.minDate = this.minDate;
+        component.maxDate = this.maxDate;
+        component.minHour = this.minHour;
+        component.maxHour = this.maxHour;
+        component.disabledDates = this.disabledDates;
         component.firstDayOfWeek = this.firstDayOfWeek;
         component.initDateTime(this.el['dateValue']);
         this.styleDatetimePicker();
@@ -172,7 +177,7 @@ var DateTimePickerDirective = (function () {
      */
     DateTimePickerDirective.prototype.getFormattedDateStr = function () {
         if (this.el['dateValue']) {
-            if (this.dateFormat) {
+            if (this.dateFormat && typeof moment !== 'undefined') {
                 return datetime_1.DateTime.momentFormatDate(this.el['dateValue'], this.dateFormat);
             }
             else {
@@ -186,7 +191,7 @@ var DateTimePickerDirective = (function () {
     DateTimePickerDirective.prototype.getDate = function (arg) {
         var date;
         if (typeof arg === 'string') {
-            if (this.dateFormat) {
+            if (this.dateFormat && typeof moment !== 'undefined') {
                 date = datetime_1.DateTime.momentParse(arg, this.dateFormat);
             }
             else {
@@ -223,6 +228,11 @@ var DateTimePickerDirective = (function () {
         'firstDayOfWeek': [{ type: core_1.Input, args: ['first-day-of-week',] },],
         'defaultValue': [{ type: core_1.Input, args: ['default-value',] },],
         'minuteStep': [{ type: core_1.Input, args: ['minute-step',] },],
+        'minDate': [{ type: core_1.Input, args: ['min-date',] },],
+        'maxDate': [{ type: core_1.Input, args: ['max-date',] },],
+        'minHour': [{ type: core_1.Input, args: ['min-hour',] },],
+        'maxHour': [{ type: core_1.Input, args: ['max-hour',] },],
+        'disabledDates': [{ type: core_1.Input, args: ['disabled-dates',] },],
         'formControlName': [{ type: core_1.Input },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
