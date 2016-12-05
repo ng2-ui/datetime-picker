@@ -322,14 +322,12 @@ export class DateTimePickerComponent implements AfterViewInit {
 
   public isDateDisabled(date: Date) {
     let dateInTime  = date.getTime();
-    let minDateInTime  = this.minDate.getTime();
-    let maxDateInTime  = this.maxDate.getTime();
     this.disabledDatesInTime =
       this.disabledDatesInTime || (this.disabledDates || []).map(d => d.getTime());
 
-    if (this.minDate && (dateInTime < minDateInTime)) {
+    if (this.minDate && (dateInTime < this.minDate.getTime())) {
       return true;
-    } else if (this.maxDate && (dateInTime > maxDateInTime)) {
+    } else if (this.maxDate && (dateInTime > this.maxDate.getTime())) {
       return true;
     } else if (this.disabledDatesInTime.indexOf(dateInTime) >= 0) {
       return true
