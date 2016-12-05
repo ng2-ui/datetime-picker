@@ -22,6 +22,9 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
     <br/><br/> 
     <input [(ngModel)]="myDate" 
       ng2-datetime-picker
+      [min-date]="minDate"
+      [max-date]="maxDate"
+      [disabled-dates]="disabledDates"
       date-only="true"/>
     myDate: {{myDate}}
 <pre><code class="language-markup"
@@ -93,10 +96,11 @@ export class AppComponent {
   date = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
   gmtDate = '2015-01-01T00:00:00.000Z';
   date5DefaultValue = new Date(2014, 11, 31, 21, 45, 59);
+  minDate = new Date(2016, 0, 1);
+  maxDate = new Date(2016, 11, 31);
+  disabledDates = [new Date(2016, 11, 20), new Date(2016, 11, 21)];
 
-  constructor(private fb: FormBuilder) {
-
-  }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.myForm = this.fb.group({

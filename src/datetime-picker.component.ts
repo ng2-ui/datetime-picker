@@ -54,12 +54,12 @@ import {DateTime} from './datetime';
       </div>
     </div>
 
-    <div class="day selectable"
+    <div class="day"
          *ngFor="let dayNum of monthData.days"
          (click)="selectDate(toDate(dayNum))"
          title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
          [ngClass]="{
-           disabled: isDateDisabled(toDate(dayNum)),
+           selectable: !isDateDisabled(toDate(dayNum)),
            selected:
              toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),
            today:
@@ -321,14 +321,17 @@ export class DateTimePickerComponent implements AfterViewInit {
   }
 
   public isDateDisabled(date: Date) {
+    let dateInTime  = date.getTime();
+    let minDateInTime  = this.minDate.getTime();
+    let maxDateInTime  = this.maxDate.getTime();
     this.disabledDatesInTime =
       this.disabledDatesInTime || (this.disabledDates || []).map(d => d.getTime());
 
-    if (this.minDate && date.getTime() < this.minDate.getTime()) {
+    if (this.minDate && (dateInTime < minDateInTime)) {
       return true;
-    } else if (this.maxDate && date.getTime() > this.maxDate.getTime()) {
+    } else if (this.maxDate && (dateInTime > maxDateInTime)) {
       return true;
-    } else if (this.disabledDatesInTime.indexOf(date.getTime()) >= 0) {
+    } else if (this.disabledDatesInTime.indexOf(dateInTime) >= 0) {
       return true
     }
 
