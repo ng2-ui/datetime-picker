@@ -139,13 +139,19 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
   * **date-only**,  true or false, default is false
   * **close-on-select**, true or false. indicates to close
     datetime-picker when select a date. default: true
-  * **time-only**, true or false, default is false 
-  * **first-day-of-week** start day of week, 0 is sunday
+  * **time-only**, true or false, default is false
+  * **first-day-of-week** start day of week, 0 is sunday. Default. 0 for us-en, us-ca
   * **date-format**,  momentjs date format, e.g. YYYY-MM-DD hh:mm:ss
+    Default: YYYY-MM-DD hh:mm:ss
     You need to include `moment` js in your html to use date-format.
-    
     `<script src="moment.min.js"></script>`
-
+  * **min-date**, {Date}, The earliest date selectable
+  * **max-date**, {Date}, The latest date selectable
+  * **min-hour**, {number}, The earliest hour selectable, Default, 0
+  * **max-hour**, {number}, max hour selectable, Default, 23
+  * **dates-disabled**, array of dates, list of dates which are not selectable, Default, `[]`
+  * **default-value**, {Date} the default date when datetime pick opens, Default, the current date
+  * **minute-step**, {number} minute gap e.g, 5, 10, 15, or 20. Default 1
      
 ## For Developers
 
