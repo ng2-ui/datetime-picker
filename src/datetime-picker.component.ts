@@ -1,5 +1,6 @@
 import {
   Input,
+  Output,
   Component,
   ElementRef,
   ViewEncapsulation,
@@ -48,22 +49,23 @@ import {DateTime} from './datetime';
     <!-- Fill up blank days for this month -->
     <div *ngIf="monthData.leadingDays.length < 7">
       <div class="day" *ngFor="let dayNum of monthData.leadingDays"
-           [ngClass]="{weekend: [0,6].indexOf(toDate(monthData.year, monthData.month-1, dayNum).getDay()) !== -1}">
+           [ngClass]="{weekend: [0,6].indexOf(toDate(dayNum, monthData.month-1).getDay()) !== -1}">
         {{dayNum}}
       </div>
     </div>
 
-    <div class="day selectable"
+    <div class="day"
          *ngFor="let dayNum of monthData.days"
-         (click)="selectDate(dayNum)"
+         (click)="selectDate(toDate(dayNum))"
          title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
          [ngClass]="{
+           selectable: !isDateDisabled(toDate(dayNum)),
            selected:
-             toDate(monthData.year, monthData.month, dayNum).getTime() === toDateOnly(selectedDate).getTime(),
+             toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),
            today:
-             toDate(monthData.year, monthData.month, dayNum).getTime() === today.getTime(),
+             toDate(dayNum).getTime() === today.getTime(),
            weekend:
-             [0,6].indexOf(toDate(monthData.year, monthData.month, dayNum).getDay()) !== -1
+             [0,6].indexOf(toDate(dayNum).getDay()) !== -1
          }">
       {{dayNum}}
     </div>
@@ -72,7 +74,7 @@ import {DateTime} from './datetime';
     <div *ngIf="monthData.trailingDays.length < 7">
       <div class="day"
            *ngFor="let dayNum of monthData.trailingDays"
-           [ngClass]="{weekend: [0,6].indexOf(toDate(monthData.year, monthData.month+1, dayNum).getDay()) !== -1}">
+           [ngClass]="{weekend: [0,6].indexOf(toDate(dayNum, monthData.month+1).getDay()) !== -1}">
         {{dayNum}}
       </div>
     </div>
@@ -87,7 +89,10 @@ import {DateTime} from './datetime';
     <label class="hourLabel">Hour:</label>
     <input #hours class="hourInput"
            (change)="selectDate()"
-           type="range" min="0" max="23" [(ngModel)]="hour" />
+           type="range"
+           min="{{minHour || 0}}"
+           max="{{maxHour || 23}}"
+           [(ngModel)]="hour" />
     <label class="minutesLabel">Min:</label>
     <input #minutes class="minutesInput"
            step="{{minuteStep}}"
@@ -95,10 +100,6 @@ import {DateTime} from './datetime';
            type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
   </div>
 </div>
-
-<!--<hr/>-->
-<!--Date: {{selectedDate}}<br/>-->
-<!--Hour: {{hour}} Minute: {{minute}}<br/>-->
   `,
   styles       : [
     `
@@ -223,17 +224,21 @@ export class DateTimePickerComponent implements AfterViewInit {
   @Input('minuteStep')        minuteStep: number = 1;
   @Input('first-day-of-week') firstDayOfWeek: string;
   @Input('default-value')     defaultValue: Date;
+  @Input('min-date')          minDate: Date;
+  @Input('max-date')          maxDate: Date;
+  @Input('min-hour')          minHour: Date;
+  @Input('max-hour')          maxHour: Date;
+  @Input('disabled-dates')    disabledDates: Date[];
+
+  @Output('changes') changes:EventEmitter<any> = new EventEmitter();
+  @Output('closing') closing:EventEmitter<any> = new EventEmitter();
+
+  @ViewChild('hours')   private _hours:ElementRef;
+  @ViewChild('minutes') private _minutes:ElementRef;
 
   public el:HTMLElement; // this component element
   public monthData:any;  // month calendar data
-
-  public changes:EventEmitter<any> = new EventEmitter();
-  public closing:EventEmitter<any> = new EventEmitter();
-
-  @ViewChild('hours')
-  private _hours:ElementRef;
-  @ViewChild('minutes')
-  private _minutes:ElementRef;
+  public disabledDatesInTime: number[];
 
   public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
     this.el = elementRef.nativeElement;
@@ -243,19 +248,12 @@ export class DateTimePickerComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit ():void {
+    let stopPropagation = (e: Event) => e.stopPropagation();
     if (!this.dateOnly) {
-      this._hours.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
-        e.stopPropagation();
-      });
-      this._hours.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
-        e.stopPropagation();
-      });
-      this._minutes.nativeElement.addEventListener('keyup', (e:KeyboardEvent) => {
-        e.stopPropagation();
-      });
-      this._minutes.nativeElement.addEventListener('mousedown', (e:KeyboardEvent) => {
-        e.stopPropagation();
-      });
+      this._hours.nativeElement.addEventListener('keyup', stopPropagation);
+      this._hours.nativeElement.addEventListener('mousedown', stopPropagation);
+      this._minutes.nativeElement.addEventListener('keyup', stopPropagation);
+      this._minutes.nativeElement.addEventListener('mousedown', stopPropagation);
     }
   }
 
@@ -292,8 +290,8 @@ export class DateTimePickerComponent implements AfterViewInit {
     this.monthData    = this.dateTime.getMonthData(this.year, this.month);
   }
 
-  public toDate (year:number, month:number, day:number):Date {
-    return new Date(year, month, day);
+  public toDate (day:number, month?: number):Date {
+    return new Date(this.monthData.year, month || this.monthData.month, day);
   }
 
   public toDateOnly (date:Date) {
@@ -304,9 +302,10 @@ export class DateTimePickerComponent implements AfterViewInit {
    * set the selected date and close it when closeOnSelect is true
    * @param date {Date}
    */
-  public selectDate (dayNum?:number) {
-    if (dayNum) {
-      this.selectedDate = new Date(this.monthData.year, this.monthData.month, dayNum);
+  public selectDate(date?: Date) {
+    this.selectedDate = date || this.selectedDate;
+    if (this.isDateDisabled(this.selectedDate)) {
+      return false;
     }
     this.selectedDate.setHours(parseInt( ''+this.hour || '0', 10));
     this.selectedDate.setMinutes(parseInt( ''+this.minute|| '0', 10));
@@ -319,6 +318,24 @@ export class DateTimePickerComponent implements AfterViewInit {
    */
   public updateMonthData (num:number) {
     this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
+  }
+
+  public isDateDisabled(date: Date) {
+    let dateInTime  = date.getTime();
+    let minDateInTime  = this.minDate.getTime();
+    let maxDateInTime  = this.maxDate.getTime();
+    this.disabledDatesInTime =
+      this.disabledDatesInTime || (this.disabledDates || []).map(d => d.getTime());
+
+    if (this.minDate && (dateInTime < minDateInTime)) {
+      return true;
+    } else if (this.maxDate && (dateInTime > maxDateInTime)) {
+      return true;
+    } else if (this.disabledDatesInTime.indexOf(dateInTime) >= 0) {
+      return true
+    }
+
+    return false;
   }
 
 }
