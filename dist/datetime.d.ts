@@ -4,6 +4,7 @@ export declare class DateTime {
     firstDayOfWeek: number;
     daysOfWeek: any[];
     localizedDaysOfWeek: any[];
+    static customFirstDayOfWeek: number;
     constructor();
     initialize(): void;
     getMonthData(year: number, month: number): any;
@@ -14,4 +15,5 @@ export declare class DateTime {
     static removeTimezone(dateStr: any): string;
     static addDSTOffset(dateStr: any): string;
     static getDateFromString(dateStr: any): Date;
+    static setFirstDayOfWeek(firstDayOfWeek: number): void;
 }
