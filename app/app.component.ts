@@ -67,6 +67,8 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
    <br/><br/> 
     <input [(ngModel)]="gmtDate" ng2-datetime-picker date-format="MM-DD-YYYY" />
 gmtDate : "2015-01-01T00:00:00.000Z" 
+    <br/>
+    <a href="#" (click)="gmtDate='2016-11-03T22:00:00Z'">Set date/time to: 2016-11-03T22:00:00Z</a>
 <pre><code class="language-markup"
 >&lt;input [(ngModel)]="gmtDate" ng2-datetime-picker date-format="MM-DD-YYYY" /&gt; </code></pre>
     
