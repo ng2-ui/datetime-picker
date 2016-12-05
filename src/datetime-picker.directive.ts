@@ -38,6 +38,11 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('first-day-of-week') firstDayOfWeek: string;
   @Input('default-value')   defaultValue: Date;
   @Input('minute-step')     minuteStep: number;
+  @Input('min-date')        minDate: Date;
+  @Input('max-date')        maxDate: Date;
+  @Input('min-hour')        minHour: Date;
+  @Input('max-hour')        maxHour: Date;
+  @Input('disabled-dates')  disabledDates: Date[];
   @Input() formControlName: string;
 
   @Input('ngModel')        ngModel: any;
@@ -151,10 +156,15 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
     let component = this.componentRef.instance;
-    component.defaultValue = this.defaultValue;
-    component.dateOnly = this.dateOnly;
-    component.timeOnly = this.timeOnly;
-    component.minuteStep = this.minuteStep;
+    component.defaultValue   = this.defaultValue;
+    component.dateOnly       = this.dateOnly;
+    component.timeOnly       = this.timeOnly;
+    component.minuteStep     = this.minuteStep;
+    component.minDate        = this.minDate;
+    component.maxDate        = this.maxDate;
+    component.minHour        = this.minHour;
+    component.maxHour        = this.maxHour;
+    component.disabledDates  = this.disabledDates;
     component.firstDayOfWeek = this.firstDayOfWeek;
 
     component.initDateTime(<Date>this.el['dateValue']);
