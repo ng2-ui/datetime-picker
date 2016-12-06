@@ -323,10 +323,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    DateTimePickerComponent.prototype.ngAfterViewInit = function () {
 	        var stopPropagation = function (e) { return e.stopPropagation(); };
 	        if (!this.dateOnly) {
-	            this._hours.nativeElement.addEventListener('keyup', stopPropagation);
-	            this._hours.nativeElement.addEventListener('mousedown', stopPropagation);
-	            this._minutes.nativeElement.addEventListener('keyup', stopPropagation);
-	            this._minutes.nativeElement.addEventListener('mousedown', stopPropagation);
+	            this.hours.nativeElement.addEventListener('keyup', stopPropagation);
+	            this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
+	            this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
+	            this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
 	        }
 	    };
 	    Object.defineProperty(DateTimePickerComponent.prototype, "year", {
@@ -477,11 +477,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    __decorate([
 	        core_1.ViewChild('hours'), 
 	        __metadata('design:type', core_1.ElementRef)
-	    ], DateTimePickerComponent.prototype, "_hours", void 0);
+	    ], DateTimePickerComponent.prototype, "hours", void 0);
 	    __decorate([
 	        core_1.ViewChild('minutes'), 
 	        __metadata('design:type', core_1.ElementRef)
-	    ], DateTimePickerComponent.prototype, "_minutes", void 0);
+	    ], DateTimePickerComponent.prototype, "minutes", void 0);
 	    DateTimePickerComponent = __decorate([
 	        core_1.Component({
 	            providers: [datetime_1.DateTime],

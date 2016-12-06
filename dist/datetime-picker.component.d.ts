@@ -21,8 +21,8 @@ export declare class DateTimePickerComponent implements AfterViewInit {
     disabledDates: Date[];
     changes: EventEmitter<any>;
     closing: EventEmitter<any>;
-    private _hours;
-    private _minutes;
+    hours: ElementRef;
+    minutes: ElementRef;
     el: HTMLElement;
     monthData: any;
     disabledDatesInTime: number[];

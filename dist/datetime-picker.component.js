@@ -21,10 +21,10 @@ var DateTimePickerComponent = (function () {
     DateTimePickerComponent.prototype.ngAfterViewInit = function () {
         var stopPropagation = function (e) { return e.stopPropagation(); };
         if (!this.dateOnly) {
-            this._hours.nativeElement.addEventListener('keyup', stopPropagation);
-            this._hours.nativeElement.addEventListener('mousedown', stopPropagation);
-            this._minutes.nativeElement.addEventListener('keyup', stopPropagation);
-            this._minutes.nativeElement.addEventListener('mousedown', stopPropagation);
+            this.hours.nativeElement.addEventListener('keyup', stopPropagation);
+            this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
+            this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
+            this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
         }
     };
     Object.defineProperty(DateTimePickerComponent.prototype, "year", {
@@ -145,8 +145,8 @@ var DateTimePickerComponent = (function () {
         'disabledDates': [{ type: core_1.Input, args: ['disabled-dates',] },],
         'changes': [{ type: core_1.Output, args: ['changes',] },],
         'closing': [{ type: core_1.Output, args: ['closing',] },],
-        '_hours': [{ type: core_1.ViewChild, args: ['hours',] },],
-        '_minutes': [{ type: core_1.ViewChild, args: ['minutes',] },],
+        'hours': [{ type: core_1.ViewChild, args: ['hours',] },],
+        'minutes': [{ type: core_1.ViewChild, args: ['minutes',] },],
     };
     return DateTimePickerComponent;
 }());
