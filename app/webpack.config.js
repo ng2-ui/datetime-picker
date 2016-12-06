@@ -24,9 +24,6 @@ const config = {
     path: `${__dirname}/build/`,
     publicPath: '/build/',
     filename: 'app.js'
-  },
-  compilerOptions: {
-    declaration: false
   }
 };
 
