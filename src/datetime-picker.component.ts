@@ -230,11 +230,11 @@ export class DateTimePickerComponent implements AfterViewInit {
   @Input('max-hour')          maxHour: Date;
   @Input('disabled-dates')    disabledDates: Date[];
 
-  @Output('changes') changes:EventEmitter<any> = new EventEmitter();
-  @Output('closing') closing:EventEmitter<any> = new EventEmitter();
+  @Output('changes')   changes:EventEmitter<any> = new EventEmitter();
+  @Output('closing')   closing:EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('hours')   private _hours:ElementRef;
-  @ViewChild('minutes') private _minutes:ElementRef;
+  @ViewChild('hours')   hours:ElementRef;
+  @ViewChild('minutes') minutes:ElementRef;
 
   public el:HTMLElement; // this component element
   public monthData:any;  // month calendar data
@@ -250,10 +250,10 @@ export class DateTimePickerComponent implements AfterViewInit {
   public ngAfterViewInit ():void {
     let stopPropagation = (e: Event) => e.stopPropagation();
     if (!this.dateOnly) {
-      this._hours.nativeElement.addEventListener('keyup', stopPropagation);
-      this._hours.nativeElement.addEventListener('mousedown', stopPropagation);
-      this._minutes.nativeElement.addEventListener('keyup', stopPropagation);
-      this._minutes.nativeElement.addEventListener('mousedown', stopPropagation);
+      this.hours.nativeElement.addEventListener('keyup', stopPropagation);
+      this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
+      this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
+      this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
     }
   }
 
