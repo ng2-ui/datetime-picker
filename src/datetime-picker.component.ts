@@ -226,8 +226,8 @@ export class DateTimePickerComponent implements AfterViewInit {
   @Input('default-value')     defaultValue: Date;
   @Input('min-date')          minDate: Date;
   @Input('max-date')          maxDate: Date;
-  @Input('min-hour')          minHour: Date;
-  @Input('max-hour')          maxHour: Date;
+  @Input('min-hour')          minHour: number;
+  @Input('max-hour')          maxHour: number;
   @Input('disabled-dates')    disabledDates: Date[];
 
   @Output('changes')   changes:EventEmitter<any> = new EventEmitter();
