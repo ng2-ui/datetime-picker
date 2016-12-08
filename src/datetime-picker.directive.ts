@@ -13,7 +13,7 @@ import {
   SkipSelf,
   Host
 } from '@angular/core';
-import {AbstractControl, ControlContainer, FormGroup} from '@angular/forms';
+import {AbstractControl, ControlContainer, FormGroup, FormGroupDirective} from '@angular/forms';
 import {DateTimePickerComponent} from './datetime-picker.component';
 import {DateTime} from './datetime';
 
@@ -64,12 +64,21 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnInit ():void {
-    if(this.parent && this.parent["form"] && this.formControlName) {
-      this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
-      this.sub = this.ctrl.valueChanges.subscribe((date) => {
-        this.setElement(date)
-        this.updateDatepicker();
-      })
+    if(this.parent && this.formControlName) {
+      if (this.parent["form"]) {
+        this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
+      } else if (this.parent["name"]) {
+        let formDir = this.parent.formDirective;
+        if (formDir instanceof FormGroupDirective && formDir.form.get(this.parent["name"])) {
+          this.ctrl = formDir.form.get(this.parent["name"]).get(this.formControlName);
+        }
+      }
+      if (this.ctrl) {
+        this.sub = this.ctrl.valueChanges.subscribe((date) => {
+          this.setElement(date)
+          this.updateDatepicker();
+        });
+      }
     }
 
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
