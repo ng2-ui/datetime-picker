@@ -19,6 +19,16 @@ import {DateTime} from './datetime';
 
 declare var moment: any;
 
+Number.isInteger = Number.isInteger || function(value) {
+  return typeof value === "number" &&
+    isFinite(value) &&
+    Math.floor(value) === value;
+};
+
+Number.isNaN = Number.isNaN || function(value) {
+    return value !== value;
+};
+
 /**
  * If the given string is not a valid date, it defaults back to today
  */
@@ -31,17 +41,17 @@ declare var moment: any;
   }
 })
 export class DateTimePickerDirective implements OnInit, OnChanges {
-  @Input('date-format')     dateFormat: string;
-  @Input('date-only')       dateOnly: boolean;
-  @Input('time-only')       timeOnly: boolean;
-  @Input('close-on-select') closeOnSelect: string;
+  @Input('date-format')       dateFormat: string;
+  @Input('date-only')         dateOnly: boolean;
+  @Input('time-only')         timeOnly: boolean;
+  @Input('close-on-select')   closeOnSelect: string;
   @Input('first-day-of-week') firstDayOfWeek: string;
-  @Input('default-value')   defaultValue: Date;
-  @Input('minute-step')     minuteStep: number;
-  @Input('min-date')        minDate: Date;
-  @Input('max-date')        maxDate: Date;
-  @Input('min-hour')        minHour: Date;
-  @Input('max-hour')        maxHour: Date;
+  @Input('default-value')     defaultValue: Date | string;
+  @Input('minute-step')       minuteStep: number;
+  @Input('min-date')          minDate: Date | string;
+  @Input('max-date')          maxDate: Date | string;
+  @Input('min-hour')          minHour: Date | number;
+  @Input('max-hour')          maxHour: Date | number;
   @Input('disabled-dates')  disabledDates: Date[];
   @Input() formControlName: string;
 
@@ -63,6 +73,57 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.el = this.viewContainerRef.element.nativeElement;
   }
 
+  normalizeInput() {
+    if (this.defaultValue && typeof this.defaultValue == 'string') {
+      let d = new Date(this.defaultValue);
+      if (Number.isNaN(d.getTime())) {
+        this.defaultValue = new Date();
+      } else {
+        this.defaultValue = d;
+      }
+    }
+
+    if (this.minDate && typeof this.minDate == 'string') {
+      let d = new Date(this.minDate);
+      if (Number.isNaN(d.getTime())) {
+        this.minDate = undefined;
+      } else {
+        this.minDate = d;
+      }
+    }
+
+    if (this.maxDate && typeof this.maxDate == 'string') {
+      let d = new Date(this.maxDate);
+      if (Number.isNaN(d.getTime())) {
+        this.maxDate = undefined;
+      } else {
+        this.maxDate = d;
+      }
+    }
+
+    if (this.minHour) {
+      if (this.minHour instanceof Date) {
+        this.minHour = this.minHour.getHours();
+      } else {
+        let hour = Number(this.minHour.toString());
+        if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+          this.minHour = undefined;
+        }
+      }
+    }
+
+    if (this.maxHour) {
+      if (this.maxHour instanceof Date) {
+        this.maxHour = this.maxHour.getHours();
+      } else {
+        let hour = Number(this.maxHour.toString());
+        if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+          this.maxHour = undefined;
+        }
+      }
+    }
+  }
+
   ngOnInit ():void {
     if(this.parent && this.formControlName) {
       if (this.parent["form"]) {
@@ -80,6 +141,8 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
         });
       }
     }
+
+    this.normalizeInput();
 
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
     let wrapper            = document.createElement("div");
@@ -165,14 +228,14 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     this.datetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
     let component = this.componentRef.instance;
-    component.defaultValue   = this.defaultValue;
+    component.defaultValue   = <Date>this.defaultValue;
     component.dateOnly       = this.dateOnly;
     component.timeOnly       = this.timeOnly;
     component.minuteStep     = this.minuteStep;
-    component.minDate        = this.minDate;
-    component.maxDate        = this.maxDate;
-    component.minHour        = this.minHour;
-    component.maxHour        = this.maxHour;
+    component.minDate        = <Date>this.minDate;
+    component.maxDate        = <Date>this.maxDate;
+    component.minHour        = <number>this.minHour;
+    component.maxHour        = <number>this.maxHour;
     component.disabledDates  = this.disabledDates;
     component.firstDayOfWeek = this.firstDayOfWeek;
 
