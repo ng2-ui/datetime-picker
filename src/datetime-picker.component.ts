@@ -242,9 +242,6 @@ export class DateTimePickerComponent implements AfterViewInit {
 
   public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
     this.el = elementRef.nativeElement;
-    if (this.firstDayOfWeek !== undefined) {
-      DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
-    }
   }
 
   public ngAfterViewInit ():void {

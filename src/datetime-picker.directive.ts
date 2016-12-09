@@ -64,6 +64,9 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnInit ():void {
+    if (this.firstDayOfWeek) {
+      DateTime.customFirstDayOfWeek = parseInt(this.firstDayOfWeek);
+    }
     if(this.parent && this.parent["form"] && this.formControlName) {
       this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
       this.sub = this.ctrl.valueChanges.subscribe((date) => {
