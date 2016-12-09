@@ -7,7 +7,8 @@ AngularJS 2 DateTime Picker
   <img src="http://i.imgur.com/g5qbBBz.png" width="50%" style="border:1px solid grey" />
 </a>
 
-[Plunker Example](https://plnkr.co/edit/su2aiL)
+[Plunker Example](https://plnkr.co/edit/su2aiL)  
+[French Example](https://plnkr.co/edit/J6hXyB?p=preview)
 
 
 ## How Does It Work
