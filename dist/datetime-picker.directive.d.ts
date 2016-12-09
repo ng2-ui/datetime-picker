@@ -12,12 +12,12 @@ export declare class DateTimePickerDirective implements OnInit, OnChanges {
     timeOnly: boolean;
     closeOnSelect: string;
     firstDayOfWeek: string;
-    defaultValue: Date;
+    defaultValue: Date | string;
     minuteStep: number;
-    minDate: Date;
-    maxDate: Date;
-    minHour: Date;
-    maxHour: Date;
+    minDate: Date | string;
+    maxDate: Date | string;
+    minHour: Date | number;
+    maxHour: Date | number;
     disabledDates: Date[];
     formControlName: string;
     ngModel: any;
@@ -29,6 +29,7 @@ export declare class DateTimePickerDirective implements OnInit, OnChanges {
     private sub;
     private justShown;
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, parent: ControlContainer);
+    normalizeInput(): void;
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     updateDatepicker(): void;

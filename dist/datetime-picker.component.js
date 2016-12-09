@@ -14,9 +14,6 @@ var DateTimePickerComponent = (function () {
         this.changes = new core_1.EventEmitter();
         this.closing = new core_1.EventEmitter();
         this.el = elementRef.nativeElement;
-        if (this.firstDayOfWeek !== undefined) {
-            datetime_1.DateTime.setFirstDayOfWeek(parseInt(this.firstDayOfWeek));
-        }
     }
     DateTimePickerComponent.prototype.ngAfterViewInit = function () {
         var stopPropagation = function (e) { return e.stopPropagation(); };

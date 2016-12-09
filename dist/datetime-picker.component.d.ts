@@ -16,8 +16,8 @@ export declare class DateTimePickerComponent implements AfterViewInit {
     defaultValue: Date;
     minDate: Date;
     maxDate: Date;
-    minHour: Date;
-    maxHour: Date;
+    minHour: number;
+    maxHour: number;
     disabledDates: Date[];
     changes: EventEmitter<any>;
     closing: EventEmitter<any>;

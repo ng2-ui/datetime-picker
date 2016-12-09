@@ -3,6 +3,14 @@ var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
 var datetime_picker_component_1 = require('./datetime-picker.component');
 var datetime_1 = require('./datetime');
+Number.isInteger = Number.isInteger || function (value) {
+    return typeof value === "number" &&
+        isFinite(value) &&
+        Math.floor(value) === value;
+};
+Number.isNaN = Number.isNaN || function (value) {
+    return value !== value;
+};
 /**
  * If the given string is not a valid date, it defaults back to today
  */
@@ -51,15 +59,80 @@ var DateTimePickerDirective = (function () {
         };
         this.el = this.viewContainerRef.element.nativeElement;
     }
+    DateTimePickerDirective.prototype.normalizeInput = function () {
+        if (this.defaultValue && typeof this.defaultValue == 'string') {
+            var d = new Date(this.defaultValue);
+            if (Number.isNaN(d.getTime())) {
+                this.defaultValue = new Date();
+            }
+            else {
+                this.defaultValue = d;
+            }
+        }
+        if (this.minDate && typeof this.minDate == 'string') {
+            var d = new Date(this.minDate);
+            if (Number.isNaN(d.getTime())) {
+                this.minDate = undefined;
+            }
+            else {
+                this.minDate = d;
+            }
+        }
+        if (this.maxDate && typeof this.maxDate == 'string') {
+            var d = new Date(this.maxDate);
+            if (Number.isNaN(d.getTime())) {
+                this.maxDate = undefined;
+            }
+            else {
+                this.maxDate = d;
+            }
+        }
+        if (this.minHour) {
+            if (this.minHour instanceof Date) {
+                this.minHour = this.minHour.getHours();
+            }
+            else {
+                var hour = Number(this.minHour.toString());
+                if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+                    this.minHour = undefined;
+                }
+            }
+        }
+        if (this.maxHour) {
+            if (this.maxHour instanceof Date) {
+                this.maxHour = this.maxHour.getHours();
+            }
+            else {
+                var hour = Number(this.maxHour.toString());
+                if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+                    this.maxHour = undefined;
+                }
+            }
+        }
+    };
     DateTimePickerDirective.prototype.ngOnInit = function () {
         var _this = this;
-        if (this.parent && this.parent["form"] && this.formControlName) {
-            this.ctrl = this.parent["form"].get(this.formControlName);
-            this.sub = this.ctrl.valueChanges.subscribe(function (date) {
-                _this.setElement(date);
-                _this.updateDatepicker();
-            });
+        if (this.firstDayOfWeek) {
+            datetime_1.DateTime.customFirstDayOfWeek = parseInt(this.firstDayOfWeek);
         }
+        if (this.parent && this.formControlName) {
+            if (this.parent["form"]) {
+                this.ctrl = this.parent["form"].get(this.formControlName);
+            }
+            else if (this.parent["name"]) {
+                var formDir = this.parent.formDirective;
+                if (formDir instanceof forms_1.FormGroupDirective && formDir.form.get(this.parent["name"])) {
+                    this.ctrl = formDir.form.get(this.parent["name"]).get(this.formControlName);
+                }
+            }
+            if (this.ctrl) {
+                this.sub = this.ctrl.valueChanges.subscribe(function (date) {
+                    _this.setElement(date);
+                    _this.updateDatepicker();
+                });
+            }
+        }
+        this.normalizeInput();
         //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
         var wrapper = document.createElement("div");
         wrapper.className = 'ng2-datetime-picker';
