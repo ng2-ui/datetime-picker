@@ -1,22 +1,11 @@
-import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
-import { CommonModule  } from '@angular/common';
-
-import { DateTime } from './datetime';
-import { DateTimePickerComponent } from './datetime-picker.component';
-import { DateTimePickerDirective } from './datetime-picker.directive';
+import { Ng2Datetime } from './ng2-datetime';
+import { Ng2DatetimePickerComponent } from './ng2-datetime-picker.component';
+import { Ng2DatetimePickerDirective } from './ng2-datetime-picker.directive';
+import { Ng2DatetimePickerModule } from './ng2-datetime-picker.module';
 
 export {
-  DateTime,
-  DateTimePickerComponent,
-  DateTimePickerDirective
-};
-
-@NgModule({
-  imports: [ CommonModule, FormsModule ],
-  declarations: [DateTimePickerComponent, DateTimePickerDirective],
-  exports:  [DateTimePickerComponent, DateTimePickerDirective],
-  entryComponents: [DateTimePickerComponent],
-  providers: [ DateTime ]
-})
-export class Ng2DatetimePickerModule {}
+  Ng2Datetime,
+  Ng2DatetimePickerComponent,
+  Ng2DatetimePickerDirective,
+  Ng2DatetimePickerModule
+}

@@ -3,7 +3,7 @@ declare var moment: any;
 import {Injectable} from "@angular/core";
 
 @Injectable()
-export class DateTime {
+export class Ng2Datetime {
   months: any[];
   days: number[];
   firstDayOfWeek: number;
@@ -68,8 +68,8 @@ export class DateTime {
 
     this.firstDayOfWeek = this.firstDayOfWeek || 0;
 
-    if (DateTime.customFirstDayOfWeek !== undefined) {
-      this.firstDayOfWeek = DateTime.customFirstDayOfWeek;
+    if (Ng2Datetime.customFirstDayOfWeek !== undefined) {
+      this.firstDayOfWeek = Ng2Datetime.customFirstDayOfWeek;
     }
 
     this.localizedDaysOfWeek = this.daysOfWeek
@@ -144,10 +144,10 @@ export class DateTime {
   //return date as given from given string
   // without considering timezone and day light saving time considered
   static parse(dateStr: string): Date {
-    dateStr = DateTime.removeTimezone(dateStr);
-    dateStr = dateStr + DateTime.addDSTOffset(dateStr);
+    dateStr = Ng2Datetime.removeTimezone(dateStr);
+    dateStr = dateStr + Ng2Datetime.addDSTOffset(dateStr);
 
-    return DateTime.getDateFromString(dateStr);
+    return Ng2Datetime.getDateFromString(dateStr);
   }
 
   //remove timezone
@@ -164,7 +164,7 @@ export class DateTime {
   }
 
   static addDSTOffset(dateStr): string {
-    let date = DateTime.getDateFromString(dateStr);
+    let date = Ng2Datetime.getDateFromString(dateStr);
     let jan = new Date(date.getFullYear(), 0, 1);
     let jul = new Date(date.getFullYear(), 6, 1);
     let stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
@@ -190,7 +190,7 @@ export class DateTime {
   }
 
   static setFirstDayOfWeek(firstDayOfWeek: number) {
-    DateTime.customFirstDayOfWeek = firstDayOfWeek;
+    Ng2Datetime.customFirstDayOfWeek = firstDayOfWeek;
   }
 }
 

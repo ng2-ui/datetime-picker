@@ -13,11 +13,7 @@ import { FormsModule, ReactiveFormsModule }    from "@angular/forms";
 import { AppComponent }   from './app.component';
 
 //noinspection TypeScriptCheckImport
-import { Ng2DatetimePickerModule, DateTime } from 'ng2-datetime-picker';
-
-export {
-  DateTime
-}
+import { Ng2DatetimePickerModule, Ng2Datetime } from 'ng2-datetime-picker';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, Ng2DatetimePickerModule],

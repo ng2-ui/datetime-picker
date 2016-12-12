@@ -9,7 +9,7 @@ import {
   ViewChild,
   AfterViewInit
 } from '@angular/core';
-import {DateTime} from './datetime';
+import {Ng2Datetime} from './ng2-datetime';
 
 //@TODO
 // . display currently selected day
@@ -18,17 +18,17 @@ import {DateTime} from './datetime';
  * show a selected date in monthly calendar
  */
 @Component({
-  providers    : [DateTime],
-  selector     : 'datetime-picker',
+  providers    : [Ng2Datetime],
+  selector     : 'ng2-datetime-picker',
   template     : `
-<div class="datetime-picker" tabindex="0">
+<div class="ng2-datetime-picker" tabindex="0">
 
   <!-- Month - Year  -->
   <div class="month" *ngIf="!timeOnly">
     <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
     <b class="prev_next prev" (click)="updateMonthData(-1)">&lsaquo;</b>
-     <span title="{{dateTime.months[monthData.month]?.fullName}}">
-           {{dateTime.months[monthData.month]?.shortName}}
+     <span title="{{ng2Datetime.months[monthData.month]?.fullName}}">
+           {{ng2Datetime.months[monthData.month]?.shortName}}
      </span>
     {{monthData.year}}
     <b class="prev_next next" (click)="updateMonthData(+12)">&raquo;</b>
@@ -40,7 +40,7 @@ import {DateTime} from './datetime';
 
     <!-- Su Mo Tu We Th Fr Sa -->
     <div class="day-of-week"
-         *ngFor="let dayOfWeek of dateTime.localizedDaysOfWeek"
+         *ngFor="let dayOfWeek of ng2Datetime.localizedDaysOfWeek"
          [ngClass]="{weekend: dayOfWeek.weekend}"
          title="{{dayOfWeek.fullName}}">
       {{dayOfWeek.shortName}}
@@ -112,11 +112,11 @@ import {DateTime} from './datetime';
   }
 }
 
-.ng2-datetime-picker {
-    position: relative;
+.ng2-datetime-picker-wrapper {
+  position: relative;
 }
 
-.datetime-picker {
+.ng2-datetime-picker {
     color: #333;
     outline-width: 0;
     font: normal 14px sans-serif;
@@ -126,7 +126,7 @@ import {DateTime} from './datetime';
     animation: slideDown 0.1s ease-in-out;
     animation-fill-mode: both;
 }
-.datetime-picker > .month {
+.ng2-datetime-picker > .month {
     text-align: center;
     line-height: 22px;
     padding: 10px;
@@ -136,7 +136,7 @@ import {DateTime} from './datetime';
     border-bottom: 1px solid #ddd;
     position: relative;
 }
-.datetime-picker > .month > .prev_next {
+.ng2-datetime-picker > .month > .prev_next {
     color: #555;
     display: block;
     font: normal 24px sans-serif;
@@ -147,23 +147,23 @@ import {DateTime} from './datetime';
     width: 15px;
     text-align: center;
 }
-.datetime-picker > .month > .prev_next:hover {
+.ng2-datetime-picker > .month > .prev_next:hover {
   background-color: #333;
   color: #fff;
 }
-.datetime-picker > .month > .prev_next.prev {
+.ng2-datetime-picker > .month > .prev_next.prev {
   float: left;
 }
-.datetime-picker > .month > .prev_next.next {
+.ng2-datetime-picker > .month > .prev_next.next {
   float: right;
 }
-.datetime-picker > .days {
+.ng2-datetime-picker > .days {
     width: 210px; /* 30 x 7 */
     margin: 10px;
     text-align: center;
 }
-.datetime-picker > .days .day-of-week,
-.datetime-picker > .days .day {
+.ng2-datetime-picker > .days .day-of-week,
+.ng2-datetime-picker > .days .day {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     border: 1px solid transparent;
@@ -171,51 +171,51 @@ import {DateTime} from './datetime';
     line-height: 28px;
     float: left;
 }
-.datetime-picker > .days .day-of-week {
+.ng2-datetime-picker > .days .day-of-week {
     font-weight: bold;
 }
-.datetime-picker > .days .day-of-week.weekend {
+.ng2-datetime-picker > .days .day-of-week.weekend {
     color: #ccc;
     background-color: inherit;
 }
-.datetime-picker > .days .day:not(.selectable) {
+.ng2-datetime-picker > .days .day:not(.selectable) {
     color: #ccc;
     cursor: default;
 }
-.datetime-picker > .days .weekend {
+.ng2-datetime-picker > .days .weekend {
     color: #ccc;
     background-color: #eee;
 }
-.datetime-picker > .days .day.selectable  {
+.ng2-datetime-picker > .days .day.selectable  {
     cursor: pointer;
 }
-.datetime-picker > .days .day.selected {
+.ng2-datetime-picker > .days .day.selected {
     background: gray;
     color: #fff;
 }
-.datetime-picker > .days .day:not(.selected).selectable:hover {
+.ng2-datetime-picker > .days .day:not(.selected).selectable:hover {
     background: #eee;
 }
-.datetime-picker > .days:after {
+.ng2-datetime-picker > .days:after {
     content: '';
     display: block;
     clear: left;
     height: 0;
 }
-.datetime-picker .hourLabel,
-.datetime-picker .minutesLabel {
+.ng2-datetime-picker .hourLabel,
+.ng2-datetime-picker .minutesLabel {
     display: inline-block;
     width: 40px;
     text-align: right;
 }
-.datetime-picker input[type=range] {
+.ng2-datetime-picker input[type=range] {
     width: 200px;
 }
   `
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class DateTimePickerComponent implements AfterViewInit {
+export class Ng2DatetimePickerComponent implements AfterViewInit {
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
   @Input('selected-date')     selectedDate: Date;
@@ -240,7 +240,11 @@ export class DateTimePickerComponent implements AfterViewInit {
   public monthData:any;  // month calendar data
   public disabledDatesInTime: number[];
 
-  public constructor (elementRef:ElementRef, public dateTime:DateTime, public cdRef:ChangeDetectorRef) {
+  public constructor (
+    elementRef: ElementRef,
+    public ng2Datetime: Ng2Datetime,
+    public cdRef: ChangeDetectorRef
+  ) {
     this.el = elementRef.nativeElement;
   }
 
@@ -280,11 +284,11 @@ export class DateTimePickerComponent implements AfterViewInit {
   public set day (day) {}
   public set today (today) {}
 
-  public initDateTime (date:Date) {
+  public initDatetime (date:Date) {
     this.selectedDate = date || this.defaultValue || new Date();
     this.hour         = this.selectedDate.getHours();
     this.minute       = this.selectedDate.getMinutes();
-    this.monthData    = this.dateTime.getMonthData(this.year, this.month);
+    this.monthData    = this.ng2Datetime.getMonthData(this.year, this.month);
   }
 
   public toDate (day:number, month?: number):Date {
@@ -314,7 +318,7 @@ export class DateTimePickerComponent implements AfterViewInit {
    * show prev/next month calendar
    */
   public updateMonthData (num:number) {
-    this.monthData = this.dateTime.getMonthData(this.monthData.year, this.monthData.month + num);
+    this.monthData = this.ng2Datetime.getMonthData(this.monthData.year, this.monthData.month + num);
   }
 
   public isDateDisabled(date: Date) {
