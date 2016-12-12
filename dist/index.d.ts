@@ -1,6 +1,5 @@
-import { DateTime } from './datetime';
-import { DateTimePickerComponent } from './datetime-picker.component';
-import { DateTimePickerDirective } from './datetime-picker.directive';
-export { DateTime, DateTimePickerComponent, DateTimePickerDirective };
-export declare class Ng2DatetimePickerModule {
-}
+import { Ng2Datetime } from './ng2-datetime';
+import { Ng2DatetimePickerComponent } from './ng2-datetime-picker.component';
+import { Ng2DatetimePickerDirective } from './ng2-datetime-picker.directive';
+import { Ng2DatetimePickerModule } from './ng2-datetime-picker.module';
+export { Ng2Datetime, Ng2DatetimePickerComponent, Ng2DatetimePickerDirective, Ng2DatetimePickerModule };
