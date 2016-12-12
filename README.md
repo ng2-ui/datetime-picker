@@ -80,7 +80,7 @@ For full example, please check `test` directory to see the example of;
 
 ## Override default style
 
-The default style is written in `src/datetime-picker.component.ts`. 
+The default style is written in `src/ng2-datetime-picker.component.ts`. 
 This can be overwritten by giving more details css seletor.
  
 e.g., 
@@ -96,16 +96,16 @@ If you use momentjs, you can use momentjs dateformat by adding the following in 
     <script src="moment-with-locales.min.js"></script>
 
 If you want to have your dateformat without using momentjs, 
-please override `DateTime.parser` and `DateTime.formatDate` function.
+please override `Ng2DateTime.parser` and `Ng2DateTime.formatDate` function.
 For example, 
 
-    import { Ng2DatetimePickerModule, DateTime } from 'ng2-datetime-picker';
+    import { Ng2DatetimePickerModule, Ng2DateTime } from 'ng2-datetime-picker';
 
     // Override Date object formatter
-    DateTime.formatDate = (date: Date) : string => { ..... my own function .... };
+    Ng2DateTime.formatDate = (date: Date) : string => { ..... my own function .... };
 
     // Override Date object parser
-    DateTime.parse = (str: any): Date => { .... my own function ... } ;
+    Ng2DateTime.parse = (str: any): Date => { .... my own function ... } ;
 
     @NgModule({
       imports: [BrowserModule, FormsModule, Ng2DatetimePickerModule],
@@ -138,8 +138,7 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
   All options are optional except value
 
   * **date-only**,  true or false, default is false
-  * **close-on-select**, true or false. indicates to close
-    datetime-picker when select a date. default: true
+  * **close-on-select**, true or false. indicates to close ng2-datetime-picker when select a date. default: true
   * **time-only**, true or false, default is false 
   * **first-day-of-week** start day of week, 0 is sunday
   * **date-format**,  momentjs date format, e.g. YYYY-MM-DD hh:mm:ss
