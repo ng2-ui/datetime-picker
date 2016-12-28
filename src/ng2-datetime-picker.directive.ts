@@ -195,14 +195,15 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     this.setElement(date);
 
     this.el.value = this.getFormattedDateStr();
+
     if(this.ctrl) {
       this.ctrl.patchValue(this.el.value);
     }
 
-    this.ngModel = this.el['dateValue'];
-    if (this.ngModel) {
-      this.ngModel.toString = () => { return this.el.value; };
-      this.ngModelChange.emit(this.ngModel);
+    if (this.el['dateValue']) {
+      // date formatting that occurs in multiple places causes an error
+      // removal of redundant code
+      this.ngModelChange.emit(this.el.value);
     } 
   };
 

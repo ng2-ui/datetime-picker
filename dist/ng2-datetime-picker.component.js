@@ -121,11 +121,11 @@ var Ng2DatetimePickerComponent = (function () {
                 },] },
     ];
     /** @nocollapse */
-    Ng2DatetimePickerComponent.ctorParameters = [
+    Ng2DatetimePickerComponent.ctorParameters = function () { return [
         { type: core_1.ElementRef, },
         { type: ng2_datetime_1.Ng2Datetime, },
         { type: core_1.ChangeDetectorRef, },
-    ];
+    ]; };
     Ng2DatetimePickerComponent.propDecorators = {
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
         'timeOnly': [{ type: core_1.Input, args: ['time-only',] },],

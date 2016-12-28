@@ -504,10 +504,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (_this.ctrl) {
 	                _this.ctrl.patchValue(_this.el.value);
 	            }
-	            _this.ngModel = _this.el['dateValue'];
-	            if (_this.ngModel) {
-	                _this.ngModel.toString = function () { return _this.el.value; };
-	                _this.ngModelChange.emit(_this.ngModel);
+	            if (_this.el['dateValue']) {
+	                // date formatting that occurs in multiple places causes an error
+	                // removal of redundant code
+	                _this.ngModelChange.emit(_this.el.value);
 	            }
 	        };
 	        this.hideDatetimePicker = function (event) {

@@ -158,7 +158,7 @@ var Ng2Datetime = (function () {
         { type: core_1.Injectable },
     ];
     /** @nocollapse */
-    Ng2Datetime.ctorParameters = [];
+    Ng2Datetime.ctorParameters = function () { return []; };
     return Ng2Datetime;
 }());
 exports.Ng2Datetime = Ng2Datetime;
