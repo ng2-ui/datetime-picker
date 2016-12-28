@@ -1,14 +1,21 @@
 import { Component } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 
+declare var moment: any;
+moment['locale']('en-ca'); //e.g. fr-ca
+
+//noinspection TypeScriptCheckImport
+import { Ng2Datetime } from 'ng2-datetime-picker';
+Ng2Datetime.firstDayOfWeek = 0; //e.g. 1, or 6
+
 //
 // The following is tested for custom DateTime parser/formatter
 //
-// DateTime.formatDate = function(d: Date) {
+// Ng2DateTime.formatDate = function(d: Date) {
 //   return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + pad0(d.getDate());
 // };
 //
-// DateTime.parse = function(s: string) {
+// Ng2DateTime.parseDate = function(s: string) {
 //   let tmp = dateStr.split('/');
 //   return  new Date( parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2]) );
 // };
@@ -20,7 +27,9 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
     <h1>Ng2 DateTime Picker Test</h1>
     
     <br/><br/> 
-    <input [(ngModel)]="myDate" 
+    <input
+      id="test1"
+      [(ngModel)]="myDate" 
       ng2-datetime-picker
       [min-date]="minDate"
       [max-date]="maxDate"
@@ -33,10 +42,11 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
     <br/><br/> 
     <form [formGroup]="myForm">
         <input 
-        required
-        formControlName="date" 
-        ng2-datetime-picker
-        close-on-select="false"/>
+          id="test2"
+          required
+          formControlName="date" 
+          ng2-datetime-picker
+          close-on-select="false"/>
     </form>
     myForm.controls.date.value: {{myForm.controls.date.value}}
     <br/>
@@ -57,6 +67,7 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 
    <br/><br/> 
     <input [(ngModel)]="date" ng2-datetime-picker 
+      id="test3"
       date-format="DD-MM-YYYY hh:mm"
       time-only="true"
       minute-step="5"
@@ -68,7 +79,11 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
    close-on-select="false"  /&gt;</code></pre>
     
    <br/><br/> 
-    <input [(ngModel)]="gmtDate" ng2-datetime-picker date-format="MM-DD-YYYY" />
+    <input 
+      id="test4"
+      [(ngModel)]="gmtDate" 
+      ng2-datetime-picker
+      date-format="MM-DD-YYYY" />
 gmtDate : "2015-01-01T00:00:00.000Z" 
     <br/>
     <a href="#" (click)="gmtDate='2016-11-03T22:00:00Z'">Set date/time to: 2016-11-03T22:00:00Z</a>
@@ -77,8 +92,11 @@ gmtDate : "2015-01-01T00:00:00.000Z"
     
    <br/><br/> 
    
-     <input [(ngModel)]="date5" ng2-datetime-picker
-        [default-value]="date5DefaultValue" /><br/>
+     <input
+       id="test5"
+       [(ngModel)]="date5"
+       ng2-datetime-picker
+       [default-value]="date5DefaultValue" /><br/>
     <pre><code class="language-markup"
   >&lt;input [(ngModel)]="date5" ng2-datetime-picker 
      [defaultValue]="date5DefaultValue" /&gt;</code></pre>
@@ -98,7 +116,7 @@ export class AppComponent {
   date5DefaultValue = new Date(2014, 11, 31, 21, 45, 59);
   minDate = new Date(2016, 0, 1);
   maxDate = new Date(2016, 11, 31);
-  disabledDates = [new Date(2016, 11, 20), new Date(2016, 11, 21)];
+  disabledDates = [new Date(2016, 11, 26), new Date(2016, 11, 27)];
 
   constructor(private fb: FormBuilder) { }
 

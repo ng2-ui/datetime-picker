@@ -1,0 +1,8 @@
+DateTime Picker Test On Browser
+To Run this, run $ `npm start`first to start the web server with port 9002
+
+open browser
+go to http://localhost:9002
+
+TEST1
+  click 

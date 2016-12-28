@@ -1,17 +1,7 @@
 import {
-  Directive,
-  Input,
-  Output,
-  OnInit,
-  OnChanges,
-  ComponentRef,
-  ViewContainerRef,
-  EventEmitter,
-  ComponentFactoryResolver,
-  Optional,
-  SimpleChanges,
-  SkipSelf,
-  Host
+  ComponentFactoryResolver, ComponentRef, Directive, EventEmitter, Host,
+  Input, OnChanges, OnInit, Optional, Output,
+  SimpleChanges, SkipSelf, ViewContainerRef
 } from '@angular/core';
 import {AbstractControl, ControlContainer, FormGroup, FormGroupDirective} from '@angular/forms';
 import {Ng2DatetimePickerComponent} from './ng2-datetime-picker.component';
@@ -75,17 +65,17 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
   normalizeInput() {
     if (this.defaultValue && typeof this.defaultValue === 'string') {
-      let d = Ng2Datetime.parse(<string>this.defaultValue);
+      let d = Ng2Datetime.parseDate(<string>this.defaultValue);
       this.defaultValue = Number.isNaN(d.getTime()) ? new Date() : d;
     }
 
     if (this.minDate && typeof this.minDate == 'string') {
-      let d = Ng2Datetime.parse(<string>this.minDate);
+      let d = Ng2Datetime.parseDate(<string>this.minDate);
       this.minDate = Number.isNaN(d.getTime()) ? new Date() : d;
     }
 
     if (this.maxDate && typeof this.maxDate == 'string') {
-      let d = Ng2Datetime.parse(<string>this.minDate);
+      let d = Ng2Datetime.parseDate(<string>this.minDate);
       this.maxDate = Number.isNaN(d.getTime()) ? new Date() : d;
     }
 
@@ -114,7 +104,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
   ngOnInit ():void {
     if (this.firstDayOfWeek) {
-      Ng2Datetime.customFirstDayOfWeek = parseInt(this.firstDayOfWeek);
+      Ng2Datetime.firstDayOfWeek = parseInt(this.firstDayOfWeek);
     }
     if(this.parent && this.formControlName) {
       if (this.parent["form"]) {
@@ -127,7 +117,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
       }
       if (this.ctrl) {
         this.sub = this.ctrl.valueChanges.subscribe((date) => {
-          this.setElement(date)
+          this.setInputElDateValue(date);
           this.updateDatepicker();
         });
       }
@@ -158,7 +148,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
       date = changes['ngModel'].currentValue;
     } 
 
-    this.setElement(date);
+    this.setInputElDateValue(date);
     this.updateDatepicker();
   }
 
@@ -169,7 +159,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     }
   }
 
-  setElement(date) {
+  setInputElDateValue(date) {
     if (typeof date === 'string' && date) {
       this.el['dateValue'] = this.getDate(date);
     } else if (typeof date === 'object') {
@@ -192,7 +182,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
   /* input element string value is changed */
   valueChanged = (date: string | Date): void => {
-    this.setElement(date);
+    this.setInputElDateValue(date);
 
     this.el.value = this.getFormattedDateStr();
     if(this.ctrl) {
@@ -233,8 +223,8 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.initDatetime(<Date>this.el['dateValue']);
     this.styleDatetimePicker();
 
-    component.changes.subscribe(this.valueChanged);
-    component.closing.subscribe(() => {
+    component.selected$.subscribe(this.valueChanged);
+    component.closing$.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
     
@@ -307,28 +297,17 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
    *  returns toString function of date object
    */
   private getFormattedDateStr(): string {
-    if (this.el['dateValue']) {
-      if (this.dateFormat && typeof moment !== 'undefined') {
-        return  Ng2Datetime.momentFormatDate(this.el['dateValue'], this.dateFormat);
-      } else {
-        return Ng2Datetime.formatDate(this.el['dateValue'], this.dateOnly);
-      }
-    } else {
-      return null;
-    }
+    return Ng2Datetime.formatDate(
+        this.el['dateValue'],
+        this.dateFormat,
+        this.dateOnly
+      );
   }
 
-  private getDate(arg: string): Date {
-    let date: Date;
+  private getDate(arg: any): Date {
+    let date: Date = <Date>arg;
     if (typeof arg === 'string') {
-      if (this.dateFormat && typeof moment !== 'undefined') {
-        date = Ng2Datetime.momentParse(arg, this.dateFormat);
-      } else {
-        //remove timezone and respect day light saving time
-        date = Ng2Datetime.parse(arg);
-      }
-    } else {
-      date = <Date>arg;
+      date =  Ng2Datetime.parseDate(arg, this.dateFormat);
     }
     return date;
   }

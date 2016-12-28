@@ -27,8 +27,8 @@ import {Ng2Datetime} from './ng2-datetime';
   <div class="month" *ngIf="!timeOnly">
     <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
     <b class="prev_next prev" (click)="updateMonthData(-1)">&lsaquo;</b>
-     <span title="{{ng2Datetime.months[monthData.month]?.fullName}}">
-           {{ng2Datetime.months[monthData.month]?.shortName}}
+     <span title="{{monthData?.fullName}}">
+           {{monthData?.shortName}}
      </span>
     {{monthData.year}}
     <b class="prev_next next" (click)="updateMonthData(+12)">&raquo;</b>
@@ -40,7 +40,7 @@ import {Ng2Datetime} from './ng2-datetime';
 
     <!-- Su Mo Tu We Th Fr Sa -->
     <div class="day-of-week"
-         *ngFor="let dayOfWeek of ng2Datetime.localizedDaysOfWeek"
+         *ngFor="let dayOfWeek of monthData.localizedDaysOfWeek"
          [ngClass]="{weekend: dayOfWeek.weekend}"
          title="{{dayOfWeek.fullName}}">
       {{dayOfWeek.shortName}}
@@ -56,7 +56,7 @@ import {Ng2Datetime} from './ng2-datetime';
 
     <div class="day"
          *ngFor="let dayNum of monthData.days"
-         (click)="selectDate(toDate(dayNum))"
+         (click)="selectDateTime(toDate(dayNum))"
          title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
          [ngClass]="{
            selectable: !isDateDisabled(toDate(dayNum)),
@@ -88,7 +88,7 @@ import {Ng2Datetime} from './ng2-datetime';
     </span><br/>
     <label class="hourLabel">Hour:</label>
     <input #hours class="hourInput"
-           (change)="selectDate()"
+           (change)="selectDateTime()"
            type="range"
            min="{{minHour || 0}}"
            max="{{maxHour || 23}}"
@@ -96,7 +96,7 @@ import {Ng2Datetime} from './ng2-datetime';
     <label class="minutesLabel">Min:</label>
     <input #minutes class="minutesInput"
            step="{{minuteStep}}"
-           (change)="selectDate()"
+           (change)="selectDateTime()"
            type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
   </div>
 </div>
@@ -230,8 +230,8 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
   @Input('max-hour')          maxHour: number;
   @Input('disabled-dates')    disabledDates: Date[];
 
-  @Output('changes')   changes:EventEmitter<any> = new EventEmitter();
-  @Output('closing')   closing:EventEmitter<any> = new EventEmitter();
+  @Output('selected$')  selected$:EventEmitter<any> = new EventEmitter();
+  @Output('closing$')   closing$:EventEmitter<any> = new EventEmitter();
 
   @ViewChild('hours')   hours:ElementRef;
   @ViewChild('minutes') minutes:ElementRef;
@@ -303,15 +303,15 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
    * set the selected date and close it when closeOnSelect is true
    * @param date {Date}
    */
-  public selectDate(date?: Date) {
+  public selectDateTime(date?: Date) {
     this.selectedDate = date || this.selectedDate;
     if (this.isDateDisabled(this.selectedDate)) {
       return false;
     }
     this.selectedDate.setHours(parseInt( ''+this.hour || '0', 10));
     this.selectedDate.setMinutes(parseInt( ''+this.minute|| '0', 10));
-    this.changes.emit(this.selectedDate);
-    this.closing.emit(true);
+    this.selected$.emit(this.selectedDate);
+    this.closing$.emit(true);
   };
 
   /**
