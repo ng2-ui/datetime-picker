@@ -45,7 +45,7 @@ AngularJS 2 DateTime Picker
         })
         export class AppModule { }
 
-## Usage it in your code
+## Use it in your code
 
         
        <input
