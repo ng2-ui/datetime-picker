@@ -30,7 +30,7 @@ var Ng2DatetimePickerDirective = (function () {
             }
             _this.ngModel = _this.el['dateValue'];
             if (_this.ngModel) {
-                _this.ngModel.toString = function () { return _this.el.value; };
+                _this.ngModel = _this.el.value;
                 _this.ngModelChange.emit(_this.ngModel);
             }
         };
