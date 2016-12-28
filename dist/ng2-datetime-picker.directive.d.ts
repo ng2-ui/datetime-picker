@@ -1,4 +1,4 @@
-import { OnInit, OnChanges, ViewContainerRef, EventEmitter, ComponentFactoryResolver, SimpleChanges } from '@angular/core';
+import { ComponentFactoryResolver, EventEmitter, OnChanges, OnInit, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 /**
  * If the given string is not a valid date, it defaults back to today
@@ -33,7 +33,7 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     updateDatepicker(): void;
-    setElement(date: any): void;
+    setInputElDateValue(date: any): void;
     ngOnDestroy(): void;
     valueChanged: (date: string | Date) => void;
     showDatetimePicker(event?: any): void;

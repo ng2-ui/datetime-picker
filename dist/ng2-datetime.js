@@ -1,124 +1,46 @@
 "use strict";
 var core_1 = require("@angular/core");
+/**
+ * Static variables that you can override
+ *   1. days.           default 1,2,....31
+ *   2. daysOfWeek,     default Sunday, Monday, .....
+ *   3. firstDayOfWeek, default 0 as in Sunday
+ *   4. months,         default January, February
+ *   5. formatDate(d)   default returns YYYY-MM-DD HH:MM
+ *   6. parseDate(str)  default returns date from YYYY-MM-DD HH:MM
+ */
 var Ng2Datetime = (function () {
     function Ng2Datetime() {
-        this.initialize();
     }
-    Ng2Datetime.prototype.initialize = function () {
-        this.months = [
-            { fullName: 'January', shortName: 'Jan' },
-            { fullName: 'February', shortName: 'Feb' },
-            { fullName: 'March', shortName: 'Mar' },
-            { fullName: 'April', shortName: 'Apr' },
-            { fullName: 'May', shortName: 'May' },
-            { fullName: 'June', shortName: 'Jun' },
-            { fullName: 'July', shortName: 'Jul' },
-            { fullName: 'August', shortName: 'Aug' },
-            { fullName: 'September', shortName: 'Sep' },
-            { fullName: 'October', shortName: 'Oct' },
-            { fullName: 'November', shortName: 'Nov' },
-            { fullName: 'December', shortName: 'Dec' }
-        ];
-        this.days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-        /**
-         * According to International Standard ISO 8601, Monday is the first day of the week
-         * followed by Tuesday, Wednesday, Thursday, Friday, Saturday,
-         * and with Sunday as the seventh and final day.
-         * However, in Javascript Sunday is 0, Monday is 1.. and so on
-         */
-        this.daysOfWeek = [
-            { fullName: 'Sunday', shortName: 'Su', weekend: true },
-            { fullName: 'Monday', shortName: 'Mo' },
-            { fullName: 'Tuesday', shortName: 'Tu' },
-            { fullName: 'Wednesday', shortName: 'We' },
-            { fullName: 'Thursday', shortName: 'Th' },
-            { fullName: 'Friday', shortName: 'Fr' },
-            { fullName: 'Saturday', shortName: 'Sa', weekend: true }
-        ];
-        /**
-         * if momentjs is available, use momentjs localized months, week, etc.
-         */
-        if (typeof moment !== 'undefined') {
-            this.months = this.months.map(function (el, index) {
-                el.fullName = moment.months()[index];
-                el.shortName = moment.monthsShort()[index];
-                return el;
-            });
-            this.daysOfWeek = this.daysOfWeek.map(function (el, index) {
-                el.fullName = moment.weekdays()[index];
-                el.shortName = moment.weekdaysShort()[index].substr(0, 2);
-                return el;
-            });
-            this.firstDayOfWeek = moment.localeData().firstDayOfWeek();
+    Ng2Datetime.formatDate = function (d, format, dateOnly) {
+        var ret;
+        if (d && !format) {
+            // return d.toLocaleString('en-us', hash); // IE11 does not understand this
+            var pad0 = function (number) { return ("0" + number).slice(-2); };
+            ret = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
+            ret += dateOnly ? '' : ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
+            return ret;
         }
-        this.firstDayOfWeek = this.firstDayOfWeek || 0;
-        if (Ng2Datetime.customFirstDayOfWeek !== undefined) {
-            this.firstDayOfWeek = Ng2Datetime.customFirstDayOfWeek;
+        else if (d && moment) {
+            return moment(d).format(format);
         }
-        this.localizedDaysOfWeek = this.daysOfWeek
-            .concat(this.daysOfWeek)
-            .splice(this.firstDayOfWeek, 7);
+        else {
+            return '';
+        }
     };
-    Ng2Datetime.prototype.getMonthData = function (year, month) {
-        year = month > 11 ? year + 1 :
-            month < 0 ? year - 1 : year;
-        month = (month + 12) % 12;
-        var firstDayOfMonth = new Date(year, month, 1);
-        var lastDayOfMonth = new Date(year, month + 1, 0);
-        var lastDayOfPreviousMonth = new Date(year, month, 0);
-        var daysInMonth = lastDayOfMonth.getDate();
-        var daysInLastMonth = lastDayOfPreviousMonth.getDate();
-        var dayOfWeek = firstDayOfMonth.getDay();
-        // Ensure there are always leading days to give context
-        var leadingDays = (dayOfWeek - this.firstDayOfWeek + 7) % 7 || 7;
-        var trailingDays = this.days.slice(0, 6 * 7 - (leadingDays + daysInMonth));
-        if (trailingDays.length > 7) {
-            trailingDays = trailingDays.slice(0, trailingDays.length - 7);
-        }
-        var monthData = {
-            year: year,
-            month: month,
-            days: this.days.slice(0, daysInMonth),
-            leadingDays: this.days.slice(-leadingDays - (31 - daysInLastMonth), daysInLastMonth),
-            trailingDays: trailingDays
-        };
-        return monthData;
-    };
-    ;
-    Ng2Datetime.momentFormatDate = function (d, dateFormat) {
+    Ng2Datetime.parseDate = function (dateStr, dateFormat) {
         if (typeof moment === 'undefined') {
-            console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
+            dateStr = Ng2Datetime.removeTimezone(dateStr);
+            dateStr = dateStr + Ng2Datetime.addDSTOffset(dateStr);
+            return Ng2Datetime.parseFromDefaultFormat(dateStr);
         }
-        return moment(d).format(dateFormat);
-    };
-    Ng2Datetime.momentParse = function (dateStr, dateFormat) {
-        if (typeof moment === 'undefined') {
-            console.error("momentjs is required with dateFormat.\n        please add <script src=\"moment.min.js\"></script>\"> in your html.");
+        else if (dateFormat) {
+            var date = moment(dateStr, dateFormat).toDate();
+            if (isNaN(date.getTime())) {
+                date = moment(dateStr).toDate(); //parse as ISO format
+            }
+            return date;
         }
-        //return moment(dateStr).toDate();
-        var date = moment(dateStr, dateFormat).toDate();
-        if (isNaN(date.getTime())) {
-            date = moment(dateStr).toDate(); //parse as ISO format
-        }
-        return date;
-    };
-    Ng2Datetime.formatDate = function (d, dateOnly) {
-        // return d.toLocaleString('en-us', hash); // IE11 does not understand this
-        var pad0 = function (number) {
-            return ("0" + number).slice(-2);
-        };
-        var ret = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
-        if (!dateOnly) {
-            ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
-        }
-        return ret;
-    };
-    //return date as given from given string
-    // without considering timezone and day light saving time considered
-    Ng2Datetime.parse = function (dateStr) {
-        dateStr = Ng2Datetime.removeTimezone(dateStr);
-        dateStr = dateStr + Ng2Datetime.addDSTOffset(dateStr);
-        return Ng2Datetime.getDateFromString(dateStr);
     };
     //remove timezone
     Ng2Datetime.removeTimezone = function (dateStr) {
@@ -133,7 +55,7 @@ var Ng2Datetime = (function () {
             .replace(/000Z$/, '00'); //remove timezone
     };
     Ng2Datetime.addDSTOffset = function (dateStr) {
-        var date = Ng2Datetime.getDateFromString(dateStr);
+        var date = Ng2Datetime.parseFromDefaultFormat(dateStr);
         var jan = new Date(date.getFullYear(), 0, 1);
         var jul = new Date(date.getFullYear(), 6, 1);
         var stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
@@ -146,14 +68,76 @@ var Ng2Datetime = (function () {
             ('0' + (offset % 60)).slice(-2);
     };
     ;
-    Ng2Datetime.getDateFromString = function (dateStr) {
+    Ng2Datetime.parseFromDefaultFormat = function (dateStr) {
         var tmp = dateStr.split(/[\+\-:\ T]/); // split by dash, colon or space
         return new Date(parseInt(tmp[0], 10), parseInt(tmp[1], 10) - 1, parseInt(tmp[2], 10), parseInt(tmp[3] || '0', 10), parseInt(tmp[4] || '0', 10), parseInt(tmp[5] || '0', 10));
     };
-    Ng2Datetime.setFirstDayOfWeek = function (firstDayOfWeek) {
-        Ng2Datetime.customFirstDayOfWeek = firstDayOfWeek;
+    Ng2Datetime.prototype.getMonthData = function (year, month) {
+        year = month > 11 ? year + 1 :
+            month < 0 ? year - 1 : year;
+        month = (month + 12) % 12;
+        var firstDayOfMonth = new Date(year, month, 1);
+        var lastDayOfMonth = new Date(year, month + 1, 0);
+        var lastDayOfPreviousMonth = new Date(year, month, 0);
+        var daysInMonth = lastDayOfMonth.getDate();
+        var daysInLastMonth = lastDayOfPreviousMonth.getDate();
+        var dayOfWeek = firstDayOfMonth.getDay();
+        // Ensure there are always leading days to give context
+        var leadingDays = (dayOfWeek - Ng2Datetime.firstDayOfWeek + 7) % 7 || 7;
+        var trailingDays = Ng2Datetime.days.slice(0, 6 * 7 - (leadingDays + daysInMonth));
+        if (trailingDays.length > 7) {
+            trailingDays = trailingDays.slice(0, trailingDays.length - 7);
+        }
+        var localizedDaysOfWeek = Ng2Datetime.daysOfWeek
+            .concat(Ng2Datetime.daysOfWeek)
+            .splice(Ng2Datetime.firstDayOfWeek, 7);
+        var monthData = {
+            year: year,
+            month: month,
+            fullName: Ng2Datetime.months[month].fullName,
+            shortName: Ng2Datetime.months[month].shortName,
+            localizedDaysOfWeek: localizedDaysOfWeek,
+            days: Ng2Datetime.days.slice(0, daysInMonth),
+            leadingDays: Ng2Datetime.days.slice(-leadingDays - (31 - daysInLastMonth), daysInLastMonth),
+            trailingDays: trailingDays
+        };
+        return monthData;
     };
-    Ng2Datetime.customFirstDayOfWeek = 0;
+    Ng2Datetime.days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    Ng2Datetime.daysOfWeek = typeof moment === 'undefined' ? [
+        { fullName: 'Sunday', shortName: 'Su', weekend: true },
+        { fullName: 'Monday', shortName: 'Mo' },
+        { fullName: 'Tuesday', shortName: 'Tu' },
+        { fullName: 'Wednesday', shortName: 'We' },
+        { fullName: 'Thursday', shortName: 'Th' },
+        { fullName: 'Friday', shortName: 'Fr' },
+        { fullName: 'Saturday', shortName: 'Sa', weekend: true }
+    ] : moment.weekdays().map(function (el, index) {
+        return {
+            fullName: el,
+            shortName: moment.weekdaysShort()[index].substr(0, 2)
+        };
+    });
+    Ng2Datetime.firstDayOfWeek = typeof moment === 'undefined' ? 0 : moment.localeData().firstDayOfWeek();
+    Ng2Datetime.months = typeof moment === 'undefined' ? [
+        { fullName: 'January', shortName: 'Jan' },
+        { fullName: 'February', shortName: 'Feb' },
+        { fullName: 'March', shortName: 'Mar' },
+        { fullName: 'April', shortName: 'Apr' },
+        { fullName: 'May', shortName: 'May' },
+        { fullName: 'June', shortName: 'Jun' },
+        { fullName: 'July', shortName: 'Jul' },
+        { fullName: 'August', shortName: 'Aug' },
+        { fullName: 'September', shortName: 'Sep' },
+        { fullName: 'October', shortName: 'Oct' },
+        { fullName: 'November', shortName: 'Nov' },
+        { fullName: 'December', shortName: 'Dec' }
+    ] : moment.months().map(function (el, index) {
+        return {
+            fullName: el,
+            shortName: moment['monthsShort']()[index]
+        };
+    });
     Ng2Datetime.decorators = [
         { type: core_1.Injectable },
     ];

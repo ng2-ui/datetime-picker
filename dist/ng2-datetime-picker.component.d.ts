@@ -19,8 +19,8 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     minHour: number;
     maxHour: number;
     disabledDates: Date[];
-    changes: EventEmitter<any>;
-    closing: EventEmitter<any>;
+    selected$: EventEmitter<any>;
+    closing$: EventEmitter<any>;
     hours: ElementRef;
     minutes: ElementRef;
     el: HTMLElement;
@@ -39,7 +39,7 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
      * set the selected date and close it when closeOnSelect is true
      * @param date {Date}
      */
-    selectDate(date?: Date): boolean;
+    selectDateTime(date?: Date): boolean;
     /**
      * show prev/next month calendar
      */
