@@ -28,10 +28,10 @@ var Ng2DatetimePickerDirective = (function () {
             if (_this.ctrl) {
                 _this.ctrl.patchValue(_this.el.value);
             }
-            _this.ngModel = _this.el['dateValue'];
-            if (_this.ngModel) {
-                _this.ngModel.toString = function () { return _this.el.value; };
-                _this.ngModelChange.emit(_this.ngModel);
+            if (_this.el['dateValue']) {
+                // date formatting that occurs in multiple places causes an error
+                // removal of redundant code
+                _this.ngModelChange.emit(_this.el.value);
             }
         };
         this.hideDatetimePicker = function (event) {
@@ -273,11 +273,11 @@ var Ng2DatetimePickerDirective = (function () {
                 },] },
     ];
     /** @nocollapse */
-    Ng2DatetimePickerDirective.ctorParameters = [
+    Ng2DatetimePickerDirective.ctorParameters = function () { return [
         { type: core_1.ComponentFactoryResolver, },
         { type: core_1.ViewContainerRef, },
         { type: forms_1.ControlContainer, decorators: [{ type: core_1.Optional }, { type: core_1.Host }, { type: core_1.SkipSelf },] },
-    ];
+    ]; };
     Ng2DatetimePickerDirective.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],

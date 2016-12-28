@@ -18,7 +18,7 @@ var Ng2DatetimePickerModule = (function () {
                 },] },
     ];
     /** @nocollapse */
-    Ng2DatetimePickerModule.ctorParameters = [];
+    Ng2DatetimePickerModule.ctorParameters = function () { return []; };
     return Ng2DatetimePickerModule;
 }());
 exports.Ng2DatetimePickerModule = Ng2DatetimePickerModule;
