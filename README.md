@@ -80,7 +80,7 @@ For full example, please check `test` directory to see the example of;
 ## Override default style
 
 The default style is written in `src/ng2-datetime-picker.component.ts`. 
-This can be overwritten by giving more details css seletor.
+This can be overwritten by giving more details css selector.
  
 e.g., 
 
@@ -91,8 +91,8 @@ e.g.,
 ## Override built-in date parser and date formatter
 
 The default date parser and formatter can only handle 'YYYY-MM-DD HH:MM' format
-if you are not using momentjs. If you use momentjs, you can use momentjs dateformat 
-by adding the following in your html.
+if you are not using [momentjs](http://momentjs.com/). If you use momentjs, you 
+can use momentjs dateformat by adding the following in your html.
 
     <script src="moment-with-locales.min.js"></script>
 
@@ -119,15 +119,17 @@ For example,
     })
     export class AppModule { }
 
-In addition, you can also override other static variables of Ng2Datetime class. The following
+In addition, you can also override other static variables of `Ng2Datetime` class. The following
 is the list of variables that you can override.
   
-  # days            default 1,2,....31
-  # daysOfWeek,     default Sunday, Monday, .....
-  # firstDayOfWeek, default 0 as in Sunday
-  # months,         default January, February
-  # formatDate      default returns YYYY-MM-DD HH:MM
-  # parseDate       default returns date from YYYY-MM-DD HH:MM
+  | Variable        | Default
+  |-----------------|----------------------
+  | days            | 1,2,....31
+  | daysOfWeek,     | Sunday, Monday, .....
+  | firstDayOfWeek  | 0 as in Sunday
+  | months,         | January, February
+  | formatDate      | returns YYYY-MM-DD HH:MM
+  | parseDate       | returns date from YYYY-MM-DD HH:MM
 
 ## **ng2-ui** welcomes new members and contributors
 
