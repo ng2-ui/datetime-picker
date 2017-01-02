@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 
 declare var moment: any;
 moment['locale']('en-ca'); //e.g. fr-ca
 
 //noinspection TypeScriptCheckImport
-import { Ng2Datetime } from 'ng2-datetime-picker';
+import { Ng2Datetime, Ng2DatetimePickerDirective } from 'ng2-datetime-picker';
 Ng2Datetime.firstDayOfWeek = 0; //e.g. 1, or 6
 
 //
@@ -76,11 +76,12 @@ let templateStr = `
     <ng2-utils-4>
       <input 
         [(ngModel)]="gmtDate" 
+        #ng2DP=ng2DatetimePicker
         ng2-datetime-picker
         date-format="MM-DD-YYYY" />
       gmtDate : "2015-01-01T00:00:00.000Z" 
       <a href="javascript:void(0)"
-        (click)="gmtDate='2016-11-03T22:00:00Z'">Set date/time to: 2016-11-03T22:00:00Z</a>
+        (click)="gmtDate=myDatetimePicker.formatDate('2016-11-03T22:00:00Z')">Set date/time to: 2016-11-03T22:00:00Z</a>
     </ng2-utils-4>
     <pre>{{templateStr | htmlCode:'ng2-utils-4'}}</pre>
     
@@ -116,6 +117,8 @@ export class AppComponent {
   templateStr: string = templateStr;
 
   constructor(private fb: FormBuilder) { }
+
+  @ViewChild('ng2DP') myDatetimePicker;
 
   ngOnInit() {
     this.myForm = this.fb.group({

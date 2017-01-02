@@ -24,6 +24,7 @@ Number.isNaN = Number.isNaN || function(value) {
  */
 @Directive({
   selector : '[ng2-datetime-picker]',
+  exportAs: 'ng2DatetimePicker',
   providers: [Ng2Datetime],
   host     : {
     '(click)': 'showDatetimePicker()',
