@@ -6,7 +6,7 @@ import 'zone.js/dist/zone';
 // The browser platform with a compiler
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { NgModule }       from '@angular/core';
+import { NgModule, Directive } from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule }    from "@angular/forms";
 
@@ -14,9 +14,16 @@ import { AppComponent }   from './app.component';
 
 //noinspection TypeScriptCheckImport
 import { Ng2DatetimePickerModule, Ng2Datetime } from 'ng2-datetime-picker';
+import { Ng2UtilsModule } from "ng2-utils";
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, Ng2DatetimePickerModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    Ng2UtilsModule,
+    Ng2DatetimePickerModule
+  ],
   declarations: [AppComponent],
   bootstrap: [ AppComponent ]
 })

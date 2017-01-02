@@ -117,8 +117,9 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
       }
       if (this.ctrl) {
         this.sub = this.ctrl.valueChanges.subscribe((date) => {
-          this.setInputElDateValue(date);
-          this.updateDatepicker();
+          this.el['dateValue'] = this.getDate(date);
+          this.ctrl.markAsDirty();
+          this.updateDatetimePicker();
         });
       }
     }
@@ -143,33 +144,12 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    let date;
     if(changes && changes['ngModel']) {
+      let date;
       date = changes['ngModel'].currentValue;
-    } 
-
-    this.setInputElDateValue(date);
-    this.updateDatepicker();
-  }
-
-  updateDatepicker() {
-    if(this.componentRef) {
-      let component = this.componentRef.instance;
-      component.initDatetime(<Date>this.el['dateValue']);
-    }
-  }
-
-  setInputElDateValue(date) {
-    if (typeof date === 'string' && date) {
       this.el['dateValue'] = this.getDate(date);
-    } else if (typeof date === 'object') {
-      this.el['dateValue'] = date
-    } else if (typeof date === 'undefined') {
-      this.el['dateValue'] = null;
-    }
-
-    if(this.ctrl) {
-      this.ctrl.markAsDirty();
+      this.ctrl && this.ctrl.markAsDirty();
+      this.updateDatetimePicker();
     }
   }
 
@@ -182,10 +162,11 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
   /* input element string value is changed */
   valueChanged = (date: string | Date): void => {
-    this.setInputElDateValue(date);
+    this.el['dateValue'] = this.getDate(date);
+    this.el.value = this.formatDate(this.el['dateValue']);
 
-    this.el.value = this.getFormattedDateStr();
     if(this.ctrl) {
+      this.ctrl.markAsDirty();
       this.ctrl.patchValue(this.el.value);
     }
 
@@ -193,8 +174,25 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     if (this.ngModel) {
       this.ngModel.toString = () => { return this.el.value; };
       this.ngModelChange.emit(this.ngModel);
-    } 
+    }
   };
+
+  //this can be used outside of this directive, so that user can format date
+  formatDate(date: Date|String) {
+    if (!date) {
+      date = this.el['dateValue'];
+    } else if (typeof date === 'string') {
+      date = this.getDate(date);
+    }
+    return Ng2Datetime.formatDate(<Date>date, this.dateFormat, this.dateOnly);
+  }
+
+  updateDatetimePicker() {
+    if(this.componentRef) {
+      let component = this.componentRef.instance;
+      component.initDatetime(<Date>this.el['dateValue']);
+    }
+  }
 
   //show datetimePicker element below the current element
   showDatetimePicker(event?) {
@@ -293,21 +291,12 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     });
   };
 
-  /**
-   *  returns toString function of date object
-   */
-  private getFormattedDateStr(): string {
-    return Ng2Datetime.formatDate(
-        this.el['dateValue'],
-        this.dateFormat,
-        this.dateOnly
-      );
-  }
-
   private getDate(arg: any): Date {
     let date: Date = <Date>arg;
     if (typeof arg === 'string') {
       date =  Ng2Datetime.parseDate(arg, this.dateFormat);
+    } else if (typeof arg === 'undefined') {
+      date = null;
     }
     return date;
   }
