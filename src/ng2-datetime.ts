@@ -81,6 +81,9 @@ export class Ng2Datetime {
         date = moment(dateStr).toDate(); //parse as ISO format
       }
       return date;
+    } else {
+      let date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
+      return date;
     }
   }
 
