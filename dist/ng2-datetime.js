@@ -41,6 +41,10 @@ var Ng2Datetime = (function () {
             }
             return date;
         }
+        else {
+            var date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
+            return date;
+        }
     };
     //remove timezone
     Ng2Datetime.removeTimezone = function (dateStr) {
