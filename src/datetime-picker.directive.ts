@@ -13,11 +13,11 @@ import {
   SkipSelf,
   Host
 } from '@angular/core';
-import {AbstractControl, ControlContainer, FormGroup} from '@angular/forms';
+import { AbstractControl, ControlContainer, FormGroup, FormControl } from '@angular/forms';
 import {DateTimePickerComponent} from './datetime-picker.component';
 import {DateTime} from './datetime';
 
-declare var moment: any;
+declare let moment: any;
 
 /**
  * If the given string is not a valid date, it defaults back to today
@@ -44,6 +44,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   @Input('max-hour')        maxHour: Date;
   @Input('disabled-dates')  disabledDates: Date[];
   @Input() formControlName: string;
+  @Input() formControl: FormControl;
 
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
@@ -64,12 +65,12 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnInit ():void {
-    if(this.parent && this.parent["form"] && this.formControlName) {
-      this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
+    if((this.parent && this.parent["form"] && this.formControlName) || this.formControl) {
+      this.ctrl = this.formControl ? this.formControl : (<FormGroup>this.parent["form"]).get(this.formControlName);
       this.sub = this.ctrl.valueChanges.subscribe((date) => {
-        this.setElement(date)
+        this.setElement(date);
         this.updateDatepicker();
-      })
+      });
     }
 
     //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
@@ -93,7 +94,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     let date;
     if(changes && changes['ngModel']) {
       date = changes['ngModel'].currentValue;
-    } 
+    }
 
     this.setElement(date);
     this.updateDatepicker();
@@ -140,7 +141,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     if (this.ngModel) {
       this.ngModel.toString = () => { return this.el.value; };
       this.ngModelChange.emit(this.ngModel);
-    } 
+    }
   };
 
   //show datetimePicker element below the current element
@@ -174,7 +175,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
     component.closing.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
-    
+
     //Hack not to fire tab keyup event
     this.justShown = true;
     setTimeout(() => this.justShown = false, 100);
@@ -194,7 +195,7 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
         this.componentRef.destroy();
         this.componentRef = undefined;
       }
-    event && event.stopPropagation();  
+    event && event.stopPropagation();
     }
   };
 

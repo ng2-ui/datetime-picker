@@ -1,4 +1,4 @@
-declare var moment: any;
+declare let moment: any;
 
 import {Injectable} from "@angular/core";
 
@@ -134,7 +134,7 @@ export class DateTime {
       return ("0"+number).slice(-2);
     };
 
-    var ret = d.getFullYear() +'-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
+    let ret = d.getFullYear() +'-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
     if(!dateOnly) {
       ret += ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
     }
