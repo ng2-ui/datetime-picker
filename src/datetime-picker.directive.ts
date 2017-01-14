@@ -109,7 +109,10 @@ export class DateTimePickerDirective implements OnInit, OnChanges {
 
   setElement(date) {
     if (typeof date === 'string' && date) {
-      this.el['dateValue'] = this.getDate(date);
+      const value = this.getDate(date);
+      if(!!value.getDate()){
+        this.el['dateValue'] = value;
+      }
     } else if (typeof date === 'object') {
       this.el['dateValue'] = date
     } else if (typeof date === 'undefined') {
