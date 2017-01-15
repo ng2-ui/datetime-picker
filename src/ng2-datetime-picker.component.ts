@@ -216,6 +216,7 @@ import {Ng2Datetime} from './ng2-datetime';
   encapsulation: ViewEncapsulation.None
 })
 export class Ng2DatetimePickerComponent implements AfterViewInit {
+  @Input('date-format')       dateFormat: string;
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
   @Input('selected-date')     selectedDate: Date;
@@ -310,6 +311,10 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     }
     this.selectedDate.setHours(parseInt( ''+this.hour || '0', 10));
     this.selectedDate.setMinutes(parseInt( ''+this.minute|| '0', 10));
+
+    this.selectedDate.toString = () => {
+      return Ng2Datetime.formatDate(this.selectedDate, this.dateFormat, this.dateOnly);
+    };
     this.selected$.emit(this.selectedDate);
     this.closing$.emit(true);
   };

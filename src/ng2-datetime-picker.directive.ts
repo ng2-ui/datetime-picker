@@ -47,6 +47,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
+  @Output('valueChanged')  valueChanged  = new EventEmitter();
 
   private el: HTMLInputElement;                               /* input element */
   private ng2DatetimePickerEl: HTMLElement;                      /* dropdown element */
@@ -63,6 +64,9 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     this.el = this.viewContainerRef.element.nativeElement;
   }
 
+  /**
+   * convert defaultValue, minDate, maxDate, minHour, and maxHour to proper types
+   */
   normalizeInput() {
     if (this.defaultValue && typeof this.defaultValue === 'string') {
       let d = Ng2Datetime.parseDate(<string>this.defaultValue);
@@ -125,7 +129,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
     this.normalizeInput();
 
-    //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
+    //wrap this element with a <div> tag, so that we can position dynamic element correctly
     let wrapper            = document.createElement("div");
     wrapper.className      = 'ng2-datetime-picker-wrapper';
     this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
@@ -135,7 +139,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     document.body.addEventListener('click', this.hideDatetimePicker);
     this.el.addEventListener('keyup', this.keyEventListener);
     setTimeout( () => { // after [(ngModel)] is applied
-      this.valueChanged(this.el.value);
+      this.el.tagName === 'INPUT' && this.inputElValueChanged(this.el.value);
       if(this.ctrl) {
         this.ctrl.markAsPristine();
       }
@@ -174,26 +178,24 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnDestroy ():void {
-    if(this.sub) {
+   if(this.sub) {
       this.sub.unsubscribe();
     }
     document.body.removeEventListener('click', this.hideDatetimePicker);
   }
 
   /* input element string value is changed */
-  valueChanged = (date: string | Date): void => {
+  inputElValueChanged = (date: string | Date): void => {
     this.setInputElDateValue(date);
-
-    this.el.value = this.getFormattedDateStr();
+    this.el.value = date.toString();
     if(this.ctrl) {
       this.ctrl.patchValue(this.el.value);
     }
-
     this.ngModel = this.el['dateValue'];
     if (this.ngModel) {
       this.ngModel.toString = () => { return this.el.value; };
       this.ngModelChange.emit(this.ngModel);
-    } 
+    }
   };
 
   //show datetimePicker element below the current element
@@ -210,6 +212,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
     let component = this.componentRef.instance;
     component.defaultValue   = <Date>this.defaultValue;
+    component.dateFormat     = this.dateFormat;
     component.dateOnly       = this.dateOnly;
     component.timeOnly       = this.timeOnly;
     component.minuteStep     = this.minuteStep;
@@ -223,7 +226,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.initDatetime(<Date>this.el['dateValue']);
     this.styleDatetimePicker();
 
-    component.selected$.subscribe(this.valueChanged);
+    component.selected$.subscribe(this.dateSelected);
     component.closing$.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
@@ -231,6 +234,11 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     //Hack not to fire tab keyup event
     this.justShown = true;
     setTimeout(() => this.justShown = false, 100);
+  }
+
+  dateSelected = (date) => {
+    this.el.tagName === 'INPUT' && this.inputElValueChanged(date);
+    this.valueChanged.emit(date);
   }
 
   hideDatetimePicker = (event?):void => {
@@ -292,17 +300,6 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
       this.ng2DatetimePickerEl.style.visibility = 'visible';
     });
   };
-
-  /**
-   *  returns toString function of date object
-   */
-  private getFormattedDateStr(): string {
-    return Ng2Datetime.formatDate(
-        this.el['dateValue'],
-        this.dateFormat,
-        this.dateOnly
-      );
-  }
 
   private getDate(arg: any): Date {
     let date: Date = <Date>arg;
