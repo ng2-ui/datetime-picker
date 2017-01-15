@@ -21,10 +21,11 @@ var Ng2DatetimePickerDirective = (function () {
         this.viewContainerRef = viewContainerRef;
         this.parent = parent;
         this.ngModelChange = new core_1.EventEmitter();
+        this.valueChanged = new core_1.EventEmitter();
         /* input element string value is changed */
-        this.valueChanged = function (date) {
+        this.inputElValueChanged = function (date) {
             _this.setInputElDateValue(date);
-            _this.el.value = _this.getFormattedDateStr();
+            _this.el.value = date.toString();
             if (_this.ctrl) {
                 _this.ctrl.patchValue(_this.el.value);
             }
@@ -33,6 +34,10 @@ var Ng2DatetimePickerDirective = (function () {
                 _this.ngModel.toString = function () { return _this.el.value; };
                 _this.ngModelChange.emit(_this.ngModel);
             }
+        };
+        this.dateSelected = function (date) {
+            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(date);
+            _this.valueChanged.emit(date);
         };
         this.hideDatetimePicker = function (event) {
             if (_this.componentRef) {
@@ -59,6 +64,9 @@ var Ng2DatetimePickerDirective = (function () {
         };
         this.el = this.viewContainerRef.element.nativeElement;
     }
+    /**
+     * convert defaultValue, minDate, maxDate, minHour, and maxHour to proper types
+     */
     Ng2DatetimePickerDirective.prototype.normalizeInput = function () {
         if (this.defaultValue && typeof this.defaultValue === 'string') {
             var d = ng2_datetime_1.Ng2Datetime.parseDate(this.defaultValue);
@@ -118,7 +126,7 @@ var Ng2DatetimePickerDirective = (function () {
             }
         }
         this.normalizeInput();
-        //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
+        //wrap this element with a <div> tag, so that we can position dynamic element correctly
         var wrapper = document.createElement("div");
         wrapper.className = 'ng2-datetime-picker-wrapper';
         this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
@@ -127,7 +135,7 @@ var Ng2DatetimePickerDirective = (function () {
         document.body.addEventListener('click', this.hideDatetimePicker);
         this.el.addEventListener('keyup', this.keyEventListener);
         setTimeout(function () {
-            _this.valueChanged(_this.el.value);
+            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(_this.el.value);
             if (_this.ctrl) {
                 _this.ctrl.markAsPristine();
             }
@@ -179,6 +187,7 @@ var Ng2DatetimePickerDirective = (function () {
         this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
         var component = this.componentRef.instance;
         component.defaultValue = this.defaultValue;
+        component.dateFormat = this.dateFormat;
         component.dateOnly = this.dateOnly;
         component.timeOnly = this.timeOnly;
         component.minuteStep = this.minuteStep;
@@ -190,7 +199,7 @@ var Ng2DatetimePickerDirective = (function () {
         component.firstDayOfWeek = this.firstDayOfWeek;
         component.initDatetime(this.el['dateValue']);
         this.styleDatetimePicker();
-        component.selected$.subscribe(this.valueChanged);
+        component.selected$.subscribe(this.dateSelected);
         component.closing$.subscribe(function () {
             _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
         });
@@ -230,12 +239,6 @@ var Ng2DatetimePickerDirective = (function () {
         });
     };
     ;
-    /**
-     *  returns toString function of date object
-     */
-    Ng2DatetimePickerDirective.prototype.getFormattedDateStr = function () {
-        return ng2_datetime_1.Ng2Datetime.formatDate(this.el['dateValue'], this.dateFormat, this.dateOnly);
-    };
     Ng2DatetimePickerDirective.prototype.getDate = function (arg) {
         var date = arg;
         if (typeof arg === 'string') {
@@ -275,6 +278,7 @@ var Ng2DatetimePickerDirective = (function () {
         'formControlName': [{ type: core_1.Input },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
+        'valueChanged': [{ type: core_1.Output, args: ['valueChanged',] },],
     };
     return Ng2DatetimePickerDirective;
 }());

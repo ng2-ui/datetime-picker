@@ -78,12 +78,16 @@ var Ng2DatetimePickerComponent = (function () {
      * @param date {Date}
      */
     Ng2DatetimePickerComponent.prototype.selectDateTime = function (date) {
+        var _this = this;
         this.selectedDate = date || this.selectedDate;
         if (this.isDateDisabled(this.selectedDate)) {
             return false;
         }
         this.selectedDate.setHours(parseInt('' + this.hour || '0', 10));
         this.selectedDate.setMinutes(parseInt('' + this.minute || '0', 10));
+        this.selectedDate.toString = function () {
+            return ng2_datetime_1.Ng2Datetime.formatDate(_this.selectedDate, _this.dateFormat, _this.dateOnly);
+        };
         this.selected$.emit(this.selectedDate);
         this.closing$.emit(true);
     };
@@ -127,6 +131,7 @@ var Ng2DatetimePickerComponent = (function () {
         { type: core_1.ChangeDetectorRef, },
     ];
     Ng2DatetimePickerComponent.propDecorators = {
+        'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
         'timeOnly': [{ type: core_1.Input, args: ['time-only',] },],
         'selectedDate': [{ type: core_1.Input, args: ['selected-date',] },],

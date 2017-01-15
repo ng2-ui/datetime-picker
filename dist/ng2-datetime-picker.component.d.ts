@@ -6,6 +6,7 @@ import { Ng2Datetime } from './ng2-datetime';
 export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     ng2Datetime: Ng2Datetime;
     cdRef: ChangeDetectorRef;
+    dateFormat: string;
     dateOnly: boolean;
     timeOnly: boolean;
     selectedDate: Date;

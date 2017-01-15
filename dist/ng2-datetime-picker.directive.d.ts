@@ -22,6 +22,7 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     formControlName: string;
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
+    valueChanged: EventEmitter<{}>;
     private el;
     private ng2DatetimePickerEl;
     private componentRef;
@@ -29,21 +30,21 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     private sub;
     private justShown;
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, parent: ControlContainer);
+    /**
+     * convert defaultValue, minDate, maxDate, minHour, and maxHour to proper types
+     */
     normalizeInput(): void;
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     updateDatepicker(): void;
     setInputElDateValue(date: any): void;
     ngOnDestroy(): void;
-    valueChanged: (date: string | Date) => void;
+    inputElValueChanged: (date: string | Date) => void;
     showDatetimePicker(event?: any): void;
+    dateSelected: (date: any) => void;
     hideDatetimePicker: (event?: any) => void;
     private keyEventListener;
     private elementIn(el, containerEl);
     private styleDatetimePicker();
-    /**
-     *  returns toString function of date object
-     */
-    private getFormattedDateStr();
     private getDate(arg);
 }

@@ -14,9 +14,10 @@ import { AppComponent }   from './app.component';
 
 //noinspection TypeScriptCheckImport
 import { Ng2DatetimePickerModule, Ng2Datetime } from 'ng2-datetime-picker';
+import { Ng2UtilsModule } from 'ng2-utils';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, Ng2DatetimePickerModule],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, Ng2UtilsModule, Ng2DatetimePickerModule],
   declarations: [AppComponent],
   bootstrap: [ AppComponent ]
 })

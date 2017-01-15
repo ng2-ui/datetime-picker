@@ -330,12 +330,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param date {Date}
 	     */
 	    Ng2DatetimePickerComponent.prototype.selectDateTime = function (date) {
+	        var _this = this;
 	        this.selectedDate = date || this.selectedDate;
 	        if (this.isDateDisabled(this.selectedDate)) {
 	            return false;
 	        }
 	        this.selectedDate.setHours(parseInt('' + this.hour || '0', 10));
 	        this.selectedDate.setMinutes(parseInt('' + this.minute || '0', 10));
+	        this.selectedDate.toString = function () {
+	            return ng2_datetime_1.Ng2Datetime.formatDate(_this.selectedDate, _this.dateFormat, _this.dateOnly);
+	        };
 	        this.selected$.emit(this.selectedDate);
 	        this.closing$.emit(true);
 	    };
@@ -361,6 +365,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return false;
 	    };
+	    __decorate([
+	        core_1.Input('date-format'), 
+	        __metadata('design:type', String)
+	    ], Ng2DatetimePickerComponent.prototype, "dateFormat", void 0);
 	    __decorate([
 	        core_1.Input('date-only'), 
 	        __metadata('design:type', Boolean)
@@ -485,10 +493,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.viewContainerRef = viewContainerRef;
 	        this.parent = parent;
 	        this.ngModelChange = new core_1.EventEmitter();
+	        this.valueChanged = new core_1.EventEmitter();
 	        /* input element string value is changed */
-	        this.valueChanged = function (date) {
+	        this.inputElValueChanged = function (date) {
 	            _this.setInputElDateValue(date);
-	            _this.el.value = _this.getFormattedDateStr();
+	            _this.el.value = date.toString();
 	            if (_this.ctrl) {
 	                _this.ctrl.patchValue(_this.el.value);
 	            }
@@ -497,6 +506,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _this.ngModel.toString = function () { return _this.el.value; };
 	                _this.ngModelChange.emit(_this.ngModel);
 	            }
+	        };
+	        this.dateSelected = function (date) {
+	            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(date);
+	            _this.valueChanged.emit(date);
 	        };
 	        this.hideDatetimePicker = function (event) {
 	            if (_this.componentRef) {
@@ -523,6 +536,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	        this.el = this.viewContainerRef.element.nativeElement;
 	    }
+	    /**
+	     * convert defaultValue, minDate, maxDate, minHour, and maxHour to proper types
+	     */
 	    Ng2DatetimePickerDirective.prototype.normalizeInput = function () {
 	        if (this.defaultValue && typeof this.defaultValue === 'string') {
 	            var d = ng2_datetime_1.Ng2Datetime.parseDate(this.defaultValue);
@@ -582,7 +598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	        this.normalizeInput();
-	        //wrap this element with a <div> tag, so that we can position dynamic elememnt correctly
+	        //wrap this element with a <div> tag, so that we can position dynamic element correctly
 	        var wrapper = document.createElement("div");
 	        wrapper.className = 'ng2-datetime-picker-wrapper';
 	        this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
@@ -591,7 +607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        document.body.addEventListener('click', this.hideDatetimePicker);
 	        this.el.addEventListener('keyup', this.keyEventListener);
 	        setTimeout(function () {
-	            _this.valueChanged(_this.el.value);
+	            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(_this.el.value);
 	            if (_this.ctrl) {
 	                _this.ctrl.markAsPristine();
 	            }
@@ -643,6 +659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
 	        var component = this.componentRef.instance;
 	        component.defaultValue = this.defaultValue;
+	        component.dateFormat = this.dateFormat;
 	        component.dateOnly = this.dateOnly;
 	        component.timeOnly = this.timeOnly;
 	        component.minuteStep = this.minuteStep;
@@ -654,7 +671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        component.firstDayOfWeek = this.firstDayOfWeek;
 	        component.initDatetime(this.el['dateValue']);
 	        this.styleDatetimePicker();
-	        component.selected$.subscribe(this.valueChanged);
+	        component.selected$.subscribe(this.dateSelected);
 	        component.closing$.subscribe(function () {
 	            _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
 	        });
@@ -694,12 +711,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    ;
-	    /**
-	     *  returns toString function of date object
-	     */
-	    Ng2DatetimePickerDirective.prototype.getFormattedDateStr = function () {
-	        return ng2_datetime_1.Ng2Datetime.formatDate(this.el['dateValue'], this.dateFormat, this.dateOnly);
-	    };
 	    Ng2DatetimePickerDirective.prototype.getDate = function (arg) {
 	        var date = arg;
 	        if (typeof arg === 'string') {
@@ -767,6 +778,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Output('ngModelChange'), 
 	        __metadata('design:type', Object)
 	    ], Ng2DatetimePickerDirective.prototype, "ngModelChange", void 0);
+	    __decorate([
+	        core_1.Output('valueChanged'), 
+	        __metadata('design:type', Object)
+	    ], Ng2DatetimePickerDirective.prototype, "valueChanged", void 0);
 	    Ng2DatetimePickerDirective = __decorate([
 	        core_1.Directive({
 	            selector: '[ng2-datetime-picker]',
