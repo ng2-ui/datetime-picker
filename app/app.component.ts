@@ -13,11 +13,11 @@ var templateStr = `
     <h1>Ng2 DateTime Picker Test</h1>
     
     <ng2-utils-1>
-      <input [(ngModel)]="myDate" />
+      <input [(ngModel)]="myDate0" />
       <i class="fa fa-calendar"
          ng2-datetime-picker
          [default-value]="defaultValue"
-         (valueChanged)="myDate=$event"></i>
+         (valueChanged)="myDate0=$event"></i>
     </ng2-utils-1>
     <pre>{{templateStr | htmlCode:'ng2-utils-1'}}</pre>
     
