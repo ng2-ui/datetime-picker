@@ -314,7 +314,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        configurable: true
 	    });
 	    Ng2DatetimePickerComponent.prototype.initDatetime = function (date) {
-	        this.selectedDate = date || this.defaultValue || new Date();
+	        if (date) {
+	            this.selectedDate = date.getTime() ? date : new Date();
+	        }
+	        else {
+	            this.selectedDate = this.defaultValue || new Date();
+	        }
 	        this.hour = this.selectedDate.getHours();
 	        this.minute = this.selectedDate.getMinutes();
 	        this.monthData = this.ng2Datetime.getMonthData(this.year, this.month);
