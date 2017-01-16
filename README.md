@@ -125,9 +125,10 @@ is the list of variables that you can override.
   | Variable        | Default
   |-----------------|----------------------
   | days            | 1,2,....31
-  | daysOfWeek,     | Sunday, Monday, .....
+  | daysOfWeek      | Sunday, Monday, .....
+  | weekends        | 0,6
   | firstDayOfWeek  | 0 as in Sunday
-  | months,         | January, February
+  | months          | January, February
   | formatDate      | returns YYYY-MM-DD HH:MM
   | parseDate       | returns date from YYYY-MM-DD HH:MM
 

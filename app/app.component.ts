@@ -6,7 +6,7 @@ moment['locale']('en-ca'); //e.g. fr-ca
 
 //noinspection TypeScriptCheckImport
 import { Ng2Datetime } from 'ng2-datetime-picker';
-Ng2Datetime.firstDayOfWeek = 6; //e.g. 1, or 6
+// Ng2Datetime.firstDayOfWeek = 6; //e.g. 1, or 6
 
 var templateStr = `
   <div id="my-div">
