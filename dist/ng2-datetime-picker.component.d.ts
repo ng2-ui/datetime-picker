@@ -33,6 +33,7 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     month: number;
     day: number;
     today: Date;
+    isWeekend(dayNum: number, month?: number): boolean;
     initDatetime(date: Date): void;
     toDate(day: number, month?: number): Date;
     toDateOnly(date: Date): Date;

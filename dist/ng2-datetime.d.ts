@@ -9,6 +9,7 @@
  */
 export declare class Ng2Datetime {
     static days: number[];
+    static weekends: number[];
     static daysOfWeek: any[];
     static firstDayOfWeek: number;
     static months: any[];
