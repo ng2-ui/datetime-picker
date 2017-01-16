@@ -16,15 +16,17 @@ export class Ng2Datetime {
   static days: number[] =
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
+  static weekends: number[] = [0,6];
+
   static daysOfWeek: any[] =
     typeof moment === 'undefined' ? [
-      {fullName: 'Sunday', shortName: 'Su', weekend: true},
+      {fullName: 'Sunday', shortName: 'Su'},
       {fullName: 'Monday', shortName: 'Mo'},
       {fullName: 'Tuesday', shortName: 'Tu'},
       {fullName: 'Wednesday', shortName: 'We'},
       {fullName: 'Thursday', shortName: 'Th'},
       {fullName: 'Friday', shortName: 'Fr'},
-      {fullName: 'Saturday', shortName: 'Sa', weekend: true}
+      {fullName: 'Saturday', shortName: 'Sa'}
     ] : moment.weekdays().map((el, index) => {
       return {
         fullName: el,
@@ -153,6 +155,8 @@ export class Ng2Datetime {
     let monthData = {
       year: year,
       month: month,
+      weekends: Ng2Datetime.weekends,
+      firstDayOfWeek: Ng2Datetime.firstDayOfWeek,
       fullName: Ng2Datetime.months[month].fullName,
       shortName: Ng2Datetime.months[month].shortName,
       localizedDaysOfWeek: localizedDaysOfWeek,

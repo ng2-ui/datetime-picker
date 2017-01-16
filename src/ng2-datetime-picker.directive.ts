@@ -42,7 +42,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('max-date')          maxDate: Date | string;
   @Input('min-hour')          minHour: Date | number;
   @Input('max-hour')          maxHour: Date | number;
-  @Input('disabled-dates')  disabledDates: Date[];
+  @Input('disabled-dates')    disabledDates: Date[];
   @Input() formControlName: string;
 
   @Input('ngModel')        ngModel: any;
