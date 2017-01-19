@@ -11,6 +11,8 @@ import {
 } from '@angular/core';
 import {Ng2Datetime} from './ng2-datetime';
 
+declare var moment: any;
+
 //@TODO
 // . display currently selected day
 
@@ -295,8 +297,17 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     } else {
       this.selectedDate = this.defaultValue || new Date();
     }
-    this.hour         = this.selectedDate.getHours();
-    this.minute       = this.selectedDate.getMinutes();
+
+    // set hour and minute using moment if available to avoid having Javascript change timezones
+    if (moment !== undefined) {
+      let m = moment(this.selectedDate);
+      this.hour = m.hours();
+      this.minute = m.minute();
+    } else {
+      this.hour         = this.selectedDate.getHours();
+      this.minute       = this.selectedDate.getMinutes();
+    }
+
     this.monthData    = this.ng2Datetime.getMonthData(this.year, this.month);
   }
 
@@ -317,8 +328,23 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     if (this.isDateDisabled(this.selectedDate)) {
       return false;
     }
-    this.selectedDate.setHours(parseInt( ''+this.hour || '0', 10));
-    this.selectedDate.setMinutes(parseInt( ''+this.minute|| '0', 10));
+
+    // editing hours and minutes via javascript date methods causes date to lose timezone info,
+    // so edit using moment if available
+    let hour = parseInt( '' + this.hour || '0', 10);
+    let minute = parseInt( '' + this.minute || '0', 10);
+    if (moment !== undefined) {
+      // here selected date has a time of 00:00 in local time,
+      // so build moment by getting year/month/day separately
+      // to avoid it saving as a day earlier
+      let m = moment([this.selectedDate.getFullYear(), this.selectedDate.getMonth(), this.selectedDate.getDate()]);
+      m.hours(this.hour);
+      m.minutes(this.minute);
+      this.selectedDate = m.toDate();
+    } else {
+      this.selectedDate.setHours(hour);
+      this.selectedDate.setMinutes(minute);
+    }
 
     this.selectedDate.toString = () => {
       return Ng2Datetime.formatDate(this.selectedDate, this.dateFormat, this.dateOnly);
