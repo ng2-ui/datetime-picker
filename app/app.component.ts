@@ -83,6 +83,18 @@ var templateStr = `
     </ng2-utils-5>
     <pre>{{templateStr | htmlCode:'ng2-utils-5'}}</pre>
    
+   <ng2-utils-7>
+      <input 
+        id="test7"
+        [(ngModel)]="dateWithTime" 
+        ng2-datetime-picker
+        date-format="MM/DD/YYYY HH:mm z"
+        parse-format="YYYY-MM-DDTHH:mm:ss"/>
+        dateWithTime: {{dateWithTime}}
+      <br/>
+    </ng2-utils-7>
+    <pre>{{templateStr | htmlCode:'ng2-utils-7'}}</pre>
+   
   </div>
 `;
 
@@ -107,6 +119,7 @@ export class AppComponent {
   minDate = new Date(2017, 0, 1);
   maxDate = new Date(2017, 11, 31);
   disabledDates = [new Date(2016, 11, 26), new Date(2016, 11, 27)];
+  dateWithTime = '2017-1-15T14:22:00-05:00';
 
   constructor(private fb: FormBuilder) { }
 
