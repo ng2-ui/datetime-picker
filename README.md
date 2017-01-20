@@ -80,7 +80,7 @@ For full example, please check `test` directory to see the example of;
 ## Override default style
 
 The default style is written in `src/ng2-datetime-picker.component.ts`. 
-This can be overwritten by giving more details css selector.
+This can be overwritten by giving a more detailed css selector.
  
 e.g., 
 
@@ -95,6 +95,15 @@ if you are not using [momentjs](http://momentjs.com/). If you use momentjs, you
 can use momentjs dateformat by adding the following in your html.
 
     <script src="moment-with-locales.min.js"></script>
+    
+If you are using moment and want to pass in a string date value in one format but display it in a different format
+you can use both date-format and parse-format:
+    
+    <input 
+          [(ngModel)]="date" 
+          ng2-datetime-picker
+          date-format="MM/DD/YYYY HH:mm"
+          parse-format="YYYY-MM-DD HH:mm:ss" />
 
 If you want to have your own date format without using momentjs, 
 please override `Ng2DateTime.parser` and `Ng2DateTime.formatDate` function.
@@ -119,7 +128,7 @@ For example,
     })
     export class AppModule { }
 
-In addition, you can also override other static variables of `Ng2Datetime` class. The following
+In addition, you can override other static variables of `Ng2Datetime` class. The following
 is the list of variables that you can override.
   
   | Variable        | Default
@@ -158,8 +167,11 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
   * **date-only**,  true or false, default is false
   * **time-only**, true or false, default is false 
   * **close-on-select**, true or false. indicates to close ng2-datetime-picker when select a date. default: true
-  * **date-format**,  momentjs date format, e.g. YYYY-MM-DD hh:mm:ss
+  * **date-format**,  momentjs date format, e.g. YYYY-MM-DD hh:mm:ss.
     You need to include `moment` js in your html to use date-format.
+    `<script src="moment.min.js"></script>`
+  * **parse-format**,  momentjs date format used to parse a string input value, e.g. YYYY-MM-DD hh:mm:ss.
+    You need to include `moment` js in your html to use parse-format.
     `<script src="moment.min.js"></script>`
   * **first-day-of-week** start day of week, 0 is sunday
   * **default-value** a date selected when a popup opens, default the current date
