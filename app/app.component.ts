@@ -82,6 +82,18 @@ var templateStr = `
       <a href="#" (click)="gmtDate='2016-11-03T22:00:00Z'">Set date/time to: 2016-11-03T22:00:00Z</a>
     </ng2-utils-5>
     <pre>{{templateStr | htmlCode:'ng2-utils-5'}}</pre>
+    
+    <hr/>
+    <ng2-utils-6>
+      <input 
+        id="test6"
+        [(ngModel)]="dateWithTimezoneInfo" 
+        ng2-datetime-picker
+        date-format="YYYY-MM-DD HH:mm Z" />
+        dateWithTimezoneInfo: {{dateWithTimezoneInfo}}
+      <br/>
+    </ng2-utils-6>
+    <pre>{{templateStr | htmlCode:'ng2-utils-6'}}</pre>
    
   </div>
 `;
@@ -103,6 +115,7 @@ export class AppComponent {
   myForm: FormGroup; // our form model
   date = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
   gmtDate = '2015-01-01T00:00:00.000Z';
+  dateWithTimezoneInfo = '2017-01-15T14:22:00-06:00';
   defaultValue = new Date(2014, 11, 31, 21, 45, 59);
   minDate = new Date(2017, 0, 1);
   maxDate = new Date(2017, 11, 31);
@@ -114,6 +127,8 @@ export class AppComponent {
     this.myForm = this.fb.group({
       date: ['2016-02-15', [Validators.required]],
     });
+
+    moment.tz.setDefault('US/Central'); // Set the default timezone that moment will use
   }
 
 }
