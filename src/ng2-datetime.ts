@@ -72,15 +72,25 @@ export class Ng2Datetime {
     }
   }
 
-  static parseDate(dateStr: string, dateFormat?: string): Date {
+  static parseDate(dateStr: string, parseFormat?: string, dateFormat?: string): Date {
     if (typeof moment === 'undefined') {
       dateStr = Ng2Datetime.removeTimezone(dateStr);
       dateStr = dateStr + Ng2Datetime.addDSTOffset(dateStr);
       return Ng2Datetime.parseFromDefaultFormat(dateStr);
-    } else if (dateFormat) {
-      let date = moment(dateStr, dateFormat).toDate();
-      if (isNaN(date.getTime())) { // if dateFormat and dateStr does not match
-        date = moment(dateStr).toDate(); //parse as ISO format
+    } else if (dateFormat || parseFormat) {
+      // try parse using each format because changing format programmatically calls this twice,
+      // once with string in parse format and once in date format
+      let formats = [];
+      if (parseFormat) {
+        formats.push(parseFormat);
+      }
+      if (dateFormat) {
+        formats.push(dateFormat);
+      }
+      let m = moment(dateStr, formats);
+      let date = m.toDate();
+      if (!m.isValid()) { // if moment is invalid
+        date = moment(dateStr, moment.ISO_8601).toDate(); // parse as ISO format
       }
       return date;
     } else {

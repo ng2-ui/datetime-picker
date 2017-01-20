@@ -32,6 +32,7 @@ Number.isNaN = Number.isNaN || function(value) {
 })
 export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')       dateFormat: string;
+  @Input('parse-format')	  parseFormat: string;
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
   @Input('close-on-select')   closeOnSelect: string;
@@ -304,7 +305,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   private getDate(arg: any): Date {
     let date: Date = <Date>arg;
     if (typeof arg === 'string') {
-      date =  Ng2Datetime.parseDate(arg, this.dateFormat);
+      date =  Ng2Datetime.parseDate(arg, this.parseFormat, this.dateFormat);
     }
     return date;
   }
