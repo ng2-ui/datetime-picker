@@ -134,8 +134,13 @@ var Ng2DatetimePickerDirective = (function () {
         // add a click listener to document, so that it can hide when others clicked
         document.body.addEventListener('click', this.hideDatetimePicker);
         this.el.addEventListener('keyup', this.keyEventListener);
+        if (this.ngModel && this.ngModel.getTime) {
+            this.ngModel.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(_this.ngModel, _this.dateFormat, _this.dateOnly); };
+        }
         setTimeout(function () {
-            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(_this.el.value);
+            if (_this.el.tagName === 'INPUT') {
+                _this.inputElValueChanged(_this.el.value); //set this.el.dateValue and reformat this.el.value
+            }
             if (_this.ctrl) {
                 _this.ctrl.markAsPristine();
             }
@@ -242,7 +247,7 @@ var Ng2DatetimePickerDirective = (function () {
     Ng2DatetimePickerDirective.prototype.getDate = function (arg) {
         var date = arg;
         if (typeof arg === 'string') {
-            date = ng2_datetime_1.Ng2Datetime.parseDate(arg, this.dateFormat);
+            date = ng2_datetime_1.Ng2Datetime.parseDate(arg, this.parseFormat, this.dateFormat);
         }
         return date;
     };
@@ -264,6 +269,7 @@ var Ng2DatetimePickerDirective = (function () {
     ];
     Ng2DatetimePickerDirective.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
+        'parseFormat': [{ type: core_1.Input, args: ['parse-format',] },],
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
         'timeOnly': [{ type: core_1.Input, args: ['time-only',] },],
         'closeOnSelect': [{ type: core_1.Input, args: ['close-on-select',] },],

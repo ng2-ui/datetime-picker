@@ -28,16 +28,26 @@ var Ng2Datetime = (function () {
             return '';
         }
     };
-    Ng2Datetime.parseDate = function (dateStr, dateFormat) {
+    Ng2Datetime.parseDate = function (dateStr, parseFormat, dateFormat) {
         if (typeof moment === 'undefined') {
             dateStr = Ng2Datetime.removeTimezone(dateStr);
             dateStr = dateStr + Ng2Datetime.addDSTOffset(dateStr);
             return Ng2Datetime.parseFromDefaultFormat(dateStr);
         }
-        else if (dateFormat) {
-            var date = moment(dateStr, dateFormat).toDate();
-            if (isNaN(date.getTime())) {
-                date = moment(dateStr).toDate(); //parse as ISO format
+        else if (dateFormat || parseFormat) {
+            // try parse using each format because changing format programmatically calls this twice,
+            // once with string in parse format and once in date format
+            var formats = [];
+            if (parseFormat) {
+                formats.push(parseFormat);
+            }
+            if (dateFormat) {
+                formats.push(dateFormat);
+            }
+            var m = moment(dateStr, formats);
+            var date = m.toDate();
+            if (!m.isValid()) {
+                date = moment(dateStr, moment.ISO_8601).toDate(); // parse as ISO format
             }
             return date;
         }

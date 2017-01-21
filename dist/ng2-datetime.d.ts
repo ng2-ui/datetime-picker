@@ -14,7 +14,7 @@ export declare class Ng2Datetime {
     static firstDayOfWeek: number;
     static months: any[];
     static formatDate(d: Date, format?: string, dateOnly?: boolean): string;
-    static parseDate(dateStr: string, dateFormat?: string): Date;
+    static parseDate(dateStr: string, parseFormat?: string, dateFormat?: string): Date;
     private static removeTimezone(dateStr);
     private static addDSTOffset(dateStr);
     private static parseFromDefaultFormat(dateStr);

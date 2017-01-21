@@ -108,16 +108,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return '';
 	        }
 	    };
-	    Ng2Datetime.parseDate = function (dateStr, dateFormat) {
+	    Ng2Datetime.parseDate = function (dateStr, parseFormat, dateFormat) {
 	        if (typeof moment === 'undefined') {
 	            dateStr = Ng2Datetime.removeTimezone(dateStr);
 	            dateStr = dateStr + Ng2Datetime.addDSTOffset(dateStr);
 	            return Ng2Datetime.parseFromDefaultFormat(dateStr);
 	        }
-	        else if (dateFormat) {
-	            var date = moment(dateStr, dateFormat).toDate();
-	            if (isNaN(date.getTime())) {
-	                date = moment(dateStr).toDate(); //parse as ISO format
+	        else if (dateFormat || parseFormat) {
+	            // try parse using each format because changing format programmatically calls this twice,
+	            // once with string in parse format and once in date format
+	            var formats = [];
+	            if (parseFormat) {
+	                formats.push(parseFormat);
+	            }
+	            if (dateFormat) {
+	                formats.push(dateFormat);
+	            }
+	            var m = moment(dateStr, formats);
+	            var date = m.toDate();
+	            if (!m.isValid()) {
+	                date = moment(dateStr, moment.ISO_8601).toDate(); // parse as ISO format
 	            }
 	            return date;
 	        }
@@ -332,8 +342,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        else {
 	            this.selectedDate = this.defaultValue || new Date();
 	        }
-	        this.hour = this.selectedDate.getHours();
-	        this.minute = this.selectedDate.getMinutes();
+	        // set hour and minute using moment if available to avoid having Javascript change timezones
+	        if (moment !== undefined) {
+	            var m = moment(this.selectedDate);
+	            this.hour = m.hours();
+	            this.minute = m.minute();
+	        }
+	        else {
+	            this.hour = this.selectedDate.getHours();
+	            this.minute = this.selectedDate.getMinutes();
+	        }
 	        this.monthData = this.ng2Datetime.getMonthData(this.year, this.month);
 	    };
 	    Ng2DatetimePickerComponent.prototype.toDate = function (day, month) {
@@ -352,8 +370,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (this.isDateDisabled(this.selectedDate)) {
 	            return false;
 	        }
-	        this.selectedDate.setHours(parseInt('' + this.hour || '0', 10));
-	        this.selectedDate.setMinutes(parseInt('' + this.minute || '0', 10));
+	        // editing hours and minutes via javascript date methods causes date to lose timezone info,
+	        // so edit using moment if available
+	        var hour = parseInt('' + this.hour || '0', 10);
+	        var minute = parseInt('' + this.minute || '0', 10);
+	        if (moment !== undefined) {
+	            // here selected date has a time of 00:00 in local time,
+	            // so build moment by getting year/month/day separately
+	            // to avoid it saving as a day earlier
+	            var m = moment([this.selectedDate.getFullYear(), this.selectedDate.getMonth(), this.selectedDate.getDate()]);
+	            m.hours(this.hour);
+	            m.minutes(this.minute);
+	            this.selectedDate = m.toDate();
+	        }
+	        else {
+	            this.selectedDate.setHours(hour);
+	            this.selectedDate.setMinutes(minute);
+	        }
 	        this.selectedDate.toString = function () {
 	            return ng2_datetime_1.Ng2Datetime.formatDate(_this.selectedDate, _this.dateFormat, _this.dateOnly);
 	        };
@@ -623,8 +656,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // add a click listener to document, so that it can hide when others clicked
 	        document.body.addEventListener('click', this.hideDatetimePicker);
 	        this.el.addEventListener('keyup', this.keyEventListener);
+	        if (this.ngModel && this.ngModel.getTime) {
+	            this.ngModel.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(_this.ngModel, _this.dateFormat, _this.dateOnly); };
+	        }
 	        setTimeout(function () {
-	            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(_this.el.value);
+	            if (_this.el.tagName === 'INPUT') {
+	                _this.inputElValueChanged(_this.el.value); //set this.el.dateValue and reformat this.el.value
+	            }
 	            if (_this.ctrl) {
 	                _this.ctrl.markAsPristine();
 	            }
@@ -731,7 +769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Ng2DatetimePickerDirective.prototype.getDate = function (arg) {
 	        var date = arg;
 	        if (typeof arg === 'string') {
-	            date = ng2_datetime_1.Ng2Datetime.parseDate(arg, this.dateFormat);
+	            date = ng2_datetime_1.Ng2Datetime.parseDate(arg, this.parseFormat, this.dateFormat);
 	        }
 	        return date;
 	    };
@@ -739,6 +777,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Input('date-format'), 
 	        __metadata('design:type', String)
 	    ], Ng2DatetimePickerDirective.prototype, "dateFormat", void 0);
+	    __decorate([
+	        core_1.Input('parse-format'), 
+	        __metadata('design:type', String)
+	    ], Ng2DatetimePickerDirective.prototype, "parseFormat", void 0);
 	    __decorate([
 	        core_1.Input('date-only'), 
 	        __metadata('design:type', Boolean)

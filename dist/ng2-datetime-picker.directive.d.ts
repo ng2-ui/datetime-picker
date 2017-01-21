@@ -8,6 +8,7 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     private viewContainerRef;
     private parent;
     dateFormat: string;
+    parseFormat: string;
     dateOnly: boolean;
     timeOnly: boolean;
     closeOnSelect: string;
