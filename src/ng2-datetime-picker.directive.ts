@@ -32,7 +32,7 @@ Number.isNaN = Number.isNaN || function(value) {
 })
 export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')       dateFormat: string;
-  @Input('parse-format')	  parseFormat: string;
+  @Input('parse-format')      parseFormat: string;
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
   @Input('close-on-select')   closeOnSelect: string;
@@ -139,8 +139,13 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     // add a click listener to document, so that it can hide when others clicked
     document.body.addEventListener('click', this.hideDatetimePicker);
     this.el.addEventListener('keyup', this.keyEventListener);
+    if (this.ngModel && this.ngModel.getTime) { // if it is a Date object given, set dateValue and toString method
+      this.ngModel.toString = () => Ng2Datetime.formatDate(this.ngModel, this.dateFormat, this.dateOnly);
+    }
     setTimeout( () => { // after [(ngModel)] is applied
-      this.el.tagName === 'INPUT' && this.inputElValueChanged(this.el.value);
+      if (this.el.tagName === 'INPUT') {
+        this.inputElValueChanged(this.el.value); //set this.el.dateValue and reformat this.el.value
+      }
       if(this.ctrl) {
         this.ctrl.markAsPristine();
       }
