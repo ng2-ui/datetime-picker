@@ -299,7 +299,7 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     }
 
     // set hour and minute using moment if available to avoid having Javascript change timezones
-    if (typeof moment !== 'undefined') {
+    if (typeof moment === 'undefined') {
       this.hour         = this.selectedDate.getHours();
       this.minute       = this.selectedDate.getMinutes();
     } else {
