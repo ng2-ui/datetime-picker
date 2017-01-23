@@ -12,7 +12,6 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     dateOnly: boolean;
     timeOnly: boolean;
     closeOnSelect: string;
-    firstDayOfWeek: string;
     defaultValue: Date | string;
     minuteStep: number;
     minDate: Date | string;

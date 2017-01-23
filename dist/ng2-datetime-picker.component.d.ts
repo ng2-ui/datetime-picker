@@ -13,7 +13,6 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     hour: number;
     minute: number;
     minuteStep: number;
-    firstDayOfWeek: string;
     defaultValue: Date;
     minDate: Date;
     maxDate: Date;
@@ -34,7 +33,7 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     day: number;
     today: Date;
     isWeekend(dayNum: number, month?: number): boolean;
-    initDatetime(date: Date): void;
+    ngOnInit(): void;
     toDate(day: number, month?: number): Date;
     toDateOnly(date: Date): Date;
     /**

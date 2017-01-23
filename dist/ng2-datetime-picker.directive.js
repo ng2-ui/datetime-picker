@@ -105,9 +105,6 @@ var Ng2DatetimePickerDirective = (function () {
     };
     Ng2DatetimePickerDirective.prototype.ngOnInit = function () {
         var _this = this;
-        if (this.firstDayOfWeek) {
-            ng2_datetime_1.Ng2Datetime.firstDayOfWeek = parseInt(this.firstDayOfWeek);
-        }
         if (this.parent && this.formControlName) {
             if (this.parent["form"]) {
                 this.ctrl = this.parent["form"].get(this.formControlName);
@@ -157,7 +154,7 @@ var Ng2DatetimePickerDirective = (function () {
     Ng2DatetimePickerDirective.prototype.updateDatepicker = function () {
         if (this.componentRef) {
             var component = this.componentRef.instance;
-            component.initDatetime(this.el['dateValue']);
+            component.defaultValue = this.el['dateValue'];
         }
     };
     Ng2DatetimePickerDirective.prototype.setInputElDateValue = function (date) {
@@ -191,7 +188,7 @@ var Ng2DatetimePickerDirective = (function () {
         this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
         this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
         var component = this.componentRef.instance;
-        component.defaultValue = this.defaultValue;
+        component.defaultValue = this.defaultValue || this.el['dateValue'];
         component.dateFormat = this.dateFormat;
         component.dateOnly = this.dateOnly;
         component.timeOnly = this.timeOnly;
@@ -201,8 +198,6 @@ var Ng2DatetimePickerDirective = (function () {
         component.minHour = this.minHour;
         component.maxHour = this.maxHour;
         component.disabledDates = this.disabledDates;
-        component.firstDayOfWeek = this.firstDayOfWeek;
-        component.initDatetime(this.el['dateValue']);
         this.styleDatetimePicker();
         component.selected$.subscribe(this.dateSelected);
         component.closing$.subscribe(function () {
@@ -273,7 +268,6 @@ var Ng2DatetimePickerDirective = (function () {
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
         'timeOnly': [{ type: core_1.Input, args: ['time-only',] },],
         'closeOnSelect': [{ type: core_1.Input, args: ['close-on-select',] },],
-        'firstDayOfWeek': [{ type: core_1.Input, args: ['first-day-of-week',] },],
         'defaultValue': [{ type: core_1.Input, args: ['default-value',] },],
         'minuteStep': [{ type: core_1.Input, args: ['minute-step',] },],
         'minDate': [{ type: core_1.Input, args: ['min-date',] },],

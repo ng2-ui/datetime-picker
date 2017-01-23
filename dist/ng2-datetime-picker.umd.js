@@ -335,13 +335,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return ng2_datetime_1.Ng2Datetime.weekends.indexOf(weekday) !== -1;
 	        }
 	    };
-	    Ng2DatetimePickerComponent.prototype.initDatetime = function (date) {
-	        if (date) {
-	            this.selectedDate = date.getTime() ? date : new Date();
-	        }
-	        else {
-	            this.selectedDate = this.defaultValue || new Date();
-	        }
+	    Ng2DatetimePickerComponent.prototype.ngOnInit = function () {
+	        this.selectedDate = this.defaultValue || new Date();
 	        // set hour and minute using moment if available to avoid having Javascript change timezones
 	        if (typeof moment === 'undefined') {
 	            this.hour = this.selectedDate.getHours();
@@ -374,7 +369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // so edit using moment if available
 	        var hour = parseInt('' + this.hour || '0', 10);
 	        var minute = parseInt('' + this.minute || '0', 10);
-	        if (moment !== undefined) {
+	        if (typeof moment !== 'undefined') {
 	            // here selected date has a time of 00:00 in local time,
 	            // so build moment by getting year/month/day separately
 	            // to avoid it saving as a day earlier
@@ -443,10 +438,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Input('minuteStep'), 
 	        __metadata('design:type', Number)
 	    ], Ng2DatetimePickerComponent.prototype, "minuteStep", void 0);
-	    __decorate([
-	        core_1.Input('first-day-of-week'), 
-	        __metadata('design:type', String)
-	    ], Ng2DatetimePickerComponent.prototype, "firstDayOfWeek", void 0);
 	    __decorate([
 	        core_1.Input('default-value'), 
 	        __metadata('design:type', Date)
@@ -627,9 +618,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    Ng2DatetimePickerDirective.prototype.ngOnInit = function () {
 	        var _this = this;
-	        if (this.firstDayOfWeek) {
-	            ng2_datetime_1.Ng2Datetime.firstDayOfWeek = parseInt(this.firstDayOfWeek);
-	        }
 	        if (this.parent && this.formControlName) {
 	            if (this.parent["form"]) {
 	                this.ctrl = this.parent["form"].get(this.formControlName);
@@ -679,7 +667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Ng2DatetimePickerDirective.prototype.updateDatepicker = function () {
 	        if (this.componentRef) {
 	            var component = this.componentRef.instance;
-	            component.initDatetime(this.el['dateValue']);
+	            component.defaultValue = this.el['dateValue'];
 	        }
 	    };
 	    Ng2DatetimePickerDirective.prototype.setInputElDateValue = function (date) {
@@ -713,7 +701,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
 	        this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
 	        var component = this.componentRef.instance;
-	        component.defaultValue = this.defaultValue;
+	        component.defaultValue = this.defaultValue || this.el['dateValue'];
 	        component.dateFormat = this.dateFormat;
 	        component.dateOnly = this.dateOnly;
 	        component.timeOnly = this.timeOnly;
@@ -723,8 +711,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        component.minHour = this.minHour;
 	        component.maxHour = this.maxHour;
 	        component.disabledDates = this.disabledDates;
-	        component.firstDayOfWeek = this.firstDayOfWeek;
-	        component.initDatetime(this.el['dateValue']);
 	        this.styleDatetimePicker();
 	        component.selected$.subscribe(this.dateSelected);
 	        component.closing$.subscribe(function () {
@@ -793,10 +779,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Input('close-on-select'), 
 	        __metadata('design:type', String)
 	    ], Ng2DatetimePickerDirective.prototype, "closeOnSelect", void 0);
-	    __decorate([
-	        core_1.Input('first-day-of-week'), 
-	        __metadata('design:type', String)
-	    ], Ng2DatetimePickerDirective.prototype, "firstDayOfWeek", void 0);
 	    __decorate([
 	        core_1.Input('default-value'), 
 	        __metadata('design:type', Object)
