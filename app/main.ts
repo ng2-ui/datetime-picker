@@ -9,6 +9,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { NgModule }       from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule }    from "@angular/forms";
+import { LocationStrategy, HashLocationStrategy } from "@angular/common";
 
 import { AppComponent }   from './app.component';
 
@@ -16,9 +17,14 @@ import { AppComponent }   from './app.component';
 import { Ng2DatetimePickerModule, Ng2Datetime } from 'ng2-datetime-picker';
 import { Ng2UtilsModule } from 'ng2-utils';
 
+import { APP_ROUTER_PROVIDERS, APP_ROUTER_COMPONENTS } from './app.route';
+
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, Ng2UtilsModule, Ng2DatetimePickerModule],
-  declarations: [AppComponent],
+  imports: [BrowserModule, APP_ROUTER_PROVIDERS, FormsModule, ReactiveFormsModule, Ng2UtilsModule, Ng2DatetimePickerModule],
+  declarations: [AppComponent, APP_ROUTER_COMPONENTS],
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

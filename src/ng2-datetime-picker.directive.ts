@@ -36,7 +36,6 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
   @Input('close-on-select')   closeOnSelect: string;
-  @Input('first-day-of-week') firstDayOfWeek: string;
   @Input('default-value')     defaultValue: Date | string;
   @Input('minute-step')       minuteStep: number;
   @Input('min-date')          minDate: Date | string;
@@ -108,9 +107,6 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   }
 
   ngOnInit ():void {
-    if (this.firstDayOfWeek) {
-      Ng2Datetime.firstDayOfWeek = parseInt(this.firstDayOfWeek);
-    }
     if(this.parent && this.formControlName) {
       if (this.parent["form"]) {
         this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
@@ -165,7 +161,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   updateDatepicker() {
     if(this.componentRef) {
       let component = this.componentRef.instance;
-      component.initDatetime(<Date>this.el['dateValue']);
+      component.defaultValue   = <Date>this.el['dateValue'];
     }
   }
 
@@ -217,7 +213,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
 
     let component = this.componentRef.instance;
-    component.defaultValue   = <Date>this.defaultValue;
+    component.defaultValue   = <Date>this.defaultValue || <Date>this.el['dateValue'];
     component.dateFormat     = this.dateFormat;
     component.dateOnly       = this.dateOnly;
     component.timeOnly       = this.timeOnly;
@@ -227,9 +223,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.minHour        = <number>this.minHour;
     component.maxHour        = <number>this.maxHour;
     component.disabledDates  = this.disabledDates;
-    component.firstDayOfWeek = this.firstDayOfWeek;
 
-    component.initDatetime(<Date>this.el['dateValue']);
     this.styleDatetimePicker();
 
     component.selected$.subscribe(this.dateSelected);

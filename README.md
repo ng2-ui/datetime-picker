@@ -173,7 +173,6 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
   * **parse-format**,  momentjs date format used to parse a string input value, e.g. YYYY-MM-DD hh:mm:ss.
     You need to include `moment` js in your html to use parse-format.
     `<script src="moment.min.js"></script>`
-  * **first-day-of-week** start day of week, 0 is sunday
   * **default-value** a date selected when a popup opens, default the current date
   * **minute-step** the interval of minutes, default 1
   * **min-date** Date, mininum selectable date

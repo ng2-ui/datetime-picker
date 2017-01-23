@@ -220,7 +220,6 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
   @Input('hour')              hour: number;
   @Input('minute')            minute: number;
   @Input('minuteStep')        minuteStep: number = 1;
-  @Input('first-day-of-week') firstDayOfWeek: string;
   @Input('default-value')     defaultValue: Date;
   @Input('min-date')          minDate: Date;
   @Input('max-date')          maxDate: Date;
@@ -291,12 +290,9 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
   public set day (day) {}
   public set today (today) {}
 
-  public initDatetime (date:Date) {
-    if (date) {
-      this.selectedDate = date.getTime() ? date : new Date();
-    } else {
-      this.selectedDate = this.defaultValue || new Date();
-    }
+
+  public ngOnInit() {
+    this.selectedDate = this.defaultValue || new Date();
 
     // set hour and minute using moment if available to avoid having Javascript change timezones
     if (typeof moment === 'undefined') {
@@ -333,7 +329,7 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     // so edit using moment if available
     let hour = parseInt( '' + this.hour || '0', 10);
     let minute = parseInt( '' + this.minute || '0', 10);
-    if (moment !== undefined) {
+    if (typeof moment !== 'undefined') {
       // here selected date has a time of 00:00 in local time,
       // so build moment by getting year/month/day separately
       // to avoid it saving as a day earlier
