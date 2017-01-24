@@ -131,15 +131,13 @@ For example,
 In addition, you can override other static variables of `Ng2Datetime` class. The following
 is the list of variables that you can override.
   
-  | Variable        | Default
-  |-----------------|----------------------
-  | days            | 1,2,....31
-  | daysOfWeek      | Sunday, Monday, .....
-  | weekends        | 0,6
-  | firstDayOfWeek  | 0 as in Sunday
-  | months          | January, February
-  | formatDate      | returns YYYY-MM-DD HH:MM
-  | parseDate       | returns date from YYYY-MM-DD HH:MM
+  * **days**:            default: 1,2,....31           
+  * **daysOfWeek**:      default: Sunday, Monday, .....
+  * **weekends**:        default: 0,6
+  * **firstDayOfWeek**:  default: 0 as in Sunday
+  * **months**:          default: January, February
+  * **formatDate**:      default: returns YYYY-MM-DD HH:MM
+  * **parseDate**:       default: returns date from YYYY-MM-DD HH:MM
 
 ## **ng2-ui** welcomes new members and contributors
 
