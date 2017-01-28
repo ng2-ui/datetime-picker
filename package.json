@@ -59,6 +59,7 @@
     "web-test": "^0.2.7",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2",
+    "webtest": "^0.3.2",
     "zone.js": "^0.6.21"
   }
 }
