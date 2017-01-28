@@ -78,7 +78,7 @@ declare var moment: any;
   </div>
 
   <!-- Time -->
-  <div class="days" id="time" *ngIf="!dateOnly">
+  <div class="time" id="time" *ngIf="!dateOnly">
     <label class="timeLabel">Time:</label>
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}

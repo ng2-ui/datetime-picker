@@ -15,3 +15,21 @@ TEST1
   verify element "#test1 input" value matches "2014-12-17"
 
 TEST2
+  click "#test2 input"
+  click "#test2 div.month b.prev_next.prev"
+  verify element "#test2 div.day[title='2016-1-20']" does not have class selectable
+  click "#test2 div.month b.prev_next.next"
+  verify element "#test2 div.day[title='2017-1-10']" does not have class selectable
+  verify element "#test2 div.day[title='2017-1-20']" does not have class selectable
+  click "#test2 div.month b.prev_next.next"
+  verify element "#test2 div.day[title='2018-1-20']" does not have class selectable
+  click "#test2 div.month b.prev_next.prev"
+  click "#test2 div.day.selectable[title='2017-1-25']"
+  verify element "#test2 input" value is "2017-01-25"
+
+TEST3
+  click "#test3 input"
+  verify element "#test3 .month" is not visible
+  verify element "#test3 .days" is not visible
+  verify element "#test3 .time" is visible
+
