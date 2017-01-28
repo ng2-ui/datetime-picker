@@ -5,4 +5,13 @@ open browser
 go to http://localhost:9002
 
 TEST1
-  click 
+  click "#test1 i.fa.fa-calendar"
+  set element "#test1 input.hourInput" value 11
+  verify element "#test1 input" value matches "11:"
+  click "#test1 i.fa.fa-calendar"
+  set element "#test1 input.minutesInput" value 19
+  verify element "#test1 input" value matches ":19"
+  click "#test1 div.day.selectable[title='2014-12-17']"
+  verify element "#test1 input" value matches "2014-12-17"
+
+TEST2
