@@ -120,10 +120,10 @@ export class DirectiveTestComponent {
 
   date3 = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
 
-  date4: string = Ng2Datetime.formatDate(
-    Ng2Datetime.parseDate('2017-01-15T14:22:00-06:00', this.timezoneFormat), this.timezoneFormat
-  );
   date4TimezoneFormat = 'DD/MM/YYYY HH:mm Z';
+  date4: string = Ng2Datetime.formatDate(
+    Ng2Datetime.parseDate('2017-01-15T14:22:00-06:00', this.date4TimezoneFormat), this.date4TimezoneFormat
+  );
 
   constructor(private fb: FormBuilder) { }
 
