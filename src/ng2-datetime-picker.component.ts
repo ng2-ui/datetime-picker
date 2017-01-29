@@ -78,7 +78,7 @@ declare var moment: any;
   </div>
 
   <!-- Time -->
-  <div class="days" id="time" *ngIf="!dateOnly">
+  <div class="time" id="time" *ngIf="!dateOnly">
     <label class="timeLabel">Time:</label>
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
@@ -329,18 +329,20 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     // so edit using moment if available
     let hour = parseInt( '' + this.hour || '0', 10);
     let minute = parseInt( '' + this.minute || '0', 10);
+
     if (typeof moment !== 'undefined') {
       // here selected date has a time of 00:00 in local time,
       // so build moment by getting year/month/day separately
       // to avoid it saving as a day earlier
       let m = moment([this.selectedDate.getFullYear(), this.selectedDate.getMonth(), this.selectedDate.getDate()]);
-      m.hours(this.hour);
-      m.minutes(this.minute);
+      m.hours(hour);
+      m.minutes(minute);
       this.selectedDate = m.toDate();
     } else {
       this.selectedDate.setHours(hour);
       this.selectedDate.setMinutes(minute);
     }
+    console.log('this.selectedDate', this.selectedDate)
 
     this.selectedDate.toString = () => {
       return Ng2Datetime.formatDate(this.selectedDate, this.dateFormat, this.dateOnly);

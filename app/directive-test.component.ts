@@ -11,36 +11,36 @@ var templateStr = `
   <div id="my-div">
     <h1>Ng2 DateTime Picker Test</h1>
     
-    <fieldset><legend><h2>Open from a button</h2></legend>
+    <fieldset id="test1"><legend><h2>Open from a button</h2></legend>
       <ng2-utils-1>
-        <input [(ngModel)]="myDate0" />
+        <input [(ngModel)]="date1" />
         <i class="fa fa-calendar"
            ng2-datetime-picker
-           [default-value]="defaultValue"
-           (valueChanged)="myDate0=$event"></i>
+           [default-value]="date1DefaultValue"
+           (valueChanged)="date1=$event"></i>
       </ng2-utils-1>
+      date1: {{date1}}
       <pre>{{templateStr | htmlCode:'ng2-utils-1'}}</pre>
     </fieldset>
     
-    <fieldset><legend><h2>min date, max date, disabled dates</h2></legend>
+    <fieldset id="test2"><legend><h2>min date, max date, disabled dates</h2></legend>
       <ng2-utils-2>
         <input
-          id="test1"
-          [(ngModel)]="myDate" 
+          [(ngModel)]="date2" 
           ng2-datetime-picker
-          [disabled-dates]="disabledDates"
-          [min-date]="minDate"
-          [max-date]="maxDate"
+          [disabled-dates]="date2DisabledDates"
+          [min-date]="date2MinDate"
+          [max-date]="date2MaxDate"
           date-only="true"/>
-        myDate: {{myDate}}
+        date2: {{date2}}
       </ng2-utils-2>
       <pre>{{templateStr | htmlCode:'ng2-utils-2'}}</pre>
     </fieldset>
      
-    <fieldset><legend><h2>time only</h2></legend>
+    <fieldset id="test3"><legend><h2>time only</h2></legend>
       <ng2-utils-4>
-        <input [(ngModel)]="date" ng2-datetime-picker 
-          id="test3"
+        <input [(ngModel)]="date3"
+          ng2-datetime-picker 
           date-format="DD-MM-YYYY hh:mm"
           time-only="true"
           minute-step="5"
@@ -49,24 +49,22 @@ var templateStr = `
       <pre>{{templateStr | htmlCode:'ng2-utils-4'}}</pre>
     </fieldset>
    
-    <fieldset><legend><h2>with timezone</h2></legend>
+    <fieldset id="test4"><legend><h2>with timezone</h2></legend>
       <ng2-utils-6>
         <input 
-          id="test6"
-          [(ngModel)]="dateWithTimezone" 
+          [(ngModel)]="date4" 
           ng2-datetime-picker
-          [date-format]="timezoneFormat" />
+          [date-format]="date4TimezoneFormat" />
           dateWithTimezone: {{dateWithTimezone}}
         <br/>
       </ng2-utils-6>
       <pre>{{templateStr | htmlCode:'ng2-utils-6'}}</pre>
     </fieldset>
    
-    <fieldset><legend><h2>Reactive form</h2></legend>
+    <fieldset id="test5"><legend><h2>Reactive form</h2></legend>
       <ng2-utils-3>
         <form [formGroup]="myForm">
             <input 
-              id="test2"
               required
               formControlName="date" 
               ng2-datetime-picker
@@ -112,13 +110,20 @@ export class DirectiveTestComponent {
   templateStr: string = templateStr;
 
   myForm: FormGroup; // our form model
-  date = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
-  defaultValue = new Date(2014, 11, 31, 21, 45, 59);
-  minDate = new Date(2017, 0, 1);
-  maxDate = new Date(2017, 11, 31);
-  disabledDates = [new Date(2016, 11, 26), new Date(2016, 11, 27)];
-  dateWithTimezone: string;
-  timezoneFormat = 'DD/MM/YYYY HH:mm Z';
+  date1 = null;
+  date1DefaultValue = new Date(2014, 11, 31, 21, 45, 59);
+
+  date2 = new Date(2017, 0, 28);
+  date2DisabledDates = [new Date(2017, 0, 10), new Date(2017, 0, 20)];
+  date2MinDate = new Date(2017, 0, 1);
+  date2MaxDate = new Date(2017, 11, 31);
+
+  date3 = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
+
+  date4TimezoneFormat = 'DD/MM/YYYY HH:mm Z';
+  date4: string = Ng2Datetime.formatDate(
+    Ng2Datetime.parseDate('2017-01-15T14:22:00-06:00', this.date4TimezoneFormat), this.date4TimezoneFormat
+  );
 
   constructor(private fb: FormBuilder) { }
 
@@ -127,11 +132,7 @@ export class DirectiveTestComponent {
       date: ['2016-02-15', [Validators.required]],
     });
 
-    moment.tz.setDefault('US/Central'); // Set the default timezone that moment will use
-
-    this.dateWithTimezone = Ng2Datetime.formatDate(
-      Ng2Datetime.parseDate('2017-01-15T14:22:00-06:00', this.timezoneFormat), this.timezoneFormat
-    );
+    //moment.tz.setDefault('US/Central'); // Set the default timezone that moment will use
   }
 
 }

@@ -17,7 +17,8 @@
     "test": "npm-run-all --serial test:start test:webtest test:stop",
     "test:start": "forever start --silent node_modules/.bin/webpack-dev-server --quiet --port 9002 --content-base app --config app/webpack.config",
     "test:stop": "forever stop node_modules/.bin/webpack-dev-server --quiet --port 9002 --content-base app --config app/webpack.config",
-    "test:webtest": "webtest ng2-datetime-picker.webtest.txt"
+    "test:webtest": "webtest ng2-datetime-picker.webtest.txt",
+    "upgrade": "npm-check-updates -a/--upgradeAll && npm i"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "core-js": "^2.4.1",
     "http-server": "^0.9.0",
     "ng2-utils": "^0.6.1",
+    "npm-check-updates": "^2.8.9",
     "npm-run-all": "^3.1.0",
     "raw-loader": "^0.5.1",
     "reflect-metadata": "^0.1.3",
@@ -58,6 +60,7 @@
     "typescript": "2.0.10",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2",
+    "webtest": "^0.2.13",
     "zone.js": "^0.6.21"
   }
 }
