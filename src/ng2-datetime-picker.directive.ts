@@ -152,7 +152,10 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     let date;
     if(changes && changes['ngModel']) {
       date = changes['ngModel'].currentValue;
-    } 
+      if (date && typeof date !== 'string') {
+        date.toString = () => Ng2Datetime.formatDate(date, this.dateFormat, this.dateOnly);
+      }
+    }
 
     this.setInputElDateValue(date);
     this.updateDatepicker();

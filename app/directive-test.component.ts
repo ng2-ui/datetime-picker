@@ -34,6 +34,7 @@ var templateStr = `
           date-only="true"/>
         date2: {{date2}}
       </ng2-utils-2>
+      <a href="javascript:void(0)" (click)="myDate=defaultValue">set myDate</a><br/>
       <pre>{{templateStr | htmlCode:'ng2-utils-2'}}</pre>
     </fieldset>
      
