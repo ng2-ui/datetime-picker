@@ -48,6 +48,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
   @Output('valueChanged')  valueChanged  = new EventEmitter();
+  @Output('popupClosed')  popupClosed  = new EventEmitter();
 
   private el: HTMLInputElement;                               /* input element */
   private ng2DatetimePickerEl: HTMLElement;                      /* dropdown element */
@@ -233,7 +234,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.closing$.subscribe(() => {
       this.closeOnSelect !== "false" && this.hideDatetimePicker();
     });
-    
+
     //Hack not to fire tab keyup event
     this.justShown = true;
     setTimeout(() => this.justShown = false, 100);
@@ -246,19 +247,21 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
   hideDatetimePicker = (event?):void => {
     if (this.componentRef) {
-      if (  /* invoked by clicking on somewhere in document */
-        event &&
+      if (
+        /* invoked by clicking on somewhere in document */
+        (event &&
         event.type === 'click' &&
         event.target !== this.el &&
-        !this.elementIn(event.target, this.ng2DatetimePickerEl)
+        !this.elementIn(event.target, this.ng2DatetimePickerEl))
+        || 
+        /* invoked by function call */
+        !event
       ) {
         this.componentRef.destroy();
         this.componentRef = undefined;
-      } else if (!event) {  /* invoked by function call */
-        this.componentRef.destroy();
-        this.componentRef = undefined;
+        this.popupClosed.emit(true);
       }
-    event && event.stopPropagation();  
+      event && event.stopPropagation();
     }
   };
 
