@@ -10,7 +10,7 @@ moment['locale']('en-ca'); //e.g. fr-ca
 var templateStr = `
   <div id="my-div">
     <h1>Ng2 DateTime Picker Test</h1>
-    
+
     <fieldset id="test1"><legend><h2>Open from a button</h2></legend>
       <ng2-utils-1>
         <input [(ngModel)]="date1" />
@@ -22,11 +22,11 @@ var templateStr = `
       date1: {{date1}}
       <pre>{{templateStr | htmlCode:'ng2-utils-1'}}</pre>
     </fieldset>
-    
+
     <fieldset id="test2"><legend><h2>min date, max date, disabled dates</h2></legend>
       <ng2-utils-2>
         <input
-          [(ngModel)]="date2" 
+          [(ngModel)]="date2"
           ng2-datetime-picker
           [disabled-dates]="date2DisabledDates"
           [min-date]="date2MinDate"
@@ -37,23 +37,24 @@ var templateStr = `
       <a href="javascript:void(0)" (click)="myDate=defaultValue">set myDate</a><br/>
       <pre>{{templateStr | htmlCode:'ng2-utils-2'}}</pre>
     </fieldset>
-     
+
     <fieldset id="test3"><legend><h2>time only</h2></legend>
       <ng2-utils-4>
         <input [(ngModel)]="date3"
-          ng2-datetime-picker 
+          ng2-datetime-picker
           date-format="DD-MM-YYYY hh:mm"
           time-only="true"
           minute-step="5"
+          (popupClosed)="doOnClose($event)"
           close-on-select="false" />
       </ng2-utils-4>
       <pre>{{templateStr | htmlCode:'ng2-utils-4'}}</pre>
     </fieldset>
-   
+
     <fieldset id="test4"><legend><h2>with timezone</h2></legend>
       <ng2-utils-6>
-        <input 
-          [(ngModel)]="date4" 
+        <input
+          [(ngModel)]="date4"
           ng2-datetime-picker
           [date-format]="date4TimezoneFormat" />
           dateWithTimezone: {{dateWithTimezone}}
@@ -61,13 +62,13 @@ var templateStr = `
       </ng2-utils-6>
       <pre>{{templateStr | htmlCode:'ng2-utils-6'}}</pre>
     </fieldset>
-   
+
     <fieldset id="test5"><legend><h2>Reactive form</h2></legend>
       <ng2-utils-3>
         <form [formGroup]="myForm">
-            <input 
+            <input
               required
-              formControlName="date" 
+              formControlName="date"
               ng2-datetime-picker
               close-on-select="false"/>
         </form>
@@ -76,7 +77,7 @@ var templateStr = `
         <br/>myForm.dirty: {{myForm.dirty}}
         <br/>myForm.controls.date.dirty: {{myForm.controls.date.dirty}}
         <br/>
-        <a href="javascript:void()" 
+        <a href="javascript:void()"
           (click)="myForm.controls.date.patchValue('2015-06-30')">
           2015-06-30
         </a>
@@ -91,7 +92,7 @@ var templateStr = `
       </ng2-utils-3>
       <pre>{{templateStr | htmlCode:'ng2-utils-3'}}</pre>
     </fieldset>
-    
+
   </div>
 `;
 
@@ -134,6 +135,10 @@ export class DirectiveTestComponent {
     });
 
     //moment.tz.setDefault('US/Central'); // Set the default timezone that moment will use
+  }
+
+  private doOnClose(event:boolean){
+    alert(" Do something on close ");
   }
 
 }
