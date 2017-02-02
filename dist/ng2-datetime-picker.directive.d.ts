@@ -23,6 +23,7 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
     valueChanged: EventEmitter<{}>;
+    popupClosed: EventEmitter<{}>;
     private el;
     private ng2DatetimePickerEl;
     private componentRef;

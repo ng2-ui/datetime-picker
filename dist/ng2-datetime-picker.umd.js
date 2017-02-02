@@ -382,7 +382,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.selectedDate.setHours(hour);
 	            this.selectedDate.setMinutes(minute);
 	        }
-	        console.log('this.selectedDate', this.selectedDate);
 	        this.selectedDate.toString = function () {
 	            return ng2_datetime_1.Ng2Datetime.formatDate(_this.selectedDate, _this.dateFormat, _this.dateOnly);
 	        };
@@ -536,6 +535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.parent = parent;
 	        this.ngModelChange = new core_1.EventEmitter();
 	        this.valueChanged = new core_1.EventEmitter();
+	        this.popupClosed = new core_1.EventEmitter();
 	        /* input element string value is changed */
 	        this.inputElValueChanged = function (date) {
 	            _this.setInputElDateValue(date);
@@ -555,16 +555,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	        this.hideDatetimePicker = function (event) {
 	            if (_this.componentRef) {
-	                if (event &&
+	                if (
+	                /* invoked by clicking on somewhere in document */
+	                (event &&
 	                    event.type === 'click' &&
 	                    event.target !== _this.el &&
-	                    !_this.elementIn(event.target, _this.ng2DatetimePickerEl)) {
+	                    !_this.elementIn(event.target, _this.ng2DatetimePickerEl))
+	                    ||
+	                        /* invoked by function call */
+	                        !event) {
 	                    _this.componentRef.destroy();
 	                    _this.componentRef = undefined;
-	                }
-	                else if (!event) {
-	                    _this.componentRef.destroy();
-	                    _this.componentRef = undefined;
+	                    _this.popupClosed.emit(true);
 	                }
 	                event && event.stopPropagation();
 	            }
@@ -828,6 +830,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Output('valueChanged'), 
 	        __metadata('design:type', Object)
 	    ], Ng2DatetimePickerDirective.prototype, "valueChanged", void 0);
+	    __decorate([
+	        core_1.Output('popupClosed'), 
+	        __metadata('design:type', Object)
+	    ], Ng2DatetimePickerDirective.prototype, "popupClosed", void 0);
 	    Ng2DatetimePickerDirective = __decorate([
 	        core_1.Directive({
 	            selector: '[ng2-datetime-picker]',

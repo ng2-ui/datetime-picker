@@ -22,6 +22,7 @@ var Ng2DatetimePickerDirective = (function () {
         this.parent = parent;
         this.ngModelChange = new core_1.EventEmitter();
         this.valueChanged = new core_1.EventEmitter();
+        this.popupClosed = new core_1.EventEmitter();
         /* input element string value is changed */
         this.inputElValueChanged = function (date) {
             _this.setInputElDateValue(date);
@@ -41,16 +42,18 @@ var Ng2DatetimePickerDirective = (function () {
         };
         this.hideDatetimePicker = function (event) {
             if (_this.componentRef) {
-                if (event &&
+                if (
+                /* invoked by clicking on somewhere in document */
+                (event &&
                     event.type === 'click' &&
                     event.target !== _this.el &&
-                    !_this.elementIn(event.target, _this.ng2DatetimePickerEl)) {
+                    !_this.elementIn(event.target, _this.ng2DatetimePickerEl))
+                    ||
+                        /* invoked by function call */
+                        !event) {
                     _this.componentRef.destroy();
                     _this.componentRef = undefined;
-                }
-                else if (!event) {
-                    _this.componentRef.destroy();
-                    _this.componentRef = undefined;
+                    _this.popupClosed.emit(true);
                 }
                 event && event.stopPropagation();
             }
@@ -283,6 +286,7 @@ var Ng2DatetimePickerDirective = (function () {
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
         'valueChanged': [{ type: core_1.Output, args: ['valueChanged',] },],
+        'popupClosed': [{ type: core_1.Output, args: ['popupClosed',] },],
     };
     return Ng2DatetimePickerDirective;
 }());
