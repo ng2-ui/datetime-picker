@@ -11,18 +11,6 @@ var templateStr = `
   <div id="my-div">
     <h1>Ng2 DateTime Picker Test</h1>
     
-    <fieldset id="test1"><legend><h2>Open from a button</h2></legend>
-      <ng2-utils-1>
-        <input [(ngModel)]="date1" />
-        <i class="fa fa-calendar"
-           ng2-datetime-picker
-           [default-value]="date1DefaultValue"
-           (valueChanged)="date1=$event"></i>
-      </ng2-utils-1>
-      date1: {{date1}}
-      <pre>{{templateStr | htmlCode:'ng2-utils-1'}}</pre>
-    </fieldset>
-    
     <fieldset id="test2"><legend><h2>min date, max date, disabled dates</h2></legend>
       <ng2-utils-2>
         <input
