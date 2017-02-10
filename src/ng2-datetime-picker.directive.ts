@@ -24,11 +24,7 @@ Number.isNaN = Number.isNaN || function(value) {
  */
 @Directive({
   selector : '[ng2-datetime-picker]',
-  providers: [Ng2Datetime],
-  host     : {
-    '(click)': 'showDatetimePicker()',
-    '(focus)': 'showDatetimePicker()'
-  }
+  providers: [Ng2Datetime]
 })
 export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('date-format')       dateFormat: string;
@@ -48,14 +44,16 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
   @Output('valueChanged')  valueChanged  = new EventEmitter();
-  @Output('popupClosed')  popupClosed  = new EventEmitter();
 
   private el: HTMLInputElement;                               /* input element */
   private ng2DatetimePickerEl: HTMLElement;                      /* dropdown element */
   private componentRef:ComponentRef<Ng2DatetimePickerComponent>; /* dropdown component reference */
   private ctrl: AbstractControl;
   private sub: any;
-  private justShown: boolean;
+  // private justShown: boolean;
+
+  inputEl: HTMLInputElement;
+  clickedDatetimePicker: boolean;
 
   constructor (
     private resolver:ComponentFactoryResolver,
@@ -134,8 +132,8 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     wrapper.appendChild(this.el);
 
     // add a click listener to document, so that it can hide when others clicked
-    document.body.addEventListener('click', this.hideDatetimePicker);
-    this.el.addEventListener('keyup', this.keyEventListener);
+    // document.body.addEventListener('click', this.hideDatetimePicker);
+    // this.el.addEventListener('keyup', this.keyEventListener);
     if (this.ngModel && this.ngModel.getTime) { // if it is a Date object given, set dateValue and toString method
       this.ngModel.toString = () => Ng2Datetime.formatDate(this.ngModel, this.dateFormat, this.dateOnly);
     }
@@ -149,14 +147,26 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     });
   }
 
+  ngAfterViewInit() {
+    // if this element is not an input tag, move dropdown after input tag
+    // so that it displays correctly
+    this.inputEl = this.el.tagName === "INPUT" ?
+        <HTMLInputElement>this.el : <HTMLInputElement>this.el.querySelector("input");
+
+    if (this.inputEl) {
+      this.inputEl.addEventListener('focus', this.showDatetimePicker);
+      this.inputEl.addEventListener('blur', this.hideDatetimePicker);
+      // this.inputEl.addEventListener('keydown', this.keydownEventHandler);
+      // this.inputEl.addEventListener('input', this.inputEventHandler);
+    }
+  }
+
+
   ngOnChanges(changes: SimpleChanges) {
     let date;
     if(changes && changes['ngModel']) {
       date = changes['ngModel'].currentValue;
-      if (date && typeof date !== 'string') {
-        date.toString = () => Ng2Datetime.formatDate(date, this.dateFormat, this.dateOnly);
-      }
-    }
+    } 
 
     this.setInputElDateValue(date);
     this.updateDatepicker();
@@ -187,7 +197,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
    if(this.sub) {
       this.sub.unsubscribe();
     }
-    document.body.removeEventListener('click', this.hideDatetimePicker);
+    // document.body.removeEventListener('click', this.hideDatetimePicker);
   }
 
   /* input element string value is changed */
@@ -205,7 +215,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   };
 
   //show datetimePicker element below the current element
-  showDatetimePicker(event?) {
+  showDatetimePicker = (event?): void =>  {
     if (this.componentRef) { /* if already shown, do nothing */
       return;
     }
@@ -214,7 +224,12 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
     this.componentRef   = this.viewContainerRef.createComponent(factory);
     this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
-    this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
+    this.ng2DatetimePickerEl.addEventListener('mousedown', (event) => {
+      this.clickedDatetimePicker = true
+    });
+    this.ng2DatetimePickerEl.addEventListener('mouseup', (event) => {
+      this.clickedDatetimePicker = false
+    });
 
     let component = this.componentRef.instance;
     component.defaultValue   = <Date>this.defaultValue || <Date>this.el['dateValue'];
@@ -227,50 +242,42 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.minHour        = <number>this.minHour;
     component.maxHour        = <number>this.maxHour;
     component.disabledDates  = this.disabledDates;
+    component.showCloseButton = this.closeOnSelect === "false";
 
     this.styleDatetimePicker();
 
     component.selected$.subscribe(this.dateSelected);
     component.closing$.subscribe(() => {
-      this.closeOnSelect !== "false" && this.hideDatetimePicker();
+      this.hideDatetimePicker();
     });
-
+    
     //Hack not to fire tab keyup event
-    this.justShown = true;
-    setTimeout(() => this.justShown = false, 100);
-  }
+    // this.justShown = true;
+    // setTimeout(() => this.justShown = false, 100);
+  };
 
   dateSelected = (date) => {
     this.el.tagName === 'INPUT' && this.inputElValueChanged(date);
     this.valueChanged.emit(date);
-  }
+    this.closeOnSelect !== "false" && this.hideDatetimePicker();
+  };
 
-  hideDatetimePicker = (event?):void => {
-    if (this.componentRef) {
-      if (
-        /* invoked by clicking on somewhere in document */
-        (event &&
-        event.type === 'click' &&
-        event.target !== this.el &&
-        !this.elementIn(event.target, this.ng2DatetimePickerEl))
-        || 
-        /* invoked by function call */
-        !event
-      ) {
-        this.componentRef.destroy();
-        this.componentRef = undefined;
-        this.popupClosed.emit(true);
-      }
-      event && event.stopPropagation();
+  hideDatetimePicker = (event?): any => {
+    if (this.clickedDatetimePicker) {
+      return false;
+    } else {  /* invoked by function call */
+      this.componentRef.destroy();
+      this.componentRef = undefined;
     }
+    event && event.stopPropagation();
   };
 
   private keyEventListener = (e:KeyboardEvent):void => {
-    if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
-      if (!this.justShown) {
-        this.hideDatetimePicker();
-      }
-    }
+    // if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
+    //   if (!this.justShown) {
+    //     this.hideDatetimePicker();
+    //   }
+    // }
   };
 
   private elementIn (el:Node, containerEl:Node):boolean {
