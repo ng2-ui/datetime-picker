@@ -22,7 +22,6 @@ var Ng2DatetimePickerDirective = (function () {
         this.parent = parent;
         this.ngModelChange = new core_1.EventEmitter();
         this.valueChanged = new core_1.EventEmitter();
-        this.popupClosed = new core_1.EventEmitter();
         /* input element string value is changed */
         this.inputElValueChanged = function (date) {
             _this.setInputElDateValue(date);
@@ -36,34 +35,62 @@ var Ng2DatetimePickerDirective = (function () {
                 _this.ngModelChange.emit(_this.ngModel);
             }
         };
+        //show datetimePicker element below the current element
+        this.showDatetimePicker = function (event) {
+            if (_this.componentRef) {
+                return;
+            }
+            var factory = _this.resolver.resolveComponentFactory(ng2_datetime_picker_component_1.Ng2DatetimePickerComponent);
+            _this.componentRef = _this.viewContainerRef.createComponent(factory);
+            _this.ng2DatetimePickerEl = _this.componentRef.location.nativeElement;
+            _this.ng2DatetimePickerEl.addEventListener('mousedown', function (event) {
+                _this.clickedDatetimePicker = true;
+            });
+            _this.ng2DatetimePickerEl.addEventListener('mouseup', function (event) {
+                _this.clickedDatetimePicker = false;
+            });
+            var component = _this.componentRef.instance;
+            component.defaultValue = _this.defaultValue || _this.el['dateValue'];
+            component.dateFormat = _this.dateFormat;
+            component.dateOnly = _this.dateOnly;
+            component.timeOnly = _this.timeOnly;
+            component.minuteStep = _this.minuteStep;
+            component.minDate = _this.minDate;
+            component.maxDate = _this.maxDate;
+            component.minHour = _this.minHour;
+            component.maxHour = _this.maxHour;
+            component.disabledDates = _this.disabledDates;
+            component.showCloseButton = _this.closeOnSelect === "false";
+            _this.styleDatetimePicker();
+            component.selected$.subscribe(_this.dateSelected);
+            component.closing$.subscribe(function () {
+                _this.hideDatetimePicker();
+            });
+            //Hack not to fire tab keyup event
+            // this.justShown = true;
+            // setTimeout(() => this.justShown = false, 100);
+        };
         this.dateSelected = function (date) {
             _this.el.tagName === 'INPUT' && _this.inputElValueChanged(date);
             _this.valueChanged.emit(date);
+            _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
         };
         this.hideDatetimePicker = function (event) {
-            if (_this.componentRef) {
-                if (
-                /* invoked by clicking on somewhere in document */
-                (event &&
-                    event.type === 'click' &&
-                    event.target !== _this.el &&
-                    !_this.elementIn(event.target, _this.ng2DatetimePickerEl))
-                    ||
-                        /* invoked by function call */
-                        !event) {
-                    _this.componentRef.destroy();
-                    _this.componentRef = undefined;
-                    _this.popupClosed.emit(true);
-                }
-                event && event.stopPropagation();
+            if (_this.clickedDatetimePicker) {
+                return false;
             }
+            else {
+                _this.componentRef.destroy();
+                _this.componentRef = undefined;
+            }
+            event && event.stopPropagation();
         };
         this.keyEventListener = function (e) {
-            if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) {
-                if (!_this.justShown) {
-                    _this.hideDatetimePicker();
-                }
-            }
+            // if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
+            //   if (!this.justShown) {
+            //     this.hideDatetimePicker();
+            //   }
+            // }
         };
         this.el = this.viewContainerRef.element.nativeElement;
     }
@@ -132,8 +159,8 @@ var Ng2DatetimePickerDirective = (function () {
         this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
         wrapper.appendChild(this.el);
         // add a click listener to document, so that it can hide when others clicked
-        document.body.addEventListener('click', this.hideDatetimePicker);
-        this.el.addEventListener('keyup', this.keyEventListener);
+        // document.body.addEventListener('click', this.hideDatetimePicker);
+        // this.el.addEventListener('keyup', this.keyEventListener);
         if (this.ngModel && this.ngModel.getTime) {
             this.ngModel.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(_this.ngModel, _this.dateFormat, _this.dateOnly); };
         }
@@ -146,14 +173,20 @@ var Ng2DatetimePickerDirective = (function () {
             }
         });
     };
+    Ng2DatetimePickerDirective.prototype.ngAfterViewInit = function () {
+        // if this element is not an input tag, move dropdown after input tag
+        // so that it displays correctly
+        this.inputEl = this.el.tagName === "INPUT" ?
+            this.el : this.el.querySelector("input");
+        if (this.inputEl) {
+            this.inputEl.addEventListener('focus', this.showDatetimePicker);
+            this.inputEl.addEventListener('blur', this.hideDatetimePicker);
+        }
+    };
     Ng2DatetimePickerDirective.prototype.ngOnChanges = function (changes) {
-        var _this = this;
         var date;
         if (changes && changes['ngModel']) {
             date = changes['ngModel'].currentValue;
-            if (date && typeof date !== 'string') {
-                date.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(date, _this.dateFormat, _this.dateOnly); };
-            }
         }
         this.setInputElDateValue(date);
         this.updateDatepicker();
@@ -182,37 +215,7 @@ var Ng2DatetimePickerDirective = (function () {
         if (this.sub) {
             this.sub.unsubscribe();
         }
-        document.body.removeEventListener('click', this.hideDatetimePicker);
-    };
-    //show datetimePicker element below the current element
-    Ng2DatetimePickerDirective.prototype.showDatetimePicker = function (event) {
-        var _this = this;
-        if (this.componentRef) {
-            return;
-        }
-        var factory = this.resolver.resolveComponentFactory(ng2_datetime_picker_component_1.Ng2DatetimePickerComponent);
-        this.componentRef = this.viewContainerRef.createComponent(factory);
-        this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
-        this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
-        var component = this.componentRef.instance;
-        component.defaultValue = this.defaultValue || this.el['dateValue'];
-        component.dateFormat = this.dateFormat;
-        component.dateOnly = this.dateOnly;
-        component.timeOnly = this.timeOnly;
-        component.minuteStep = this.minuteStep;
-        component.minDate = this.minDate;
-        component.maxDate = this.maxDate;
-        component.minHour = this.minHour;
-        component.maxHour = this.maxHour;
-        component.disabledDates = this.disabledDates;
-        this.styleDatetimePicker();
-        component.selected$.subscribe(this.dateSelected);
-        component.closing$.subscribe(function () {
-            _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
-        });
-        //Hack not to fire tab keyup event
-        this.justShown = true;
-        setTimeout(function () { return _this.justShown = false; }, 100);
+        // document.body.removeEventListener('click', this.hideDatetimePicker);
     };
     Ng2DatetimePickerDirective.prototype.elementIn = function (el, containerEl) {
         while (el = el.parentNode) {
@@ -256,11 +259,7 @@ var Ng2DatetimePickerDirective = (function () {
     Ng2DatetimePickerDirective.decorators = [
         { type: core_1.Directive, args: [{
                     selector: '[ng2-datetime-picker]',
-                    providers: [ng2_datetime_1.Ng2Datetime],
-                    host: {
-                        '(click)': 'showDatetimePicker()',
-                        '(focus)': 'showDatetimePicker()'
-                    }
+                    providers: [ng2_datetime_1.Ng2Datetime]
                 },] },
     ];
     /** @nocollapse */
@@ -286,7 +285,6 @@ var Ng2DatetimePickerDirective = (function () {
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
         'valueChanged': [{ type: core_1.Output, args: ['valueChanged',] },],
-        'popupClosed': [{ type: core_1.Output, args: ['popupClosed',] },],
     };
     return Ng2DatetimePickerDirective;
 }());

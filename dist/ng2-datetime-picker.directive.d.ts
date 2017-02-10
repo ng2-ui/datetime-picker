@@ -23,27 +23,28 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
     valueChanged: EventEmitter<{}>;
-    popupClosed: EventEmitter<{}>;
     private el;
     private ng2DatetimePickerEl;
     private componentRef;
     private ctrl;
     private sub;
-    private justShown;
+    inputEl: HTMLInputElement;
+    clickedDatetimePicker: boolean;
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, parent: ControlContainer);
     /**
      * convert defaultValue, minDate, maxDate, minHour, and maxHour to proper types
      */
     normalizeInput(): void;
     ngOnInit(): void;
+    ngAfterViewInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     updateDatepicker(): void;
     setInputElDateValue(date: any): void;
     ngOnDestroy(): void;
     inputElValueChanged: (date: string | Date) => void;
-    showDatetimePicker(event?: any): void;
+    showDatetimePicker: (event?: any) => void;
     dateSelected: (date: any) => void;
-    hideDatetimePicker: (event?: any) => void;
+    hideDatetimePicker: (event?: any) => any;
     private keyEventListener;
     private elementIn(el, containerEl);
     private styleDatetimePicker();

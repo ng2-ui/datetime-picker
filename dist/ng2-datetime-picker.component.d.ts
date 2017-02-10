@@ -1,9 +1,9 @@
-import { ElementRef, ChangeDetectorRef, EventEmitter, AfterViewInit } from '@angular/core';
+import { ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { Ng2Datetime } from './ng2-datetime';
 /**
  * show a selected date in monthly calendar
  */
-export declare class Ng2DatetimePickerComponent implements AfterViewInit {
+export declare class Ng2DatetimePickerComponent {
     ng2Datetime: Ng2Datetime;
     cdRef: ChangeDetectorRef;
     dateFormat: string;
@@ -19,6 +19,7 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     minHour: number;
     maxHour: number;
     disabledDates: Date[];
+    showCloseButton: boolean;
     selected$: EventEmitter<any>;
     closing$: EventEmitter<any>;
     hours: ElementRef;
@@ -27,7 +28,6 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     monthData: any;
     disabledDatesInTime: number[];
     constructor(elementRef: ElementRef, ng2Datetime: Ng2Datetime, cdRef: ChangeDetectorRef);
-    ngAfterViewInit(): void;
     year: number;
     month: number;
     day: number;
@@ -36,6 +36,7 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
     ngOnInit(): void;
     toDate(day: number, month?: number): Date;
     toDateOnly(date: Date): Date;
+    selectCurrentTime(): void;
     /**
      * set the selected date and close it when closeOnSelect is true
      * @param date {Date}
@@ -46,4 +47,5 @@ export declare class Ng2DatetimePickerComponent implements AfterViewInit {
      */
     updateMonthData(num: number): void;
     isDateDisabled(date: Date): boolean;
+    close(): void;
 }
