@@ -23,7 +23,7 @@ declare var moment: any;
   selector     : 'ng2-datetime-picker',
   template     : `
 <div class="ng2-datetime-picker">
-  <div class="close-button" *ngIf="showCloseButton" (click)="close()">X</div>
+  <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
   
   <!-- Month - Year  -->
   <div class="month" *ngIf="!timeOnly">
@@ -82,6 +82,7 @@ declare var moment: any;
 
   <!-- Time -->
   <div class="time" id="time" *ngIf="!dateOnly">
+    <div class="select-current-time" (click)="selectCurrentTime()"></div>
     <label class="timeLabel">Time:</label>
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
@@ -128,7 +129,8 @@ declare var moment: any;
   animation: slideDown 0.1s ease-in-out;
   animation-fill-mode: both;
 }
-.ng2-datetime-picker .close-button {
+.ng2-datetime-picker .close-button:before {
+  content: 'X';
   position: absolute;
   padding: 0 5px;
   cursor: pointer;
@@ -211,6 +213,18 @@ declare var moment: any;
   display: block;
   clear: left;
   height: 0;
+}
+.ng2-datetime-picker .time {
+  position: relative;
+}
+.ng2-datetime-picker .select-current-time:before {
+  content: 'current time';
+  position: absolute;
+  top: 1em;
+  right: 5px;
+  z-index: 1;
+  cursor: pointer;
+  color: #0000ff;
 }
 .ng2-datetime-picker .hourLabel,
 .ng2-datetime-picker .minutesLabel {
@@ -327,6 +341,12 @@ export class Ng2DatetimePickerComponent {
 
   public toDateOnly (date:Date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+  }
+
+  public selectCurrentTime(){
+    this.hour = (new Date()).getHours();
+    this.minute = (new Date()).getMinutes();
+    this.selectDateTime();
   }
 
   /**
