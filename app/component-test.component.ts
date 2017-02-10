@@ -11,6 +11,7 @@ var templateStr = `
     <fieldset><legend><h2>Attributes and Events</h2></legend>
       <ng2-utils-1>
         <ng2-datetime-picker
+          *ngIf="show !== false"
           date-format="DD-MM-YYYY hh:mm"
           [date-only]="false"
           [time-only]="false"
@@ -20,7 +21,9 @@ var templateStr = `
           [max-date]="maxDate"
           [min-hour]="9"
           [max-hour]="17"
+          [show-close-button]="true"
           [disabled-dates]="disabledDates"
+          (closing$)="show = false"
           (selected$)="selectedDate = $event">
         </ng2-datetime-picker>
         <br/> selected DateTime : {{ selectedDate || defaultValue }}

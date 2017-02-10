@@ -6,8 +6,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
   EventEmitter,
-  ViewChild,
-  AfterViewInit
+  ViewChild
 } from '@angular/core';
 import {Ng2Datetime} from './ng2-datetime';
 
@@ -24,7 +23,8 @@ declare var moment: any;
   selector     : 'ng2-datetime-picker',
   template     : `
 <div class="ng2-datetime-picker">
-
+  <div class="close-button" *ngIf="showCloseButton" (click)="close()">X</div>
+  
   <!-- Month - Year  -->
   <div class="month" *ngIf="!timeOnly">
     <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
@@ -119,35 +119,43 @@ declare var moment: any;
 }
 
 .ng2-datetime-picker {
-    color: #333;
-    outline-width: 0;
-    font: normal 14px sans-serif;
-    border: 1px solid #ddd;
-    display: inline-block;
-    background: #fff;
-    animation: slideDown 0.1s ease-in-out;
-    animation-fill-mode: both;
+  color: #333;
+  outline-width: 0;
+  font: normal 14px sans-serif;
+  border: 1px solid #ddd;
+  display: inline-block;
+  background: #fff;
+  animation: slideDown 0.1s ease-in-out;
+  animation-fill-mode: both;
+}
+.ng2-datetime-picker .close-button {
+  position: absolute;
+  padding: 0 5px;
+  cursor: pointer;
+  color: #ff0000;
+  right: 0;
+  z-index: 1;
 }
 .ng2-datetime-picker > .month {
-    text-align: center;
-    line-height: 22px;
-    padding: 10px;
-    background: #fcfcfc;
-    text-transform: uppercase;
-    font-weight: bold;
-    border-bottom: 1px solid #ddd;
-    position: relative;
+  text-align: center;
+  line-height: 22px;
+  padding: 10px;
+  background: #fcfcfc;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  position: relative;
 }
 .ng2-datetime-picker > .month > .prev_next {
-    color: #555;
-    display: block;
-    font: normal 24px sans-serif;
-    outline: none;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    width: 15px;
-    text-align: center;
+  color: #555;
+  display: block;
+  font: normal 24px sans-serif;
+  outline: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 15px;
+  text-align: center;
 }
 .ng2-datetime-picker > .month > .prev_next:hover {
   background-color: #333;
@@ -160,64 +168,64 @@ declare var moment: any;
   float: right;
 }
 .ng2-datetime-picker > .days {
-    width: 210px; /* 30 x 7 */
-    margin: 10px;
-    text-align: center;
+  width: 210px; /* 30 x 7 */
+  margin: 10px;
+  text-align: center;
 }
 .ng2-datetime-picker > .days .day-of-week,
 .ng2-datetime-picker > .days .day {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    border: 1px solid transparent;
-    width: 30px;
-    line-height: 28px;
-    float: left;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  border: 1px solid transparent;
+  width: 30px;
+  line-height: 28px;
+  float: left;
 }
 .ng2-datetime-picker > .days .day-of-week {
-    font-weight: bold;
+  font-weight: bold;
 }
 .ng2-datetime-picker > .days .day-of-week.weekend {
-    color: #ccc;
-    background-color: inherit;
+  color: #ccc;
+  background-color: inherit;
 }
 .ng2-datetime-picker > .days .day:not(.selectable) {
-    color: #ccc;
-    cursor: default;
+  color: #ccc;
+  cursor: default;
 }
 .ng2-datetime-picker > .days .weekend {
-    color: #ccc;
-    background-color: #eee;
+  color: #ccc;
+  background-color: #eee;
 }
 .ng2-datetime-picker > .days .day.selectable  {
-    cursor: pointer;
+  cursor: pointer;
 }
 .ng2-datetime-picker > .days .day.selected {
-    background: gray;
-    color: #fff;
+  background: gray;
+  color: #fff;
 }
 .ng2-datetime-picker > .days .day:not(.selected).selectable:hover {
-    background: #eee;
+  background: #eee;
 }
 .ng2-datetime-picker > .days:after {
-    content: '';
-    display: block;
-    clear: left;
-    height: 0;
+  content: '';
+  display: block;
+  clear: left;
+  height: 0;
 }
 .ng2-datetime-picker .hourLabel,
 .ng2-datetime-picker .minutesLabel {
-    display: inline-block;
-    width: 40px;
-    text-align: right;
+  display: inline-block;
+  width: 40px;
+  text-align: right;
 }
 .ng2-datetime-picker input[type=range] {
-    width: 200px;
+  width: 200px;
 }
   `
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class Ng2DatetimePickerComponent implements AfterViewInit {
+export class Ng2DatetimePickerComponent {
   @Input('date-format')       dateFormat: string;
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
@@ -231,6 +239,7 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
   @Input('min-hour')          minHour: number;
   @Input('max-hour')          maxHour: number;
   @Input('disabled-dates')    disabledDates: Date[];
+  @Input('show-close-button') showCloseButton: boolean;
 
   @Output('selected$')  selected$:EventEmitter<any> = new EventEmitter();
   @Output('closing$')   closing$:EventEmitter<any> = new EventEmitter();
@@ -250,15 +259,15 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     this.el = elementRef.nativeElement;
   }
 
-  public ngAfterViewInit ():void {
-    let stopPropagation = (e: Event) => e.stopPropagation();
-    if (!this.dateOnly) {
-      this.hours.nativeElement.addEventListener('keyup', stopPropagation);
-      this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
-      this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
-      this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
-    }
-  }
+  // public ngAfterViewInit ():void {
+  //   let stopPropagation = (e: Event) => e.stopPropagation();
+  //   if (!this.dateOnly) {
+  //     this.hours.nativeElement.addEventListener('keyup', stopPropagation);
+  //     this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
+  //     this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
+  //     this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
+  //   }
+  // }
 
   public get year ():number {
     return this.selectedDate.getFullYear();
@@ -353,7 +362,6 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
       return Ng2Datetime.formatDate(this.selectedDate, this.dateFormat, this.dateOnly);
     };
     this.selected$.emit(this.selectedDate);
-    this.closing$.emit(true);
   };
 
   /**
@@ -379,4 +387,7 @@ export class Ng2DatetimePickerComponent implements AfterViewInit {
     return false;
   }
 
+  public close() {
+    this.closing$.emit(true);
+  }
 }

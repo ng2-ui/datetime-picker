@@ -224,8 +224,14 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
     this.componentRef   = this.viewContainerRef.createComponent(factory);
     this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
-    this.ng2DatetimePickerEl.addEventListener('mousedown', (event) => this.clickedDatetimePicker = true);
-    this.ng2DatetimePickerEl.addEventListener('mouseup', (event) => this.clickedDatetimePicker = false);
+    this.ng2DatetimePickerEl.addEventListener('mousedown', (event) => {
+      console.log('mouse down.............');
+      this.clickedDatetimePicker = true
+    });
+    this.ng2DatetimePickerEl.addEventListener('mouseup', (event) => {
+      console.log('mouse up.............');
+      this.clickedDatetimePicker = false
+    });
 
     let component = this.componentRef.instance;
     component.defaultValue   = <Date>this.defaultValue || <Date>this.el['dateValue'];
@@ -238,12 +244,13 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.minHour        = <number>this.minHour;
     component.maxHour        = <number>this.maxHour;
     component.disabledDates  = this.disabledDates;
+    component.showCloseButton = this.closeOnSelect === "false";
 
     this.styleDatetimePicker();
 
     component.selected$.subscribe(this.dateSelected);
     component.closing$.subscribe(() => {
-      this.closeOnSelect !== "false" && this.hideDatetimePicker();
+      this.hideDatetimePicker();
     });
     
     //Hack not to fire tab keyup event
@@ -254,6 +261,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   dateSelected = (date) => {
     this.el.tagName === 'INPUT' && this.inputElValueChanged(date);
     this.valueChanged.emit(date);
+    this.closeOnSelect !== "false" && this.hideDatetimePicker();
   };
 
   hideDatetimePicker = (event?): any => {
