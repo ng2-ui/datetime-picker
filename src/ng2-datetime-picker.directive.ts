@@ -50,9 +50,10 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   private componentRef:ComponentRef<Ng2DatetimePickerComponent>; /* dropdown component reference */
   private ctrl: AbstractControl;
   private sub: any;
-  private justShown: boolean;
+  // private justShown: boolean;
 
   inputEl: HTMLInputElement;
+  clickedDatetimePicker: boolean;
 
   constructor (
     private resolver:ComponentFactoryResolver,
@@ -223,11 +224,8 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
     this.componentRef   = this.viewContainerRef.createComponent(factory);
     this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
-    // this.ng2DatetimePickerEl.addEventListener('keyup', this.keyEventListener);
-    // this.ng2DatetimePickerEl.addEventListener('click', function(event) {
-    //   console.log('click.................');
-    //   event.stopPropagation();
-    // });
+    this.ng2DatetimePickerEl.addEventListener('mousedown', (event) => this.clickedDatetimePicker = true);
+    this.ng2DatetimePickerEl.addEventListener('mouseup', (event) => this.clickedDatetimePicker = false);
 
     let component = this.componentRef.instance;
     component.defaultValue   = <Date>this.defaultValue || <Date>this.el['dateValue'];
@@ -249,8 +247,8 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     });
     
     //Hack not to fire tab keyup event
-    this.justShown = true;
-    setTimeout(() => this.justShown = false, 100);
+    // this.justShown = true;
+    // setTimeout(() => this.justShown = false, 100);
   };
 
   dateSelected = (date) => {
@@ -259,8 +257,8 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   };
 
   hideDatetimePicker = (event?): any => {
-    console.log(' hide XXXXXXXXXXXXXXXXXXXXXXXXXXX', event, this.elementIn(event.target, this.ng2DatetimePickerEl))
-    if ( event && this.elementIn(event.target, this.ng2DatetimePickerEl) ) {
+    console.log(' hide XXXXXXXXXXXXXXXXXXXXXXXXXXX', event)
+    if (this.clickedDatetimePicker) {
       return false;
     } else {  /* invoked by function call */
       this.componentRef.destroy();

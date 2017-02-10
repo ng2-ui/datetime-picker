@@ -23,7 +23,7 @@ declare var moment: any;
   providers    : [Ng2Datetime],
   selector     : 'ng2-datetime-picker',
   template     : `
-<div class="ng2-datetime-picker" tabindex="0">
+<div class="ng2-datetime-picker">
 
   <!-- Month - Year  -->
   <div class="month" *ngIf="!timeOnly">
@@ -50,7 +50,9 @@ declare var moment: any;
 
     <!-- Fill up blank days for this month -->
     <div *ngIf="monthData.leadingDays.length < 7">
-      <div class="day" *ngFor="let dayNum of monthData.leadingDays">
+      <div class="day"
+          (click)="updateMonthData(-1)"
+           *ngFor="let dayNum of monthData.leadingDays">
         {{dayNum}}
       </div>
     </div>
@@ -71,6 +73,7 @@ declare var moment: any;
     <!-- Fill up blank days for this month -->
     <div *ngIf="monthData.trailingDays.length < 7">
       <div class="day"
+           (click)="updateMonthData(+1)"
            *ngFor="let dayNum of monthData.trailingDays">
         {{dayNum}}
       </div>
@@ -85,6 +88,7 @@ declare var moment: any;
     </span><br/>
     <label class="hourLabel">Hour:</label>
     <input #hours class="hourInput"
+           tabindex="90000"
            (change)="selectDateTime()"
            type="range"
            min="{{minHour || 0}}"
@@ -92,6 +96,7 @@ declare var moment: any;
            [(ngModel)]="hour" />
     <label class="minutesLabel">Min:</label>
     <input #minutes class="minutesInput"
+           tabindex="90000"
            step="{{minuteStep}}"
            (change)="selectDateTime()"
            type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
