@@ -122,7 +122,7 @@ var Ng2DatetimePickerComponent = (function () {
             this.selectedDate.setHours(hour);
             this.selectedDate.setMinutes(minute);
         }
-        console.log('this.selectedDate', this.selectedDate);
+        //console.log('this.selectedDate', this.selectedDate)
         this.selectedDate.toString = function () {
             return ng2_datetime_1.Ng2Datetime.formatDate(_this.selectedDate, _this.dateFormat, _this.dateOnly);
         };
