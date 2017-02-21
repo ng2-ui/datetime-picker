@@ -453,7 +453,6 @@ export class Ng2DatetimePickerComponent {
   }
 
   public close() {
-    console.log('töttöröö');
     this.closing$.emit(true);
   }
 }

@@ -265,7 +265,6 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   };
 
   hideDatetimePicker = (event?): any => {
-    console.log('what');
     if (this.clickedDatetimePicker) {
       return false;
     } else {  /* invoked by function call */
