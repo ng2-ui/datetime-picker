@@ -39,6 +39,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('min-hour')          minHour: Date | number;
   @Input('max-hour')          maxHour: Date | number;
   @Input('disabled-dates')    disabledDates: Date[];
+  @Input('show-close-layer')  showCloseLayer: boolean;
   @Input() formControlName: string;
 
   @Input('ngModel')        ngModel: any;
@@ -243,6 +244,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.maxHour        = <number>this.maxHour;
     component.disabledDates  = this.disabledDates;
     component.showCloseButton = this.closeOnSelect === "false";
+    component.showCloseLayer = this.showCloseLayer;
 
     this.styleDatetimePicker();
 
