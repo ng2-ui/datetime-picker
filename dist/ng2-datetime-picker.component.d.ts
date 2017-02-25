@@ -20,6 +20,7 @@ export declare class Ng2DatetimePickerComponent {
     maxHour: number;
     disabledDates: Date[];
     showCloseButton: boolean;
+    showCloseLayer: boolean;
     selected$: EventEmitter<any>;
     closing$: EventEmitter<any>;
     hours: ElementRef;
@@ -27,6 +28,7 @@ export declare class Ng2DatetimePickerComponent {
     el: HTMLElement;
     monthData: any;
     disabledDatesInTime: number[];
+    locale: any;
     constructor(elementRef: ElementRef, ng2Datetime: Ng2Datetime, cdRef: ChangeDetectorRef);
     year: number;
     month: number;

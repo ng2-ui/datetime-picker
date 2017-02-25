@@ -61,6 +61,7 @@ var Ng2DatetimePickerDirective = (function () {
             component.maxHour = _this.maxHour;
             component.disabledDates = _this.disabledDates;
             component.showCloseButton = _this.closeOnSelect === "false";
+            component.showCloseLayer = _this.showCloseLayer;
             _this.styleDatetimePicker();
             component.selected$.subscribe(_this.dateSelected);
             component.closing$.subscribe(function () {
@@ -281,6 +282,7 @@ var Ng2DatetimePickerDirective = (function () {
         'minHour': [{ type: core_1.Input, args: ['min-hour',] },],
         'maxHour': [{ type: core_1.Input, args: ['max-hour',] },],
         'disabledDates': [{ type: core_1.Input, args: ['disabled-dates',] },],
+        'showCloseLayer': [{ type: core_1.Input, args: ['show-close-layer',] },],
         'formControlName': [{ type: core_1.Input },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],

@@ -119,6 +119,15 @@ var Ng2Datetime = (function () {
         };
         return monthData;
     };
+    Ng2Datetime.locale = {
+        date: 'date',
+        time: 'time',
+        year: 'year',
+        month: 'month',
+        day: 'day',
+        hour: 'hour',
+        minute: 'minute'
+    };
     Ng2Datetime.days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
     Ng2Datetime.weekends = [0, 6];
     Ng2Datetime.daysOfWeek = typeof moment === 'undefined' ? [

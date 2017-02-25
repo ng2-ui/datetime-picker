@@ -8,6 +8,7 @@
  *   6. parseDate(str)  default returns date from YYYY-MM-DD HH:MM
  */
 export declare class Ng2Datetime {
+    static locale: any;
     static days: number[];
     static weekends: number[];
     static daysOfWeek: any[];
