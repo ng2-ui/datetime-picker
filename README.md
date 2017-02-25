@@ -139,6 +139,7 @@ is the list of variables that you can override.
   * **months**:          default: January, February
   * **formatDate**:      default: returns YYYY-MM-DD HH:MM
   * **parseDate**:       default: returns date from YYYY-MM-DD HH:MM
+  * **locale**:          default: 'date', 'year', 'month', time', 'hour', 'minute'
 
 ## **ng2-ui** welcomes new members and contributors
 

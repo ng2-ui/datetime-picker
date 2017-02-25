@@ -83,11 +83,11 @@ declare var moment: any;
   <!-- Time -->
   <div class="time" id="time" *ngIf="!dateOnly">
     <div class="select-current-time" (click)="selectCurrentTime()"></div>
-    <label class="timeLabel">Time:</label>
+    <label class="timeLabel">{{locale.time}}</label>
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
     </span><br/>
-    <label class="hourLabel">Hour:</label>
+    <label class="hourLabel">{{locale.hour}}:</label>
     <input #hours class="hourInput"
            tabindex="90000"
            (change)="selectDateTime()"
@@ -95,7 +95,7 @@ declare var moment: any;
            min="{{minHour || 0}}"
            max="{{maxHour || 23}}"
            [(ngModel)]="hour" />
-    <label class="minutesLabel">Min:</label>
+    <label class="minutesLabel">{{locale.minute}}:</label>
     <input #minutes class="minutesInput"
            tabindex="90000"
            step="{{minuteStep}}"
@@ -216,6 +216,8 @@ declare var moment: any;
 }
 .ng2-datetime-picker .time {
   position: relative;
+  padding: 10px;
+  text-transform: Capitalize;
 }
 .ng2-datetime-picker .select-current-time:before {
   content: 'current time';
@@ -264,6 +266,7 @@ export class Ng2DatetimePickerComponent {
   public el:HTMLElement; // this component element
   public monthData:any;  // month calendar data
   public disabledDatesInTime: number[];
+  public locale = Ng2Datetime.locale;
 
   public constructor (
     elementRef: ElementRef,
