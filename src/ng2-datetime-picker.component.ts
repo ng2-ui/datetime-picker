@@ -22,6 +22,7 @@ declare var moment: any;
   providers    : [Ng2Datetime],
   selector     : 'ng2-datetime-picker',
   template     : `
+<div class="closing-layer" (click)="close()" *ngIf="showCloseLayer" ></div>
 <div class="ng2-datetime-picker">
   <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
   
@@ -106,12 +107,21 @@ declare var moment: any;
   `,
   styles       : [
     `
- @keyframes slideDown {
+@keyframes slideDown {
   0% {
     transform:  translateY(-10px);
   }
   100% {
     transform: translateY(0px);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
   }
 }
 
@@ -156,7 +166,7 @@ declare var moment: any;
   background: transparent;
   border: none;
   cursor: pointer;
-  width: 15px;
+  width: 25px;
   text-align: center;
 }
 .ng2-datetime-picker > .month > .prev_next:hover {
@@ -237,6 +247,40 @@ declare var moment: any;
 .ng2-datetime-picker input[type=range] {
   width: 200px;
 }
+
+.closing-layer {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0,0,0,0);
+}
+
+@media (max-width: 767px) {
+  .ng2-datetime-picker {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;    
+    animation: slideUp 0.1s ease-in-out;
+  }
+
+  .ng2-datetime-picker .days {
+    margin: 10px auto;
+  }
+
+  .closing-layer {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0,0.2);
+  }
+}
   `
   ],
   encapsulation: ViewEncapsulation.None
@@ -256,6 +300,7 @@ export class Ng2DatetimePickerComponent {
   @Input('max-hour')          maxHour: number;
   @Input('disabled-dates')    disabledDates: Date[];
   @Input('show-close-button') showCloseButton: boolean;
+  @Input('show-close-layer')  showCloseLayer: boolean;
 
   @Output('selected$')  selected$:EventEmitter<any> = new EventEmitter();
   @Output('closing$')   closing$:EventEmitter<any> = new EventEmitter();

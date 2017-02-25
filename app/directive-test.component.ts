@@ -19,6 +19,7 @@ var templateStr = `
           [disabled-dates]="date2DisabledDates"
           [min-date]="date2MinDate"
           [max-date]="date2MaxDate"
+          [show-close-layer]="true"
           date-only="true"/>
         date2: {{date2}}
       </ng2-utils-2>
