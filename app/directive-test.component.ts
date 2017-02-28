@@ -33,6 +33,7 @@ var templateStr = `
           date-format="DD-MM-YYYY hh:mm"
           time-only="true"
           minute-step="5"
+          (popupClosed)="onDatetimePickerClosed()"
           close-on-select="false" />
       </ng2-utils-4>
       <pre>{{templateStr | htmlCode:'ng2-utils-4'}}</pre>
@@ -124,4 +125,7 @@ export class DirectiveTestComponent {
     //moment.tz.setDefault('US/Central'); // Set the default timezone that moment will use
   }
 
+  onDatetimePickerClosed() {
+    console.log('datetime picker is closed');
+  }
 }
