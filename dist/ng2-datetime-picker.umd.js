@@ -560,7 +560,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.viewContainerRef = viewContainerRef;
 	        this.parent = parent;
 	        this.ngModelChange = new core_1.EventEmitter();
-	        this.valueChanged = new core_1.EventEmitter();
+	        this.valueChanged$ = new core_1.EventEmitter();
+	        this.popupClosed$ = new core_1.EventEmitter();
 	        /* input element string value is changed */
 	        this.inputElValueChanged = function (date) {
 	            _this.setInputElDateValue(date);
@@ -612,7 +613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	        this.dateSelected = function (date) {
 	            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(date);
-	            _this.valueChanged.emit(date);
+	            _this.valueChanged$.emit(date);
 	            _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
 	        };
 	        this.hideDatetimePicker = function (event) {
@@ -622,6 +623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            else {
 	                _this.componentRef.destroy();
 	                _this.componentRef = undefined;
+	                _this.popupClosed$.emit(true);
 	            }
 	            event && event.stopPropagation();
 	        };
@@ -698,9 +700,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        wrapper.className = 'ng2-datetime-picker-wrapper';
 	        this.el.parentElement.insertBefore(wrapper, this.el.nextSibling);
 	        wrapper.appendChild(this.el);
-	        // add a click listener to document, so that it can hide when others clicked
-	        // document.body.addEventListener('click', this.hideDatetimePicker);
-	        // this.el.addEventListener('keyup', this.keyEventListener);
 	        if (this.ngModel && this.ngModel.getTime) {
 	            this.ngModel.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(_this.ngModel, _this.dateFormat, _this.dateOnly); };
 	        }
@@ -755,7 +754,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (this.sub) {
 	            this.sub.unsubscribe();
 	        }
-	        // document.body.removeEventListener('click', this.hideDatetimePicker);
 	    };
 	    Ng2DatetimePickerDirective.prototype.elementIn = function (el, containerEl) {
 	        while (el = el.parentNode) {
@@ -863,7 +861,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    __decorate([
 	        core_1.Output('valueChanged'), 
 	        __metadata('design:type', Object)
-	    ], Ng2DatetimePickerDirective.prototype, "valueChanged", void 0);
+	    ], Ng2DatetimePickerDirective.prototype, "valueChanged$", void 0);
+	    __decorate([
+	        core_1.Output('popupClosed'), 
+	        __metadata('design:type', Object)
+	    ], Ng2DatetimePickerDirective.prototype, "popupClosed$", void 0);
 	    Ng2DatetimePickerDirective = __decorate([
 	        core_1.Directive({
 	            selector: '[ng2-datetime-picker]',
