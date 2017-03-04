@@ -21,7 +21,8 @@ export class Ng2Datetime {
     month: 'month',
     day: 'day',
     hour: 'hour',
-    minute: 'minute'
+    minute: 'minute',
+    currentTime: "current time"
   };
 
   static days: number[] =

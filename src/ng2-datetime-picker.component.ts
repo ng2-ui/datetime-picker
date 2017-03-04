@@ -83,7 +83,7 @@ declare var moment: any;
 
   <!-- Time -->
   <div class="time" id="time" *ngIf="!dateOnly">
-    <div class="select-current-time" (click)="selectCurrentTime()"></div>
+    <div class="select-current-time" (click)="selectCurrentTime()">{{locale.currentTime}}</div>
     <label class="timeLabel">{{locale.time}}</label>
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
@@ -229,8 +229,7 @@ declare var moment: any;
   padding: 10px;
   text-transform: Capitalize;
 }
-.ng2-datetime-picker .select-current-time:before {
-  content: 'current time';
+.ng2-datetime-picker .select-current-time {
   position: absolute;
   top: 1em;
   right: 5px;
