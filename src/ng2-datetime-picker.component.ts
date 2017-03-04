@@ -367,6 +367,9 @@ export class Ng2DatetimePickerComponent {
 
 
   public ngOnInit() {
+    if(isNaN(this.defaultValue.getTime())) {
+      this.defaultValue = new Date();
+    }
     this.selectedDate = this.defaultValue || new Date();
 
     // set hour and minute using moment if available to avoid having Javascript change timezones
