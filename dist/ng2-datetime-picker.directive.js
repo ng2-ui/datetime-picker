@@ -184,9 +184,13 @@ var Ng2DatetimePickerDirective = (function () {
         }
     };
     Ng2DatetimePickerDirective.prototype.ngOnChanges = function (changes) {
+        var _this = this;
         var date;
         if (changes && changes['ngModel']) {
             date = changes['ngModel'].currentValue;
+            if (date && typeof date !== 'string') {
+                date.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(date, _this.dateFormat, _this.dateOnly); };
+            }
         }
         this.setInputElDateValue(date);
         this.updateDatepicker();

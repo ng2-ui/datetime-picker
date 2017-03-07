@@ -324,6 +324,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        enumerable: true,
 	        configurable: true
 	    });
+	    Object.defineProperty(Ng2DatetimePickerComponent.prototype, "monthData", {
+	        get: function () {
+	            return this._monthData;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
 	    Object.defineProperty(Ng2DatetimePickerComponent.prototype, "today", {
 	        get: function () {
 	            var dt = new Date();
@@ -361,10 +368,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.hour = m.hours();
 	            this.minute = m.minute();
 	        }
-	        this.monthData = this.ng2Datetime.getMonthData(this.year, this.month);
+	        this._monthData = this.ng2Datetime.getMonthData(this.year, this.month);
 	    };
 	    Ng2DatetimePickerComponent.prototype.toDate = function (day, month) {
-	        return new Date(this.monthData.year, month || this.monthData.month, day);
+	        return new Date(this._monthData.year, month || this._monthData.month, day);
 	    };
 	    Ng2DatetimePickerComponent.prototype.toDateOnly = function (date) {
 	        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
@@ -412,7 +419,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * show prev/next month calendar
 	     */
 	    Ng2DatetimePickerComponent.prototype.updateMonthData = function (num) {
-	        this.monthData = this.ng2Datetime.getMonthData(this.monthData.year, this.monthData.month + num);
+	        this._monthData = this.ng2Datetime.getMonthData(this._monthData.year, this._monthData.month + num);
 	    };
 	    Ng2DatetimePickerComponent.prototype.isDateDisabled = function (date) {
 	        var dateInTime = date.getTime();
@@ -727,9 +734,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    Ng2DatetimePickerDirective.prototype.ngOnChanges = function (changes) {
+	        var _this = this;
 	        var date;
 	        if (changes && changes['ngModel']) {
 	            date = changes['ngModel'].currentValue;
+	            if (date && typeof date !== 'string') {
+	                date.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(date, _this.dateFormat, _this.dateOnly); };
+	            }
 	        }
 	        this.setInputElDateValue(date);
 	        this.updateDatepicker();

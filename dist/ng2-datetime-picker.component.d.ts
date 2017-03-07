@@ -26,13 +26,14 @@ export declare class Ng2DatetimePickerComponent {
     hours: ElementRef;
     minutes: ElementRef;
     el: HTMLElement;
-    monthData: any;
     disabledDatesInTime: number[];
     locale: any;
+    private _monthData;
     constructor(elementRef: ElementRef, ng2Datetime: Ng2Datetime, cdRef: ChangeDetectorRef);
     year: number;
     month: number;
     day: number;
+    readonly monthData: any;
     today: Date;
     isWeekend(dayNum: number, month?: number): boolean;
     ngOnInit(): void;
