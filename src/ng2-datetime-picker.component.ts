@@ -346,8 +346,6 @@ export class Ng2DatetimePickerComponent {
     return this._monthData;
   }
 
-  public monthData:any;  // month calendar data
-
   public get today ():Date {
     let dt = new Date();
     dt.setHours(0);

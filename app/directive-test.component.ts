@@ -22,6 +22,7 @@ var templateStr = `
           [show-close-layer]="true"
           date-only="true"/>
         date2: {{date2}}
+        <button id="set-date" (click)="date2 = date2New">Set 2017-12-31</button>
       </ng2-utils-2>
       <pre>{{templateStr | htmlCode:'ng2-utils-2'}}</pre>
     </fieldset>
@@ -100,13 +101,12 @@ export class DirectiveTestComponent {
   templateStr: string = templateStr;
 
   myForm: FormGroup; // our form model
-  date1 = null;
-  date1DefaultValue = new Date(2014, 11, 31, 21, 45, 59);
 
   date2 = new Date(2017, 0, 28);
   date2DisabledDates = [new Date(2017, 0, 10), new Date(2017, 0, 20)];
   date2MinDate = new Date(2017, 0, 1);
   date2MaxDate = new Date(2017, 11, 31);
+  date2New = new Date(2017,11,31);
 
   date3 = new Date("Thu Jan 01 2015 00:00:00 GMT-0500 (EST)");
 

@@ -28,6 +28,9 @@ TEST2
   click "#test2 div.month b.prev_next.prev"
   click "#test2 div.day.selectable[title='2017-1-25']"
   verify element "#test2 input" value is "2017-01-25"
+  click "#test2 #set-date"
+  verify element "#test2 input" value is "2017-12-31"
+
 
 TEST3
   click "#test3 input"
