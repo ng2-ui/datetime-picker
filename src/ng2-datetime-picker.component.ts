@@ -308,9 +308,9 @@ export class Ng2DatetimePickerComponent {
   @ViewChild('minutes') minutes:ElementRef;
 
   public el:HTMLElement; // this component element
-  public monthData:any;  // month calendar data
   public disabledDatesInTime: number[];
   public locale = Ng2Datetime.locale;
+  private _monthData: any;
 
   public constructor (
     elementRef: ElementRef,
@@ -330,17 +330,23 @@ export class Ng2DatetimePickerComponent {
   //   }
   // }
 
-  public get year ():number {
+  public get year(): number {
     return this.selectedDate.getFullYear();
   }
 
-  public get month ():number {
+  public get month(): number {
     return this.selectedDate.getMonth();
   }
 
-  public get day ():number {
+  public get day(): number {
     return this.selectedDate.getDate();
   }
+
+  public get monthData(): any {
+    return this._monthData;
+  }
+
+  public monthData:any;  // month calendar data
 
   public get today ():Date {
     let dt = new Date();
@@ -382,11 +388,11 @@ export class Ng2DatetimePickerComponent {
       this.minute = m.minute();
     }
 
-    this.monthData    = this.ng2Datetime.getMonthData(this.year, this.month);
+    this._monthData = this.ng2Datetime.getMonthData(this.year, this.month);
   }
 
   public toDate (day:number, month?: number):Date {
-    return new Date(this.monthData.year, month || this.monthData.month, day);
+    return new Date(this._monthData.year, month || this._monthData.month, day);
   }
 
   public toDateOnly (date:Date) {
@@ -438,7 +444,7 @@ export class Ng2DatetimePickerComponent {
    * show prev/next month calendar
    */
   public updateMonthData (num:number) {
-    this.monthData = this.ng2Datetime.getMonthData(this.monthData.year, this.monthData.month + num);
+    this._monthData = this.ng2Datetime.getMonthData(this._monthData.year, this._monthData.month + num);
   }
 
   public isDateDisabled(date: Date) {
