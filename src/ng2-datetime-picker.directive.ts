@@ -9,14 +9,20 @@ import {Ng2Datetime} from './ng2-datetime';
 
 declare var moment: any;
 
-Number.isInteger = Number.isInteger || function(value) {
+function isInteger(value) {
+  if (Number.isInteger) {
+    return Number.isInteger(value);
+  }
   return typeof value === "number" &&
     isFinite(value) &&
     Math.floor(value) === value;
 };
 
-Number.isNaN = Number.isNaN || function(value) {
-    return value !== value;
+function isNaN(value) {
+  if (Number.isNaN) {
+    return Number.isNaN(value);
+  }
+  return value !== value;
 };
 
 /**
@@ -71,17 +77,17 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   normalizeInput() {
     if (this.defaultValue && typeof this.defaultValue === 'string') {
       let d = Ng2Datetime.parseDate(<string>this.defaultValue);
-      this.defaultValue = Number.isNaN(d.getTime()) ? new Date() : d;
+      this.defaultValue = isNaN(d.getTime()) ? new Date() : d;
     }
 
     if (this.minDate && typeof this.minDate == 'string') {
       let d = Ng2Datetime.parseDate(<string>this.minDate);
-      this.minDate = Number.isNaN(d.getTime()) ? new Date() : d;
+      this.minDate = isNaN(d.getTime()) ? new Date() : d;
     }
 
     if (this.maxDate && typeof this.maxDate == 'string') {
       let d = Ng2Datetime.parseDate(<string>this.minDate);
-      this.maxDate = Number.isNaN(d.getTime()) ? new Date() : d;
+      this.maxDate = isNaN(d.getTime()) ? new Date() : d;
     }
 
     if (this.minHour) {
@@ -89,7 +95,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
         this.minHour = (<Date>this.minHour).getHours();
       } else {
         let hour = Number(this.minHour.toString());
-        if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+        if (!isInteger(hour) || hour > 23 || hour < 0) {
           this.minHour = undefined;
         }
       }
@@ -100,7 +106,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
         this.maxHour = (<Date>this.maxHour).getHours();
       } else {
         let hour = Number(this.maxHour.toString());
-        if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+        if (!isInteger(hour) || hour > 23 || hour < 0) {
           this.maxHour = undefined;
         }
       }
