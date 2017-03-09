@@ -35,7 +35,7 @@ var templateStr = `
           time-only="true"
           minute-step="5"
           (popupClosed)="onDatetimePickerClosed()"
-          close-on-select="false" />
+          [close-on-select]="false" />
       </ng2-utils-4>
       <pre>{{templateStr | htmlCode:'ng2-utils-4'}}</pre>
     </fieldset>
@@ -59,7 +59,7 @@ var templateStr = `
               required
               formControlName="date" 
               ng2-datetime-picker
-              close-on-select="false"/>
+              [close-on-select]="false"/>
         </form>
         myForm.controls.date.value: {{myForm.controls.date.value}}
         <br/>myForm.value: {{myForm.value | json}}

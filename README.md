@@ -71,7 +71,7 @@ AngularJS 2 DateTime Picker
           day="31"
           hour="23"
           minute='59'
-          close-on-select="false"  />
+          [close-on-select]="false"  />
 
 For full example, please check `test` directory to see the example of;
 

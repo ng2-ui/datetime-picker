@@ -37,7 +37,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('parse-format')      parseFormat: string;
   @Input('date-only')         dateOnly: boolean;
   @Input('time-only')         timeOnly: boolean;
-  @Input('close-on-select')   closeOnSelect: string;
+  @Input('close-on-select')   closeOnSelect: boolean = true;
   @Input('default-value')     defaultValue: Date | string;
   @Input('minute-step')       minuteStep: number;
   @Input('min-date')          minDate: Date | string;
@@ -230,11 +230,15 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
 
     this.componentRef   = this.viewContainerRef.createComponent(factory);
     this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
+    this.ng2DatetimePickerEl.setAttribute('tabindex', '32767');
     this.ng2DatetimePickerEl.addEventListener('mousedown', (event) => {
       this.clickedDatetimePicker = true
     });
     this.ng2DatetimePickerEl.addEventListener('mouseup', (event) => {
       this.clickedDatetimePicker = false
+    });
+    this.ng2DatetimePickerEl.addEventListener('blur', (event) => {
+      this.hideDatetimePicker();
     });
 
     let component = this.componentRef.instance;
@@ -248,7 +252,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.minHour        = <number>this.minHour;
     component.maxHour        = <number>this.maxHour;
     component.disabledDates  = this.disabledDates;
-    component.showCloseButton = this.closeOnSelect === "false";
+    component.showCloseButton = this.closeOnSelect === false;
     component.showCloseLayer = this.showCloseLayer;
 
     this.styleDatetimePicker();
@@ -266,7 +270,11 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   dateSelected = (date) => {
     this.el.tagName === 'INPUT' && this.inputElValueChanged(date);
     this.valueChanged$.emit(date);
-    this.closeOnSelect !== "false" && this.hideDatetimePicker();
+    if (this.closeOnSelect !== false) {
+      this.hideDatetimePicker();
+    } else {
+      this.ng2DatetimePickerEl.focus();
+    }
   };
 
   hideDatetimePicker = (event?): any => {
