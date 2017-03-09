@@ -105,9 +105,11 @@ export class Ng2Datetime {
         date = moment(dateStr, moment.ISO_8601).toDate(); // parse as ISO format
       }
       return date;
-    } else {
+    } else if (dateStr.length > 4) { //at least requires an year
       let date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
       return date;
+    } else {
+      return new Date();
     }
   }
 
