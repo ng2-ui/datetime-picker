@@ -51,9 +51,12 @@ var Ng2Datetime = (function () {
             }
             return date;
         }
-        else {
+        else if (dateStr.length > 4) {
             var date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
             return date;
+        }
+        else {
+            return new Date();
         }
     };
     //remove timezone

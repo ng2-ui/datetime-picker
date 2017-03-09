@@ -131,9 +131,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return date;
 	        }
-	        else {
+	        else if (dateStr.length > 4) {
 	            var date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
 	            return date;
+	        }
+	        else {
+	            return new Date();
 	        }
 	    };
 	    //remove timezone
@@ -553,14 +556,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	var forms_1 = __webpack_require__(5);
 	var ng2_datetime_picker_component_1 = __webpack_require__(3);
 	var ng2_datetime_1 = __webpack_require__(1);
-	Number.isInteger = Number.isInteger || function (value) {
+	function isInteger(value) {
+	    if (Number.isInteger) {
+	        return Number.isInteger(value);
+	    }
 	    return typeof value === "number" &&
 	        isFinite(value) &&
 	        Math.floor(value) === value;
-	};
-	Number.isNaN = Number.isNaN || function (value) {
+	}
+	;
+	function isNaN(value) {
+	    if (Number.isNaN) {
+	        return Number.isNaN(value);
+	    }
 	    return value !== value;
-	};
+	}
+	;
 	/**
 	 * If the given string is not a valid date, it defaults back to today
 	 */
@@ -570,6 +581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.resolver = resolver;
 	        this.viewContainerRef = viewContainerRef;
 	        this.parent = parent;
+	        this.closeOnSelect = true;
 	        this.ngModelChange = new core_1.EventEmitter();
 	        this.valueChanged$ = new core_1.EventEmitter();
 	        this.popupClosed$ = new core_1.EventEmitter();
@@ -594,11 +606,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var factory = _this.resolver.resolveComponentFactory(ng2_datetime_picker_component_1.Ng2DatetimePickerComponent);
 	            _this.componentRef = _this.viewContainerRef.createComponent(factory);
 	            _this.ng2DatetimePickerEl = _this.componentRef.location.nativeElement;
+	            _this.ng2DatetimePickerEl.setAttribute('tabindex', '32767');
 	            _this.ng2DatetimePickerEl.addEventListener('mousedown', function (event) {
 	                _this.clickedDatetimePicker = true;
 	            });
 	            _this.ng2DatetimePickerEl.addEventListener('mouseup', function (event) {
 	                _this.clickedDatetimePicker = false;
+	            });
+	            _this.ng2DatetimePickerEl.addEventListener('blur', function (event) {
+	                _this.hideDatetimePicker();
 	            });
 	            var component = _this.componentRef.instance;
 	            component.defaultValue = _this.defaultValue || _this.el['dateValue'];
@@ -611,7 +627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            component.minHour = _this.minHour;
 	            component.maxHour = _this.maxHour;
 	            component.disabledDates = _this.disabledDates;
-	            component.showCloseButton = _this.closeOnSelect === "false";
+	            component.showCloseButton = _this.closeOnSelect === false;
 	            component.showCloseLayer = _this.showCloseLayer;
 	            _this.styleDatetimePicker();
 	            component.selected$.subscribe(_this.dateSelected);
@@ -625,7 +641,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.dateSelected = function (date) {
 	            _this.el.tagName === 'INPUT' && _this.inputElValueChanged(date);
 	            _this.valueChanged$.emit(date);
-	            _this.closeOnSelect !== "false" && _this.hideDatetimePicker();
+	            if (_this.closeOnSelect !== false) {
+	                _this.hideDatetimePicker();
+	            }
+	            else {
+	                _this.ng2DatetimePickerEl.focus();
+	            }
 	        };
 	        this.hideDatetimePicker = function (event) {
 	            if (_this.clickedDatetimePicker) {
@@ -653,15 +674,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Ng2DatetimePickerDirective.prototype.normalizeInput = function () {
 	        if (this.defaultValue && typeof this.defaultValue === 'string') {
 	            var d = ng2_datetime_1.Ng2Datetime.parseDate(this.defaultValue);
-	            this.defaultValue = Number.isNaN(d.getTime()) ? new Date() : d;
+	            this.defaultValue = isNaN(d.getTime()) ? new Date() : d;
 	        }
 	        if (this.minDate && typeof this.minDate == 'string') {
 	            var d = ng2_datetime_1.Ng2Datetime.parseDate(this.minDate);
-	            this.minDate = Number.isNaN(d.getTime()) ? new Date() : d;
+	            this.minDate = isNaN(d.getTime()) ? new Date() : d;
 	        }
 	        if (this.maxDate && typeof this.maxDate == 'string') {
 	            var d = ng2_datetime_1.Ng2Datetime.parseDate(this.minDate);
-	            this.maxDate = Number.isNaN(d.getTime()) ? new Date() : d;
+	            this.maxDate = isNaN(d.getTime()) ? new Date() : d;
 	        }
 	        if (this.minHour) {
 	            if (this.minHour instanceof Date) {
@@ -669,7 +690,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            else {
 	                var hour = Number(this.minHour.toString());
-	                if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+	                if (!isInteger(hour) || hour > 23 || hour < 0) {
 	                    this.minHour = undefined;
 	                }
 	            }
@@ -680,7 +701,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            else {
 	                var hour = Number(this.maxHour.toString());
-	                if (!Number.isInteger(hour) || hour > 23 || hour < 0) {
+	                if (!isInteger(hour) || hour > 23 || hour < 0) {
 	                    this.maxHour = undefined;
 	                }
 	            }
@@ -827,7 +848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ], Ng2DatetimePickerDirective.prototype, "timeOnly", void 0);
 	    __decorate([
 	        core_1.Input('close-on-select'), 
-	        __metadata('design:type', String)
+	        __metadata('design:type', Boolean)
 	    ], Ng2DatetimePickerDirective.prototype, "closeOnSelect", void 0);
 	    __decorate([
 	        core_1.Input('default-value'), 
