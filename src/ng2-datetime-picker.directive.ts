@@ -215,7 +215,8 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     }
     this.ngModel = this.el['dateValue'];
     if (this.ngModel) {
-      this.ngModel.toString = () => { return this.el.value; };
+      // removal of redundant toString override causing errors
+      this.ngModel = this.el.value;
       this.ngModelChange.emit(this.ngModel);
     }
   };
