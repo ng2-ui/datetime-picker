@@ -281,19 +281,15 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     if (this.clickedDatetimePicker) {
       return false;
     } else {  /* invoked by function call */
-      this.componentRef.destroy();
-      this.componentRef = undefined;
-      this.popupClosed$.emit(true);
+      setTimeout(() => { //haveing exception without setTimeout
+        if (this.componentRef) {
+          this.componentRef.destroy();
+          this.componentRef = undefined;
+        }
+        this.popupClosed$.emit(true);
+      })
     }
     event && event.stopPropagation();
-  };
-
-  private keyEventListener = (e:KeyboardEvent):void => {
-    // if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
-    //   if (!this.justShown) {
-    //     this.hideDatetimePicker();
-    //   }
-    // }
   };
 
   private elementIn (el:Node, containerEl:Node):boolean {
