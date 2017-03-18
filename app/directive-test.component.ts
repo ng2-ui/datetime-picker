@@ -81,7 +81,21 @@ var templateStr = `
       </ng2-utils-3>
       <pre>{{templateStr | htmlCode:'ng2-utils-3'}}</pre>
     </fieldset>
-    
+
+    <fieldset id="test6">
+      <legend><h2>Material Design</h2></legend>
+      <ng2-utils-4>
+        <md-input-container>
+          <input mdInput 
+            [(ngModel)]="mdDate"
+            name="mdDate"
+            ng2-datetime-picker
+            date-only="true" 
+            [close-on-select]="false" />
+        </md-input-container>
+      </ng2-utils-4>
+    </fieldset>
+
   </div>
 `;
 
@@ -114,6 +128,8 @@ export class DirectiveTestComponent {
   date4: string = Ng2Datetime.formatDate(
     Ng2Datetime.parseDate('2017-01-15T14:22:00-06:00', this.date4TimezoneFormat), this.date4TimezoneFormat
   );
+
+  mdDate: Date = new Date(2017, 0, 28);
 
   constructor(private fb: FormBuilder) { }
 

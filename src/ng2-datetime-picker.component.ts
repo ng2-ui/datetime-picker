@@ -28,14 +28,14 @@ declare var moment: any;
   
   <!-- Month - Year  -->
   <div class="month" *ngIf="!timeOnly">
-    <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
-    <b class="prev_next prev" (click)="updateMonthData(-1)">&lsaquo;</b>
+    <b class="prev_next prev year" (click)="updateMonthData(-12)">&laquo;</b>
+    <b class="prev_next prev month" (click)="updateMonthData(-1)">&lsaquo;</b>
      <span title="{{monthData?.fullName}}">
            {{monthData?.shortName}}
      </span>
     {{monthData.year}}
-    <b class="prev_next next" (click)="updateMonthData(+12)">&raquo;</b>
-    <b class="prev_next next" (click)="updateMonthData(+1)">&rsaquo;</b>
+    <b class="prev_next next year" (click)="updateMonthData(+12)">&raquo;</b>
+    <b class="prev_next next month" (click)="updateMonthData(+1)">&rsaquo;</b>
   </div>
 
   <!-- Date -->
@@ -139,14 +139,18 @@ declare var moment: any;
   animation: slideDown 0.1s ease-in-out;
   animation-fill-mode: both;
 }
-.ng2-datetime-picker .close-button:before {
-  content: 'X';
+.ng2-datetime-picker .close-button {
   position: absolute;
-  padding: 0 5px;
-  cursor: pointer;
-  color: #ff0000;
+  width: 1em;
+  height: 1em;
   right: 0;
   z-index: 1;
+  padding: 0 5px;
+}
+.ng2-datetime-picker .close-button:before {
+  content: 'X';
+  cursor: pointer;
+  color: #ff0000;
 }
 .ng2-datetime-picker > .month {
   text-align: center;
@@ -319,16 +323,6 @@ export class Ng2DatetimePickerComponent {
   ) {
     this.el = elementRef.nativeElement;
   }
-
-  // public ngAfterViewInit ():void {
-  //   let stopPropagation = (e: Event) => e.stopPropagation();
-  //   if (!this.dateOnly) {
-  //     this.hours.nativeElement.addEventListener('keyup', stopPropagation);
-  //     this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
-  //     this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
-  //     this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
-  //   }
-  // }
 
   public get year(): number {
     return this.selectedDate.getFullYear();

@@ -235,7 +235,11 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
       this.clickedDatetimePicker = true
     });
     this.ng2DatetimePickerEl.addEventListener('mouseup', (event) => {
-      this.clickedDatetimePicker = false
+      this.clickedDatetimePicker = false;
+    });
+    //This is for material design. MD has click event to make blur to happen
+    this.ng2DatetimePickerEl.addEventListener('click', (event) => {
+      event.stopPropagation();
     });
     this.ng2DatetimePickerEl.addEventListener('blur', (event) => {
       this.hideDatetimePicker();
@@ -281,7 +285,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     if (this.clickedDatetimePicker) {
       return false;
     } else {  /* invoked by function call */
-      setTimeout(() => { //haveing exception without setTimeout
+      setTimeout(() => { //having exception without setTimeout
         if (this.componentRef) {
           this.componentRef.destroy();
           this.componentRef = undefined;
