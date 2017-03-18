@@ -60,6 +60,10 @@ var Ng2DatetimePickerDirective = (function () {
             _this.ng2DatetimePickerEl.addEventListener('mouseup', function (event) {
                 _this.clickedDatetimePicker = false;
             });
+            //This is for material design. MD has click event to make blur to happen
+            _this.ng2DatetimePickerEl.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
             _this.ng2DatetimePickerEl.addEventListener('blur', function (event) {
                 _this.hideDatetimePicker();
             });
@@ -100,18 +104,15 @@ var Ng2DatetimePickerDirective = (function () {
                 return false;
             }
             else {
-                _this.componentRef.destroy();
-                _this.componentRef = undefined;
-                _this.popupClosed$.emit(true);
+                setTimeout(function () {
+                    if (_this.componentRef) {
+                        _this.componentRef.destroy();
+                        _this.componentRef = undefined;
+                    }
+                    _this.popupClosed$.emit(true);
+                });
             }
             event && event.stopPropagation();
-        };
-        this.keyEventListener = function (e) {
-            // if (e.keyCode === 27 || e.keyCode === 9 || e.keyCode === 13) { //ESC, TAB, ENTER keys
-            //   if (!this.justShown) {
-            //     this.hideDatetimePicker();
-            //   }
-            // }
         };
         this.el = this.viewContainerRef.element.nativeElement;
     }
