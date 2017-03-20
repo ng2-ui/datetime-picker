@@ -86,7 +86,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     }
 
     if (this.maxDate && typeof this.maxDate == 'string') {
-      let d = Ng2Datetime.parseDate(<string>this.minDate);
+      let d = Ng2Datetime.parseDate(<string>this.maxDate);
       this.maxDate = isNaN(d.getTime()) ? new Date() : d;
     }
 
