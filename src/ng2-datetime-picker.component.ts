@@ -81,6 +81,10 @@ declare var moment: any;
     </div>
   </div>
 
+  <div class="shortcuts" *ngIf="showTodayShortcut">
+    <a href="#" (click)="selectToday()">Today</a>
+  </div>
+
   <!-- Time -->
   <div class="time" id="time" *ngIf="!dateOnly">
     <div class="select-current-time" (click)="selectCurrentTime()"></div>
@@ -256,6 +260,17 @@ declare var moment: any;
   background: rgba(0,0,0,0);
 }
 
+.ng2-datetime-picker .shortcuts {
+  padding: 10px;
+  text-align: center;
+}
+
+.ng2-datetime-picker .shortcuts a {
+  font-family: Sans-serif;
+  margin: 0 0.5em;
+  text-decoration: none;
+}
+
 @media (max-width: 767px) {
   .ng2-datetime-picker {
     position: fixed;
@@ -299,6 +314,7 @@ export class Ng2DatetimePickerComponent {
   @Input('disabled-dates')    disabledDates: Date[];
   @Input('show-close-button') showCloseButton: boolean;
   @Input('show-close-layer')  showCloseLayer: boolean;
+  @Input('show-today-shortcut') showTodayShortcut: boolean = false;
 
   @Output('selected$')  selected$:EventEmitter<any> = new EventEmitter();
   @Output('closing$')   closing$:EventEmitter<any> = new EventEmitter();
@@ -454,5 +470,9 @@ export class Ng2DatetimePickerComponent {
 
   public close() {
     this.closing$.emit(true);
+  }
+
+  public selectToday() {
+    this.selectDateTime(new Date());
   }
 }
