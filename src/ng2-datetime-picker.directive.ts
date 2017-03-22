@@ -231,6 +231,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     this.componentRef   = this.viewContainerRef.createComponent(factory);
     this.ng2DatetimePickerEl = this.componentRef.location.nativeElement;
     this.ng2DatetimePickerEl.setAttribute('tabindex', '32767');
+    this.ng2DatetimePickerEl.setAttribute('draggable', 'true');
     this.ng2DatetimePickerEl.addEventListener('mousedown', (event) => {
       this.clickedDatetimePicker = true
     });
@@ -244,6 +245,9 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     this.ng2DatetimePickerEl.addEventListener('blur', (event) => {
       this.hideDatetimePicker();
     });
+    this.ng2DatetimePickerEl.addEventListener('dragstart',this.drag_start,false);
+    document.body.addEventListener('dragover',this.drag_over,false);
+    document.body.addEventListener('drop',this.drop,false); 
 
     let component = this.componentRef.instance;
     component.defaultValue   = <Date>this.defaultValue || <Date>this.el['dateValue'];
@@ -330,11 +334,38 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     });
   };
 
-  private getDate(arg: any): Date {
+  private getDate = (arg: any): Date  => {
     let date: Date = <Date>arg;
     if (typeof arg === 'string') {
       date =  Ng2Datetime.parseDate(arg, this.parseFormat, this.dateFormat);
     }
     return date;
   }
+
+  private drag_start = (event) => {
+   if (document.activeElement.tagName == 'INPUT') {
+      event.preventDefault();
+      return false; // block dragging
+   }
+    var style = window.getComputedStyle(event.target, null);
+    event.dataTransfer.setData("text/plain",
+      (parseInt(style.getPropertyValue("left"),10) - event.clientX)
+      + ',' 
+      + (parseInt(style.getPropertyValue("top"),10) - event.clientY)
+    );
+  }
+
+  private drag_over(event) {
+    event.preventDefault();
+    return false;
+  } 
+
+  private drop = (event) => {
+    var offset = event.dataTransfer.getData("text/plain").split(',');
+    this.ng2DatetimePickerEl.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+    this.ng2DatetimePickerEl.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+    this.ng2DatetimePickerEl.style.bottom = '';
+    event.preventDefault();
+    return false;
+  } 
 }
