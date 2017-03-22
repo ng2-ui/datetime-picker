@@ -49,5 +49,8 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     hideDatetimePicker: (event?: any) => any;
     private elementIn(el, containerEl);
     private styleDatetimePicker();
-    private getDate(arg);
+    private getDate;
+    private drag_start;
+    private drag_over(event);
+    private drop;
 }

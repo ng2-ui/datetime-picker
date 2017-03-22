@@ -598,6 +598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this.componentRef = _this.viewContainerRef.createComponent(factory);
 	            _this.ng2DatetimePickerEl = _this.componentRef.location.nativeElement;
 	            _this.ng2DatetimePickerEl.setAttribute('tabindex', '32767');
+	            _this.ng2DatetimePickerEl.setAttribute('draggable', 'true');
 	            _this.ng2DatetimePickerEl.addEventListener('mousedown', function (event) {
 	                _this.clickedDatetimePicker = true;
 	            });
@@ -611,6 +612,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this.ng2DatetimePickerEl.addEventListener('blur', function (event) {
 	                _this.hideDatetimePicker();
 	            });
+	            _this.ng2DatetimePickerEl.addEventListener('dragstart', _this.drag_start, false);
+	            document.body.addEventListener('dragover', _this.drag_over, false);
+	            document.body.addEventListener('drop', _this.drop, false);
 	            var component = _this.componentRef.instance;
 	            component.defaultValue = _this.defaultValue || _this.el['dateValue'];
 	            component.dateFormat = _this.dateFormat;
@@ -658,6 +662,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            event && event.stopPropagation();
 	        };
+	        this.getDate = function (arg) {
+	            var date = arg;
+	            if (typeof arg === 'string') {
+	                date = ng2_datetime_1.Ng2Datetime.parseDate(arg, _this.parseFormat, _this.dateFormat);
+	            }
+	            return date;
+	        };
+	        this.drag_start = function (event) {
+	            if (document.activeElement.tagName == 'INPUT') {
+	                event.preventDefault();
+	                return false; // block dragging
+	            }
+	            var style = window.getComputedStyle(event.target, null);
+	            event.dataTransfer.setData("text/plain", (parseInt(style.getPropertyValue("left"), 10) - event.clientX)
+	                + ','
+	                + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
+	        };
+	        this.drop = function (event) {
+	            var offset = event.dataTransfer.getData("text/plain").split(',');
+	            _this.ng2DatetimePickerEl.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
+	            _this.ng2DatetimePickerEl.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
+	            _this.ng2DatetimePickerEl.style.bottom = '';
+	            event.preventDefault();
+	            return false;
+	        };
 	        this.el = this.viewContainerRef.element.nativeElement;
 	    }
 	    /**
@@ -673,7 +702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.minDate = isNaN(d.getTime()) ? new Date() : d;
 	        }
 	        if (this.maxDate && typeof this.maxDate == 'string') {
-	            var d = ng2_datetime_1.Ng2Datetime.parseDate(this.minDate);
+	            var d = ng2_datetime_1.Ng2Datetime.parseDate(this.maxDate);
 	            this.maxDate = isNaN(d.getTime()) ? new Date() : d;
 	        }
 	        if (this.minHour) {
@@ -815,12 +844,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    ;
-	    Ng2DatetimePickerDirective.prototype.getDate = function (arg) {
-	        var date = arg;
-	        if (typeof arg === 'string') {
-	            date = ng2_datetime_1.Ng2Datetime.parseDate(arg, this.parseFormat, this.dateFormat);
-	        }
-	        return date;
+	    Ng2DatetimePickerDirective.prototype.drag_over = function (event) {
+	        event.preventDefault();
+	        return false;
 	    };
 	    __decorate([
 	        core_1.Input('date-format'), 
