@@ -71,7 +71,7 @@ AngularJS 2 DateTime Picker
           day="31"
           hour="23"
           minute='59'
-          close-on-select="false"  />
+          [close-on-select]="false"  />
 
 For full example, please check `test` directory to see the example of;
 
@@ -139,6 +139,7 @@ is the list of variables that you can override.
   * **months**:          default: January, February
   * **formatDate**:      default: returns YYYY-MM-DD HH:MM
   * **parseDate**:       default: returns date from YYYY-MM-DD HH:MM
+  * **locale**:          default: 'date', 'year', 'month', time', 'hour', 'minute'
 
 ## **ng2-ui** welcomes new members and contributors
 

@@ -28,14 +28,14 @@ declare var moment: any;
   
   <!-- Month - Year  -->
   <div class="month" *ngIf="!timeOnly">
-    <b class="prev_next prev" (click)="updateMonthData(-12)">&laquo;</b>
-    <b class="prev_next prev" (click)="updateMonthData(-1)">&lsaquo;</b>
+    <b class="prev_next prev year" (click)="updateMonthData(-12)">&laquo;</b>
+    <b class="prev_next prev month" (click)="updateMonthData(-1)">&lsaquo;</b>
      <span title="{{monthData?.fullName}}">
            {{monthData?.shortName}}
      </span>
     {{monthData.year}}
-    <b class="prev_next next" (click)="updateMonthData(+12)">&raquo;</b>
-    <b class="prev_next next" (click)="updateMonthData(+1)">&rsaquo;</b>
+    <b class="prev_next next year" (click)="updateMonthData(+12)">&raquo;</b>
+    <b class="prev_next next month" (click)="updateMonthData(+1)">&rsaquo;</b>
   </div>
 
   <!-- Date -->
@@ -87,12 +87,12 @@ declare var moment: any;
 
   <!-- Time -->
   <div class="time" id="time" *ngIf="!dateOnly">
-    <div class="select-current-time" (click)="selectCurrentTime()"></div>
-    <label class="timeLabel">Time:</label>
+    <div class="select-current-time" (click)="selectCurrentTime()">{{locale.currentTime}}</div>
+    <label class="timeLabel">{{locale.time}}</label>
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
     </span><br/>
-    <label class="hourLabel">Hour:</label>
+    <label class="hourLabel">{{locale.hour}}:</label>
     <input #hours class="hourInput"
            tabindex="90000"
            (change)="selectDateTime()"
@@ -100,7 +100,7 @@ declare var moment: any;
            min="{{minHour || 0}}"
            max="{{maxHour || 23}}"
            [(ngModel)]="hour" />
-    <label class="minutesLabel">Min:</label>
+    <label class="minutesLabel">{{locale.minute}}:</label>
     <input #minutes class="minutesInput"
            tabindex="90000"
            step="{{minuteStep}}"
@@ -143,14 +143,18 @@ declare var moment: any;
   animation: slideDown 0.1s ease-in-out;
   animation-fill-mode: both;
 }
-.ng2-datetime-picker .close-button:before {
-  content: 'X';
+.ng2-datetime-picker .close-button {
   position: absolute;
-  padding: 0 5px;
-  cursor: pointer;
-  color: #ff0000;
+  width: 1em;
+  height: 1em;
   right: 0;
   z-index: 1;
+  padding: 0 5px;
+}
+.ng2-datetime-picker .close-button:before {
+  content: 'X';
+  cursor: pointer;
+  color: #ff0000;
 }
 .ng2-datetime-picker > .month {
   text-align: center;
@@ -230,9 +234,10 @@ declare var moment: any;
 }
 .ng2-datetime-picker .time {
   position: relative;
+  padding: 10px;
+  text-transform: Capitalize;
 }
-.ng2-datetime-picker .select-current-time:before {
-  content: 'current time';
+.ng2-datetime-picker .select-current-time {
   position: absolute;
   top: 1em;
   right: 5px;
@@ -323,8 +328,9 @@ export class Ng2DatetimePickerComponent {
   @ViewChild('minutes') minutes:ElementRef;
 
   public el:HTMLElement; // this component element
-  public monthData:any;  // month calendar data
   public disabledDatesInTime: number[];
+  public locale = Ng2Datetime.locale;
+  private _monthData: any;
 
   public constructor (
     elementRef: ElementRef,
@@ -334,26 +340,20 @@ export class Ng2DatetimePickerComponent {
     this.el = elementRef.nativeElement;
   }
 
-  // public ngAfterViewInit ():void {
-  //   let stopPropagation = (e: Event) => e.stopPropagation();
-  //   if (!this.dateOnly) {
-  //     this.hours.nativeElement.addEventListener('keyup', stopPropagation);
-  //     this.hours.nativeElement.addEventListener('mousedown', stopPropagation);
-  //     this.minutes.nativeElement.addEventListener('keyup', stopPropagation);
-  //     this.minutes.nativeElement.addEventListener('mousedown', stopPropagation);
-  //   }
-  // }
-
-  public get year ():number {
+  public get year(): number {
     return this.selectedDate.getFullYear();
   }
 
-  public get month ():number {
+  public get month(): number {
     return this.selectedDate.getMonth();
   }
 
-  public get day ():number {
+  public get day(): number {
     return this.selectedDate.getDate();
+  }
+
+  public get monthData(): any {
+    return this._monthData;
   }
 
   public get today ():Date {
@@ -381,7 +381,10 @@ export class Ng2DatetimePickerComponent {
 
 
   public ngOnInit() {
-    this.selectedDate = this.defaultValue || new Date();
+    if(!this.defaultValue || isNaN(this.defaultValue.getTime())) {
+      this.defaultValue = new Date();
+    }
+    this.selectedDate = this.defaultValue;
 
     // set hour and minute using moment if available to avoid having Javascript change timezones
     if (typeof moment === 'undefined') {
@@ -393,11 +396,11 @@ export class Ng2DatetimePickerComponent {
       this.minute = m.minute();
     }
 
-    this.monthData    = this.ng2Datetime.getMonthData(this.year, this.month);
+    this._monthData = this.ng2Datetime.getMonthData(this.year, this.month);
   }
 
   public toDate (day:number, month?: number):Date {
-    return new Date(this.monthData.year, month || this.monthData.month, day);
+    return new Date(this._monthData.year, month || this._monthData.month, day);
   }
 
   public toDateOnly (date:Date) {
@@ -449,7 +452,7 @@ export class Ng2DatetimePickerComponent {
    * show prev/next month calendar
    */
   public updateMonthData (num:number) {
-    this.monthData = this.ng2Datetime.getMonthData(this.monthData.year, this.monthData.month + num);
+    this._monthData = this.ng2Datetime.getMonthData(this._monthData.year, this._monthData.month + num);
   }
 
   public isDateDisabled(date: Date) {

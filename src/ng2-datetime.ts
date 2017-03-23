@@ -13,6 +13,18 @@ import {Injectable} from "@angular/core";
  */
 @Injectable()
 export class Ng2Datetime {
+  static locale: any = {
+    date: 'date',
+    time: 'time',
+
+    year: 'year',
+    month: 'month',
+    day: 'day',
+    hour: 'hour',
+    minute: 'minute',
+    currentTime: "current time"
+  };
+
   static days: number[] =
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
@@ -93,9 +105,11 @@ export class Ng2Datetime {
         date = moment(dateStr, moment.ISO_8601).toDate(); // parse as ISO format
       }
       return date;
-    } else {
+    } else if (dateStr.length > 4) { //at least requires an year
       let date = moment(dateStr, 'YYYY-MM-DD HH:mm').toDate();
       return date;
+    } else {
+      return new Date();
     }
   }
 

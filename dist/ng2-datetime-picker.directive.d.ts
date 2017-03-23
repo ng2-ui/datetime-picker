@@ -11,7 +11,7 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     parseFormat: string;
     dateOnly: boolean;
     timeOnly: boolean;
-    closeOnSelect: string;
+    closeOnSelect: boolean;
     defaultValue: Date | string;
     minuteStep: number;
     minDate: Date | string;
@@ -19,10 +19,12 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     minHour: Date | number;
     maxHour: Date | number;
     disabledDates: Date[];
+    showCloseLayer: boolean;
     formControlName: string;
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
-    valueChanged: EventEmitter<{}>;
+    valueChanged$: EventEmitter<{}>;
+    popupClosed$: EventEmitter<{}>;
     private el;
     private ng2DatetimePickerEl;
     private componentRef;
@@ -45,8 +47,10 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     showDatetimePicker: (event?: any) => void;
     dateSelected: (date: any) => void;
     hideDatetimePicker: (event?: any) => any;
-    private keyEventListener;
     private elementIn(el, containerEl);
     private styleDatetimePicker();
-    private getDate(arg);
+    private getDate;
+    private drag_start;
+    private drag_over(event);
+    private drop;
 }
