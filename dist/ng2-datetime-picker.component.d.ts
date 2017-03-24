@@ -21,6 +21,7 @@ export declare class Ng2DatetimePickerComponent {
     disabledDates: Date[];
     showCloseButton: boolean;
     showCloseLayer: boolean;
+    showWeekNumbers: boolean;
     showTodayShortcut: boolean;
     selected$: EventEmitter<any>;
     closing$: EventEmitter<any>;

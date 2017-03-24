@@ -139,6 +139,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return new Date();
 	        }
 	    };
+	    Ng2Datetime.getWeekNumber = function (date) {
+	        if (!(date instanceof Date))
+	            date = new Date();
+	        // ISO week date weeks start on Monday, so correct the day number
+	        var nDay = (date.getDay() + 6) % 7;
+	        // ISO 8601 states that week 1 is the week with the first Thursday of that year
+	        // Set the target date to the Thursday in the target week
+	        date.setDate(date.getDate() - nDay + 3);
+	        // Store the millisecond value of the target date
+	        var n1stThursday = date.valueOf();
+	        // Set the target to the first Thursday of the year
+	        // First, set the target to January 1st
+	        date.setMonth(0, 1);
+	        // Not a Thursday? Correct the date to the next Thursday
+	        if (date.getDay() !== 4) {
+	            date.setMonth(0, 1 + ((4 - date.getDay()) + 7) % 7);
+	        }
+	        // The week number is the number of weeks between the first Thursday of the year
+	        // and the Thursday in the target week (604800000 = 7 * 24 * 3600 * 1000)
+	        return 1 + Math.ceil((n1stThursday - date) / 604800000);
+	    };
 	    //remove timezone
 	    Ng2Datetime.removeTimezone = function (dateStr) {
 	        // if no time is given, add 00:00:00 at the end
@@ -185,6 +206,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (trailingDays.length > 7) {
 	            trailingDays = trailingDays.slice(0, trailingDays.length - 7);
 	        }
+	        var firstDay = new Date(firstDayOfMonth);
+	        firstDay.setDate(firstDayOfMonth.getDate() - (leadingDays % 7));
+	        var firstWeekNumber = Ng2Datetime.getWeekNumber(firstDay);
+	        var numWeeks = Math.ceil((daysInMonth + leadingDays % 7) / 7);
+	        var weekNumbers = Array(numWeeks).fill(0).map(function (el, ndx) {
+	            var weekNum = (ndx + firstWeekNumber + 52) % 52;
+	            return weekNum === 0 ? 52 : weekNum;
+	        });
 	        var localizedDaysOfWeek = Ng2Datetime.daysOfWeek
 	            .concat(Ng2Datetime.daysOfWeek)
 	            .splice(Ng2Datetime.firstDayOfWeek, 7);
@@ -198,7 +227,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            localizedDaysOfWeek: localizedDaysOfWeek,
 	            days: Ng2Datetime.days.slice(0, daysInMonth),
 	            leadingDays: Ng2Datetime.days.slice(-leadingDays - (31 - daysInLastMonth), daysInLastMonth),
-	            trailingDays: trailingDays
+	            trailingDays: trailingDays,
+	            weekNumbers: weekNumbers
 	        };
 	        return monthData;
 	    };
@@ -289,6 +319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.ng2Datetime = ng2Datetime;
 	        this.cdRef = cdRef;
 	        this.minuteStep = 1;
+	        this.showWeekNumbers = false;
 	        this.showTodayShortcut = false;
 	        this.selected$ = new core_1.EventEmitter();
 	        this.closing$ = new core_1.EventEmitter();
@@ -498,6 +529,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __metadata('design:type', Boolean)
 	    ], Ng2DatetimePickerComponent.prototype, "showCloseLayer", void 0);
 	    __decorate([
+	        core_1.Input('show-week-numbers'), 
+	        __metadata('design:type', Boolean)
+	    ], Ng2DatetimePickerComponent.prototype, "showWeekNumbers", void 0);
+	    __decorate([
 	        core_1.Input('show-today-shortcut'), 
 	        __metadata('design:type', Boolean)
 	    ], Ng2DatetimePickerComponent.prototype, "showTodayShortcut", void 0);
@@ -521,9 +556,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Component({
 	            providers: [ng2_datetime_1.Ng2Datetime],
 	            selector: 'ng2-datetime-picker',
-	            template: "\n<div class=\"closing-layer\" (click)=\"close()\" *ngIf=\"showCloseLayer\" ></div>\n<div class=\"ng2-datetime-picker\">\n  <div class=\"close-button\" *ngIf=\"showCloseButton\" (click)=\"close()\"></div>\n  \n  <!-- Month - Year  -->\n  <div class=\"month\" *ngIf=\"!timeOnly\">\n    <b class=\"prev_next prev year\" (click)=\"updateMonthData(-12)\">&laquo;</b>\n    <b class=\"prev_next prev month\" (click)=\"updateMonthData(-1)\">&lsaquo;</b>\n     <span title=\"{{monthData?.fullName}}\">\n           {{monthData?.shortName}}\n     </span>\n    {{monthData.year}}\n    <b class=\"prev_next next year\" (click)=\"updateMonthData(+12)\">&raquo;</b>\n    <b class=\"prev_next next month\" (click)=\"updateMonthData(+1)\">&rsaquo;</b>\n  </div>\n\n  <!-- Date -->\n  <div class=\"days\" *ngIf=\"!timeOnly\">\n\n    <!-- Su Mo Tu We Th Fr Sa -->\n    <div class=\"day-of-week\"\n         *ngFor=\"let dayOfWeek of monthData.localizedDaysOfWeek; let ndx=index\"\n         [class.weekend]=\"isWeekend(ndx + monthData.firstDayOfWeek)\"\n         title=\"{{dayOfWeek.fullName}}\">\n      {{dayOfWeek.shortName}}\n    </div>\n\n    <!-- Fill up blank days for this month -->\n    <div *ngIf=\"monthData.leadingDays.length < 7\">\n      <div class=\"day\"\n          (click)=\"updateMonthData(-1)\"\n           *ngFor=\"let dayNum of monthData.leadingDays\">\n        {{dayNum}}\n      </div>\n    </div>\n\n    <div class=\"day\"\n         *ngFor=\"let dayNum of monthData.days\"\n         (click)=\"selectDateTime(toDate(dayNum))\"\n         title=\"{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}\"\n         [ngClass]=\"{\n           selectable: !isDateDisabled(toDate(dayNum)),\n           selected: toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),\n           today: toDate(dayNum).getTime() === today.getTime(),\n           weekend: isWeekend(dayNum, monthData.month)\n         }\">\n      {{dayNum}}\n    </div>\n\n    <!-- Fill up blank days for this month -->\n    <div *ngIf=\"monthData.trailingDays.length < 7\">\n      <div class=\"day\"\n           (click)=\"updateMonthData(+1)\"\n           *ngFor=\"let dayNum of monthData.trailingDays\">\n        {{dayNum}}\n      </div>\n    </div>\n  </div>\n\n  <div class=\"shortcuts\" *ngIf=\"showTodayShortcut\">\n    <a href=\"#\" (click)=\"selectToday()\">Today</a>\n  </div>\n\n  <!-- Time -->\n  <div class=\"time\" id=\"time\" *ngIf=\"!dateOnly\">\n    <div class=\"select-current-time\" (click)=\"selectCurrentTime()\">{{locale.currentTime}}</div>\n    <label class=\"timeLabel\">{{locale.time}}</label>\n    <span class=\"timeValue\">\n      {{(\"0\"+hour).slice(-2)}} : {{(\"0\"+minute).slice(-2)}}\n    </span><br/>\n    <label class=\"hourLabel\">{{locale.hour}}:</label>\n    <input #hours class=\"hourInput\"\n           tabindex=\"90000\"\n           (change)=\"selectDateTime()\"\n           type=\"range\"\n           min=\"{{minHour || 0}}\"\n           max=\"{{maxHour || 23}}\"\n           [(ngModel)]=\"hour\" />\n    <label class=\"minutesLabel\">{{locale.minute}}:</label>\n    <input #minutes class=\"minutesInput\"\n           tabindex=\"90000\"\n           step=\"{{minuteStep}}\"\n           (change)=\"selectDateTime()\"\n           type=\"range\" min=\"0\" max=\"59\" range=\"10\" [(ngModel)]=\"minute\"/>\n  </div>\n</div>\n  ",
+	            template: "\n<div class=\"closing-layer\" (click)=\"close()\" *ngIf=\"showCloseLayer\" ></div>\n<div class=\"ng2-datetime-picker\">\n  <div class=\"close-button\" *ngIf=\"showCloseButton\" (click)=\"close()\"></div>\n  \n  <!-- Month - Year  -->\n  <div class=\"month\" *ngIf=\"!timeOnly\">\n    <b class=\"prev_next prev year\" (click)=\"updateMonthData(-12)\">&laquo;</b>\n    <b class=\"prev_next prev month\" (click)=\"updateMonthData(-1)\">&lsaquo;</b>\n     <span title=\"{{monthData?.fullName}}\">\n           {{monthData?.shortName}}\n     </span>\n    {{monthData.year}}\n    <b class=\"prev_next next year\" (click)=\"updateMonthData(+12)\">&raquo;</b>\n    <b class=\"prev_next next month\" (click)=\"updateMonthData(+1)\">&rsaquo;</b>\n  </div>\n\n  <div class=\"week-numbers-and-days\"\n    [ngClass]=\"{'show-week-numbers': !timeOnly && showWeekNumbers}\">\n    <!-- Week -->\n    <div class=\"week-numbers\" *ngIf=\"!timeOnly && showWeekNumbers\">\n      <div class=\"week-number\" *ngFor=\"let weekNumber of monthData.weekNumbers\">\n        {{weekNumber}}\n      </div>\n    </div>\n    \n    <!-- Date -->\n    <div class=\"days\" *ngIf=\"!timeOnly\">\n\n      <!-- Su Mo Tu We Th Fr Sa -->\n      <div class=\"day-of-week\"\n           *ngFor=\"let dayOfWeek of monthData.localizedDaysOfWeek; let ndx=index\"\n           [class.weekend]=\"isWeekend(ndx + monthData.firstDayOfWeek)\"\n           title=\"{{dayOfWeek.fullName}}\">\n        {{dayOfWeek.shortName}}\n      </div>\n\n      <!-- Fill up blank days for this month -->\n      <div *ngIf=\"monthData.leadingDays.length < 7\">\n        <div class=\"day\"\n            (click)=\"updateMonthData(-1)\"\n             *ngFor=\"let dayNum of monthData.leadingDays\">\n          {{dayNum}}\n        </div>\n      </div>\n\n      <div class=\"day\"\n           *ngFor=\"let dayNum of monthData.days\"\n           (click)=\"selectDateTime(toDate(dayNum))\"\n           title=\"{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}\"\n           [ngClass]=\"{\n             selectable: !isDateDisabled(toDate(dayNum)),\n             selected: toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),\n             today: toDate(dayNum).getTime() === today.getTime(),\n             weekend: isWeekend(dayNum, monthData.month)\n           }\">\n        {{dayNum}}\n      </div>\n\n      <!-- Fill up blank days for this month -->\n      <div *ngIf=\"monthData.trailingDays.length < 7\">\n        <div class=\"day\"\n             (click)=\"updateMonthData(+1)\"\n             *ngFor=\"let dayNum of monthData.trailingDays\">\n          {{dayNum}}\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"shortcuts\" *ngIf=\"showTodayShortcut\">\n    <a href=\"#\" (click)=\"selectToday()\">Today</a>\n  </div>\n\n  <!-- Time -->\n  <div class=\"time\" id=\"time\" *ngIf=\"!dateOnly\">\n    <div class=\"select-current-time\" (click)=\"selectCurrentTime()\">{{locale.currentTime}}</div>\n    <label class=\"timeLabel\">{{locale.time}}</label>\n    <span class=\"timeValue\">\n      {{(\"0\"+hour).slice(-2)}} : {{(\"0\"+minute).slice(-2)}}\n    </span><br/>\n    <div>\n      <label class=\"hourLabel\">{{locale.hour}}:</label>\n      <input #hours class=\"hourInput\"\n             tabindex=\"90000\"\n             (change)=\"selectDateTime()\"\n             type=\"range\"\n             min=\"{{minHour || 0}}\"\n             max=\"{{maxHour || 23}}\"\n             [(ngModel)]=\"hour\" />\n    </div>\n    <div>\n      <label class=\"minutesLabel\">{{locale.minute}}:</label>\n      <input #minutes class=\"minutesInput\"\n             tabindex=\"90000\"\n             step=\"{{minuteStep}}\"\n             (change)=\"selectDateTime()\"\n             type=\"range\" min=\"0\" max=\"59\" range=\"10\" [(ngModel)]=\"minute\"/>\n    </div>\n  </div>\n</div>\n  ",
 	            styles: [
-	                "\n@keyframes slideDown {\n  0% {\n    transform:  translateY(-10px);\n  }\n  100% {\n    transform: translateY(0px);\n  }\n}\n\n@keyframes slideUp {\n  0% {\n    transform: translateY(100%);\n  }\n  100% {\n    transform: translateY(0%);\n  }\n}\n\n.ng2-datetime-picker-wrapper {\n  position: relative;\n}\n\n.ng2-datetime-picker {\n  color: #333;\n  outline-width: 0;\n  font: normal 14px sans-serif;\n  border: 1px solid #ddd;\n  display: inline-block;\n  background: #fff;\n  animation: slideDown 0.1s ease-in-out;\n  animation-fill-mode: both;\n}\n.ng2-datetime-picker .close-button {\n  position: absolute;\n  width: 1em;\n  height: 1em;\n  right: 0;\n  z-index: 1;\n  padding: 0 5px;\n}\n.ng2-datetime-picker .close-button:before {\n  content: 'X';\n  cursor: pointer;\n  color: #ff0000;\n}\n.ng2-datetime-picker > .month {\n  text-align: center;\n  line-height: 22px;\n  padding: 10px;\n  background: #fcfcfc;\n  text-transform: uppercase;\n  font-weight: bold;\n  border-bottom: 1px solid #ddd;\n  position: relative;\n}\n.ng2-datetime-picker > .month > .prev_next {\n  color: #555;\n  display: block;\n  font: normal 24px sans-serif;\n  outline: none;\n  background: transparent;\n  border: none;\n  cursor: pointer;\n  width: 25px;\n  text-align: center;\n}\n.ng2-datetime-picker > .month > .prev_next:hover {\n  background-color: #333;\n  color: #fff;\n}\n.ng2-datetime-picker > .month > .prev_next.prev {\n  float: left;\n}\n.ng2-datetime-picker > .month > .prev_next.next {\n  float: right;\n}\n.ng2-datetime-picker > .days {\n  width: 210px; /* 30 x 7 */\n  margin: 10px;\n  text-align: center;\n}\n.ng2-datetime-picker > .days .day-of-week,\n.ng2-datetime-picker > .days .day {\n  box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  border: 1px solid transparent;\n  width: 30px;\n  line-height: 28px;\n  float: left;\n}\n.ng2-datetime-picker > .days .day-of-week {\n  font-weight: bold;\n}\n.ng2-datetime-picker > .days .day-of-week.weekend {\n  color: #ccc;\n  background-color: inherit;\n}\n.ng2-datetime-picker > .days .day:not(.selectable) {\n  color: #ccc;\n  cursor: default;\n}\n.ng2-datetime-picker > .days .weekend {\n  color: #ccc;\n  background-color: #eee;\n}\n.ng2-datetime-picker > .days .day.selectable  {\n  cursor: pointer;\n}\n.ng2-datetime-picker > .days .day.selected {\n  background: gray;\n  color: #fff;\n}\n.ng2-datetime-picker > .days .day:not(.selected).selectable:hover {\n  background: #eee;\n}\n.ng2-datetime-picker > .days:after {\n  content: '';\n  display: block;\n  clear: left;\n  height: 0;\n}\n.ng2-datetime-picker .time {\n  position: relative;\n  padding: 10px;\n  text-transform: Capitalize;\n}\n.ng2-datetime-picker .select-current-time {\n  position: absolute;\n  top: 1em;\n  right: 5px;\n  z-index: 1;\n  cursor: pointer;\n  color: #0000ff;\n}\n.ng2-datetime-picker .hourLabel,\n.ng2-datetime-picker .minutesLabel {\n  display: inline-block;\n  width: 40px;\n  text-align: right;\n}\n.ng2-datetime-picker input[type=range] {\n  width: 200px;\n}\n\n.closing-layer {\n  display: block;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  background: rgba(0,0,0,0);\n}\n\n.ng2-datetime-picker .shortcuts {\n  padding: 10px;\n  text-align: center;\n}\n\n.ng2-datetime-picker .shortcuts a {\n  font-family: Sans-serif;\n  margin: 0 0.5em;\n  text-decoration: none;\n}\n\n@media (max-width: 767px) {\n  .ng2-datetime-picker {\n    position: fixed;\n    bottom: 0;\n    left: 0;\n    right: 0;    \n    animation: slideUp 0.1s ease-in-out;\n  }\n\n  .ng2-datetime-picker .days {\n    margin: 10px auto;\n  }\n\n  .closing-layer {\n    display: block;\n    position: fixed;\n    top: 0;\n    left: 0;\n    bottom: 0;\n    right: 0;\n    background: rgba(0,0,0,0.2);\n  }\n}\n  "
+	                "\n@keyframes slideDown {\n  0% {\n    transform:  translateY(-10px);\n  }\n  100% {\n    transform: translateY(0px);\n  }\n}\n\n@keyframes slideUp {\n  0% {\n    transform: translateY(100%);\n  }\n  100% {\n    transform: translateY(0%);\n  }\n}\n\n.ng2-datetime-picker-wrapper {\n  position: relative;\n}\n\n.ng2-datetime-picker {\n  color: #333;\n  outline-width: 0;\n  font: normal 14px sans-serif;\n  border: 1px solid #ddd;\n  display: inline-block;\n  background: #fff;\n  animation: slideDown 0.1s ease-in-out;\n  animation-fill-mode: both;\n}\n.ng2-datetime-picker .days {\n  width: 210px; /* 30 x 7 days */\n}\n.ng2-datetime-picker .close-button {\n  position: absolute;\n  width: 1em;\n  height: 1em;\n  right: 0;\n  z-index: 1;\n  padding: 0 5px;\n}\n.ng2-datetime-picker .close-button:before {\n  content: 'X';\n  cursor: pointer;\n  color: #ff0000;\n}\n.ng2-datetime-picker > .month {\n  text-align: center;\n  line-height: 22px;\n  padding: 10px;\n  background: #fcfcfc;\n  text-transform: uppercase;\n  font-weight: bold;\n  border-bottom: 1px solid #ddd;\n  position: relative;\n}\n\n.ng2-datetime-picker > .month > .prev_next {\n  color: #555;\n  display: block;\n  font: normal 24px sans-serif;\n  outline: none;\n  background: transparent;\n  border: none;\n  cursor: pointer;\n  width: 25px;\n  text-align: center;\n}\n.ng2-datetime-picker > .month > .prev_next:hover {\n  background-color: #333;\n  color: #fff;\n}\n.ng2-datetime-picker > .month > .prev_next.prev {\n  float: left;\n}\n.ng2-datetime-picker > .month > .prev_next.next {\n  float: right;\n}\n\n.ng2-datetime-picker .week-numbers-and-days {\n  text-align: center;\n}\n.ng2-datetime-picker .week-numbers {\n  line-height: 30px;\n  display: inline-block;\n  padding: 30px 0 0 0;\n  color: #ddd;\n  text-align: right;\n  width: 21px;\n  vertical-align: top;\n}\n\n.ng2-datetime-picker  .days {\n  display: inline-block;\n  width: 210px; /* 30 x 7 */\n  text-align: center;\n  padding: 0 10px;\n}\n.ng2-datetime-picker .days .day-of-week,\n.ng2-datetime-picker .days .day {\n  box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  border: 1px solid transparent;\n  width: 30px;\n  line-height: 28px;\n  float: left;\n}\n.ng2-datetime-picker .days .day-of-week {\n  font-weight: bold;\n}\n.ng2-datetime-picker .days .day-of-week.weekend {\n  color: #ccc;\n  background-color: inherit;\n}\n.ng2-datetime-picker .days .day:not(.selectable) {\n  color: #ccc;\n  cursor: default;\n}\n.ng2-datetime-picker .days .weekend {\n  color: #ccc;\n  background-color: #eee;\n}\n.ng2-datetime-picker .days .day.selectable  {\n  cursor: pointer;\n}\n.ng2-datetime-picker .days .day.selected {\n  background: gray;\n  color: #fff;\n}\n.ng2-datetime-picker .days .day:not(.selected).selectable:hover {\n  background: #eee;\n}\n.ng2-datetime-picker .days:after {\n  content: '';\n  display: block;\n  clear: left;\n  height: 0;\n}\n.ng2-datetime-picker .time {\n  position: relative;\n  padding: 10px;\n  text-transform: Capitalize;\n}\n.ng2-datetime-picker .select-current-time {\n  position: absolute;\n  top: 1em;\n  right: 5px;\n  z-index: 1;\n  cursor: pointer;\n  color: #0000ff;\n}\n.ng2-datetime-picker .hourLabel,\n.ng2-datetime-picker .minutesLabel {\n  display: inline-block;\n  width: 45px;\n  vertical-align: top;\n}\n.closing-layer {\n  display: block;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  right: 0;\n  background: rgba(0,0,0,0);\n}\n\n.ng2-datetime-picker .shortcuts {\n  padding: 10px;\n  text-align: center;\n}\n\n.ng2-datetime-picker .shortcuts a {\n  font-family: Sans-serif;\n  margin: 0 0.5em;\n  text-decoration: none;\n}\n\n@media (max-width: 767px) {\n  .ng2-datetime-picker {\n    position: fixed;\n    bottom: 0;\n    left: 0;\n    right: 0;    \n    width: auto !important;\n    animation: slideUp 0.1s ease-in-out;\n  }\n\n  .ng2-datetime-picker > .days {\n    display: block;\n    margin: 0 auto;\n  }\n\n  .closing-layer {\n    display: block;\n    position: fixed;\n    top: 0;\n    left: 0;\n    bottom: 0;\n    right: 0;\n    background: rgba(0,0,0,0.2);\n  }\n}\n  "
 	            ],
 	            encapsulation: core_1.ViewEncapsulation.None
 	        }), 
@@ -636,6 +671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            component.disabledDates = _this.disabledDates;
 	            component.showCloseButton = _this.closeOnSelect === false;
 	            component.showCloseLayer = _this.showCloseLayer;
+	            component.showWeekNumbers = _this.showWeekNumbers;
 	            _this.styleDatetimePicker();
 	            component.selected$.subscribe(_this.dateSelected);
 	            component.closing$.subscribe(function () {
@@ -840,7 +876,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _this = this;
 	        // setting position, width, and height of auto complete dropdown
 	        var thisElBCR = this.el.getBoundingClientRect();
-	        this.ng2DatetimePickerEl.style.width = thisElBCR.width + 'px';
+	        // this.ng2DatetimePickerEl.style.minWidth      = thisElBCR.width + 'px';
 	        this.ng2DatetimePickerEl.style.position = 'absolute';
 	        this.ng2DatetimePickerEl.style.zIndex = '1000';
 	        this.ng2DatetimePickerEl.style.left = '0';
@@ -917,6 +953,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        core_1.Input('show-close-layer'), 
 	        __metadata('design:type', Boolean)
 	    ], Ng2DatetimePickerDirective.prototype, "showCloseLayer", void 0);
+	    __decorate([
+	        core_1.Input('show-week-numbers'), 
+	        __metadata('design:type', Boolean)
+	    ], Ng2DatetimePickerDirective.prototype, "showWeekNumbers", void 0);
 	    __decorate([
 	        core_1.Input(), 
 	        __metadata('design:type', String)

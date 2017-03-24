@@ -84,6 +84,7 @@ var Ng2DatetimePickerDirective = (function () {
             component.disabledDates = _this.disabledDates;
             component.showCloseButton = _this.closeOnSelect === false;
             component.showCloseLayer = _this.showCloseLayer;
+            component.showWeekNumbers = _this.showWeekNumbers;
             _this.styleDatetimePicker();
             component.selected$.subscribe(_this.dateSelected);
             component.closing$.subscribe(function () {
@@ -288,7 +289,7 @@ var Ng2DatetimePickerDirective = (function () {
         var _this = this;
         // setting position, width, and height of auto complete dropdown
         var thisElBCR = this.el.getBoundingClientRect();
-        this.ng2DatetimePickerEl.style.width = thisElBCR.width + 'px';
+        // this.ng2DatetimePickerEl.style.minWidth      = thisElBCR.width + 'px';
         this.ng2DatetimePickerEl.style.position = 'absolute';
         this.ng2DatetimePickerEl.style.zIndex = '1000';
         this.ng2DatetimePickerEl.style.left = '0';
@@ -339,6 +340,7 @@ var Ng2DatetimePickerDirective = (function () {
         'maxHour': [{ type: core_1.Input, args: ['max-hour',] },],
         'disabledDates': [{ type: core_1.Input, args: ['disabled-dates',] },],
         'showCloseLayer': [{ type: core_1.Input, args: ['show-close-layer',] },],
+        'showWeekNumbers': [{ type: core_1.Input, args: ['show-week-numbers',] },],
         'formControlName': [{ type: core_1.Input },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],

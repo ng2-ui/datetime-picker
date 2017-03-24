@@ -20,6 +20,7 @@ export declare class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     maxHour: Date | number;
     disabledDates: Date[];
     showCloseLayer: boolean;
+    showWeekNumbers: boolean;
     formControlName: string;
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
