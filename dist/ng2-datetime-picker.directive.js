@@ -238,10 +238,19 @@ var Ng2DatetimePickerDirective = (function () {
             date = changes['ngModel'].currentValue;
             if (date && typeof date !== 'string') {
                 date.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(date, _this.dateFormat, _this.dateOnly); };
+                this.setInputElDateValue(date);
+                this.updateDatepicker();
+            }
+            else if (date && typeof date === 'string') {
+                /** if program assigns a string value, then format to date later */
+                setTimeout(function () {
+                    var dt = _this.getDate(date);
+                    dt.toString = function () { return ng2_datetime_1.Ng2Datetime.formatDate(dt, _this.dateFormat, _this.dateOnly); };
+                    _this.ngModel = dt;
+                    _this.inputEl.value = '' + dt;
+                });
             }
         }
-        this.setInputElDateValue(date);
-        this.updateDatepicker();
     };
     Ng2DatetimePickerDirective.prototype.updateDatepicker = function () {
         if (this.componentRef) {

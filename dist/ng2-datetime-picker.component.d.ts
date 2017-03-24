@@ -21,6 +21,7 @@ export declare class Ng2DatetimePickerComponent {
     disabledDates: Date[];
     showCloseButton: boolean;
     showCloseLayer: boolean;
+    showTodayShortcut: boolean;
     selected$: EventEmitter<any>;
     closing$: EventEmitter<any>;
     hours: ElementRef;
@@ -51,4 +52,5 @@ export declare class Ng2DatetimePickerComponent {
     updateMonthData(num: number): void;
     isDateDisabled(date: Date): boolean;
     close(): void;
+    selectToday(): void;
 }
