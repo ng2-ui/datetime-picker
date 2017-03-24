@@ -12,117 +12,6 @@ import {Ng2Datetime} from './ng2-datetime';
 
 declare var moment: any;
 
-let monthYearHTML: string = `
-  <div class="month" *ngIf="!timeOnly">
-    <b class="prev_next prev year" (click)="updateMonthData(-12)">&laquo;</b>
-    <b class="prev_next prev month" (click)="updateMonthData(-1)">&lsaquo;</b>
-     <span title="{{monthData?.fullName}}">
-       {{monthData?.shortName}}
-     </span>
-     <span (click)="showYearSelector = true">
-      {{monthData.year}}
-     </span>
-    <b class="prev_next next year" (click)="updateMonthData(+12)">&raquo;</b>
-    <b class="prev_next next month" (click)="updateMonthData(+1)">&rsaquo;</b>
-  </div>
-`;
-
-let daysHTML: string = `
-  <div class="week-numbers-and-days"
-    [ngClass]="{'show-week-numbers': !timeOnly && showWeekNumbers}">
-    <!-- Week -->
-    <div class="week-numbers" *ngIf="!timeOnly && showWeekNumbers">
-      <div class="week-number" *ngFor="let weekNumber of monthData.weekNumbers">
-        {{weekNumber}}
-      </div>
-    </div>
-    
-    <!-- Date -->
-    <div class="days" *ngIf="!timeOnly">
-
-      <!-- Su Mo Tu We Th Fr Sa -->
-      <div class="day-of-week"
-           *ngFor="let dayOfWeek of monthData.localizedDaysOfWeek; let ndx=index"
-           [class.weekend]="isWeekend(ndx + monthData.firstDayOfWeek)"
-           title="{{dayOfWeek.fullName}}">
-        {{dayOfWeek.shortName}}
-      </div>
-
-      <!-- Fill up blank days for this month -->
-      <div *ngIf="monthData.leadingDays.length < 7">
-        <div class="day"
-            (click)="updateMonthData(-1)"
-             *ngFor="let dayNum of monthData.leadingDays">
-          {{dayNum}}
-        </div>
-      </div>
-
-      <div class="day"
-           *ngFor="let dayNum of monthData.days"
-           (click)="selectDateTime(toDate(dayNum))"
-           title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
-           [ngClass]="{
-             selectable: !isDateDisabled(toDate(dayNum)),
-             selected: toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),
-             today: toDate(dayNum).getTime() === today.getTime(),
-             weekend: isWeekend(dayNum, monthData.month)
-           }">
-        {{dayNum}}
-      </div>
-
-      <!-- Fill up blank days for this month -->
-      <div *ngIf="monthData.trailingDays.length < 7">
-        <div class="day"
-             (click)="updateMonthData(+1)"
-             *ngFor="let dayNum of monthData.trailingDays">
-          {{dayNum}}
-        </div>
-      </div>
-    </div>
-  </div>
-`;
-
-let timeHTML: string = `
-  <div class="time" id="time" *ngIf="!dateOnly">
-    <div class="select-current-time" (click)="selectCurrentTime()">{{locale.currentTime}}</div>
-    <label class="timeLabel">{{locale.time}}</label>
-    <span class="timeValue">
-      {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
-    </span><br/>
-    <div>
-      <label class="hourLabel">{{locale.hour}}:</label>
-      <input #hours class="hourInput"
-             tabindex="90000"
-             (change)="selectDateTime()"
-             type="range"
-             min="{{minHour || 0}}"
-             max="{{maxHour || 23}}"
-             [(ngModel)]="hour" />
-    </div>
-    <div>
-      <label class="minutesLabel">{{locale.minute}}:</label>
-      <input #minutes class="minutesInput"
-             tabindex="90000"
-             step="{{minuteStep}}"
-             (change)="selectDateTime()"
-             type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
-    </div>
-  </div>
-`;
-
-let yearSelectorHTML: string = `
-  <div class="year-selector" *ngIf="showYearSelector">
-    <div class="locale">
-      <b>{{locale.year}}</b>
-    </div>
-    <span class="year" 
-      *ngFor="let year of yearsSelectable"
-      (click)="selectYear(year)">
-      {{year}}
-    </span>
-  </div>
-`;
-
 //@TODO
 // . display currently selected day
 
@@ -133,26 +22,121 @@ let yearSelectorHTML: string = `
   providers    : [Ng2Datetime],
   selector     : 'ng2-datetime-picker',
   template     : `
-<div class="closing-layer" (click)="close()" *ngIf="showCloseLayer" ></div>
-<div class="ng2-datetime-picker">
-  <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
-  
-  <!-- Month - Year  -->
-  ${monthYearHTML}
+  <div class="closing-layer" (click)="close()" *ngIf="showCloseLayer" ></div>
+  <div class="ng2-datetime-picker">
+    <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
+    
+    <!-- Month - Year  -->
+    <div class="month" *ngIf="!timeOnly">
+      <b class="prev_next prev year" (click)="updateMonthData(-12)">&laquo;</b>
+      <b class="prev_next prev month" (click)="updateMonthData(-1)">&lsaquo;</b>
+       <span title="{{monthData?.fullName}}">
+         {{monthData?.shortName}}
+       </span>
+       <span (click)="showYearSelector = true">
+        {{monthData.year}}
+       </span>
+      <b class="prev_next next year" (click)="updateMonthData(+12)">&raquo;</b>
+      <b class="prev_next next month" (click)="updateMonthData(+1)">&rsaquo;</b>
+    </div>
 
-  <!-- Week number / Days  -->
-  ${daysHTML}
+    <!-- Week number / Days  -->
+    <div class="week-numbers-and-days"
+      [ngClass]="{'show-week-numbers': !timeOnly && showWeekNumbers}">
+      <!-- Week -->
+      <div class="week-numbers" *ngIf="!timeOnly && showWeekNumbers">
+        <div class="week-number" *ngFor="let weekNumber of monthData.weekNumbers">
+          {{weekNumber}}
+        </div>
+      </div>
+      
+      <!-- Date -->
+      <div class="days" *ngIf="!timeOnly">
 
-  <div class="shortcuts" *ngIf="showTodayShortcut">
-    <a href="#" (click)="selectToday()">Today</a>
+        <!-- Su Mo Tu We Th Fr Sa -->
+        <div class="day-of-week"
+             *ngFor="let dayOfWeek of monthData.localizedDaysOfWeek; let ndx=index"
+             [class.weekend]="isWeekend(ndx + monthData.firstDayOfWeek)"
+             title="{{dayOfWeek.fullName}}">
+          {{dayOfWeek.shortName}}
+        </div>
+
+        <!-- Fill up blank days for this month -->
+        <div *ngIf="monthData.leadingDays.length < 7">
+          <div class="day"
+              (click)="updateMonthData(-1)"
+               *ngFor="let dayNum of monthData.leadingDays">
+            {{dayNum}}
+          </div>
+        </div>
+
+        <div class="day"
+             *ngFor="let dayNum of monthData.days"
+             (click)="selectDateTime(toDate(dayNum))"
+             title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
+             [ngClass]="{
+               selectable: !isDateDisabled(toDate(dayNum)),
+               selected: toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),
+               today: toDate(dayNum).getTime() === today.getTime(),
+               weekend: isWeekend(dayNum, monthData.month)
+             }">
+          {{dayNum}}
+        </div>
+
+        <!-- Fill up blank days for this month -->
+        <div *ngIf="monthData.trailingDays.length < 7">
+          <div class="day"
+               (click)="updateMonthData(+1)"
+               *ngFor="let dayNum of monthData.trailingDays">
+            {{dayNum}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shortcuts" *ngIf="showTodayShortcut">
+      <a href="#" (click)="selectToday()">Today</a>
+    </div>
+
+    <!-- Hour Minute -->
+    <div class="time" id="time" *ngIf="!dateOnly">
+      <div class="select-current-time" (click)="selectCurrentTime()">{{locale.currentTime}}</div>
+      <label class="timeLabel">{{locale.time}}</label>
+      <span class="timeValue">
+        {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
+      </span><br/>
+      <div>
+        <label class="hourLabel">{{locale.hour}}:</label>
+        <input #hours class="hourInput"
+               tabindex="90000"
+               (change)="selectDateTime()"
+               type="range"
+               min="{{minHour || 0}}"
+               max="{{maxHour || 23}}"
+               [(ngModel)]="hour" />
+      </div>
+      <div>
+        <label class="minutesLabel">{{locale.minute}}:</label>
+        <input #minutes class="minutesInput"
+               tabindex="90000"
+               step="{{minuteStep}}"
+               (change)="selectDateTime()"
+               type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
+      </div>
+    </div>
+
+    <!-- Year Selector -->
+    <div class="year-selector" *ngIf="showYearSelector">
+      <div class="locale">
+        <b>{{locale.year}}</b>
+      </div>
+      <span class="year" 
+        *ngFor="let year of yearsSelectable"
+        (click)="selectYear(year)">
+        {{year}}
+      </span>
+    </div>
   </div>
-
-  <!-- Hour Minute -->
-  ${timeHTML}
-
-  <!-- Year Selector -->
-  ${yearSelectorHTML}
-</div>
   `,
   styles       : [
     `
