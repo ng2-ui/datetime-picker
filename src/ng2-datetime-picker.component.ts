@@ -38,45 +38,55 @@ declare var moment: any;
     <b class="prev_next next month" (click)="updateMonthData(+1)">&rsaquo;</b>
   </div>
 
-  <!-- Date -->
-  <div class="days" *ngIf="!timeOnly">
-
-    <!-- Su Mo Tu We Th Fr Sa -->
-    <div class="day-of-week"
-         *ngFor="let dayOfWeek of monthData.localizedDaysOfWeek; let ndx=index"
-         [class.weekend]="isWeekend(ndx + monthData.firstDayOfWeek)"
-         title="{{dayOfWeek.fullName}}">
-      {{dayOfWeek.shortName}}
-    </div>
-
-    <!-- Fill up blank days for this month -->
-    <div *ngIf="monthData.leadingDays.length < 7">
-      <div class="day"
-          (click)="updateMonthData(-1)"
-           *ngFor="let dayNum of monthData.leadingDays">
-        {{dayNum}}
+  <div class="week-numbers-and-days"
+    [ngClass]="{'show-week-numbers': !timeOnly && showWeekNumbers}">
+    <!-- Week -->
+    <div class="week-numbers" *ngIf="!timeOnly && showWeekNumbers">
+      <div class="week-number" *ngFor="let weekNumber of monthData.weekNumbers">
+        {{weekNumber}}
       </div>
     </div>
+    
+    <!-- Date -->
+    <div class="days" *ngIf="!timeOnly">
 
-    <div class="day"
-         *ngFor="let dayNum of monthData.days"
-         (click)="selectDateTime(toDate(dayNum))"
-         title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
-         [ngClass]="{
-           selectable: !isDateDisabled(toDate(dayNum)),
-           selected: toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),
-           today: toDate(dayNum).getTime() === today.getTime(),
-           weekend: isWeekend(dayNum, monthData.month)
-         }">
-      {{dayNum}}
-    </div>
+      <!-- Su Mo Tu We Th Fr Sa -->
+      <div class="day-of-week"
+           *ngFor="let dayOfWeek of monthData.localizedDaysOfWeek; let ndx=index"
+           [class.weekend]="isWeekend(ndx + monthData.firstDayOfWeek)"
+           title="{{dayOfWeek.fullName}}">
+        {{dayOfWeek.shortName}}
+      </div>
 
-    <!-- Fill up blank days for this month -->
-    <div *ngIf="monthData.trailingDays.length < 7">
+      <!-- Fill up blank days for this month -->
+      <div *ngIf="monthData.leadingDays.length < 7">
+        <div class="day"
+            (click)="updateMonthData(-1)"
+             *ngFor="let dayNum of monthData.leadingDays">
+          {{dayNum}}
+        </div>
+      </div>
+
       <div class="day"
-           (click)="updateMonthData(+1)"
-           *ngFor="let dayNum of monthData.trailingDays">
+           *ngFor="let dayNum of monthData.days"
+           (click)="selectDateTime(toDate(dayNum))"
+           title="{{monthData.year}}-{{monthData.month+1}}-{{dayNum}}"
+           [ngClass]="{
+             selectable: !isDateDisabled(toDate(dayNum)),
+             selected: toDate(dayNum).getTime() === toDateOnly(selectedDate).getTime(),
+             today: toDate(dayNum).getTime() === today.getTime(),
+             weekend: isWeekend(dayNum, monthData.month)
+           }">
         {{dayNum}}
+      </div>
+
+      <!-- Fill up blank days for this month -->
+      <div *ngIf="monthData.trailingDays.length < 7">
+        <div class="day"
+             (click)="updateMonthData(+1)"
+             *ngFor="let dayNum of monthData.trailingDays">
+          {{dayNum}}
+        </div>
       </div>
     </div>
   </div>
@@ -92,20 +102,24 @@ declare var moment: any;
     <span class="timeValue">
       {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
     </span><br/>
-    <label class="hourLabel">{{locale.hour}}:</label>
-    <input #hours class="hourInput"
-           tabindex="90000"
-           (change)="selectDateTime()"
-           type="range"
-           min="{{minHour || 0}}"
-           max="{{maxHour || 23}}"
-           [(ngModel)]="hour" />
-    <label class="minutesLabel">{{locale.minute}}:</label>
-    <input #minutes class="minutesInput"
-           tabindex="90000"
-           step="{{minuteStep}}"
-           (change)="selectDateTime()"
-           type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
+    <div>
+      <label class="hourLabel">{{locale.hour}}:</label>
+      <input #hours class="hourInput"
+             tabindex="90000"
+             (change)="selectDateTime()"
+             type="range"
+             min="{{minHour || 0}}"
+             max="{{maxHour || 23}}"
+             [(ngModel)]="hour" />
+    </div>
+    <div>
+      <label class="minutesLabel">{{locale.minute}}:</label>
+      <input #minutes class="minutesInput"
+             tabindex="90000"
+             step="{{minuteStep}}"
+             (change)="selectDateTime()"
+             type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
+    </div>
   </div>
 </div>
   `,
@@ -143,6 +157,9 @@ declare var moment: any;
   animation: slideDown 0.1s ease-in-out;
   animation-fill-mode: both;
 }
+.ng2-datetime-picker .days {
+  width: 210px; /* 30 x 7 days */
+}
 .ng2-datetime-picker .close-button {
   position: absolute;
   width: 1em;
@@ -166,6 +183,7 @@ declare var moment: any;
   border-bottom: 1px solid #ddd;
   position: relative;
 }
+
 .ng2-datetime-picker > .month > .prev_next {
   color: #555;
   display: block;
@@ -187,13 +205,28 @@ declare var moment: any;
 .ng2-datetime-picker > .month > .prev_next.next {
   float: right;
 }
-.ng2-datetime-picker > .days {
-  width: 210px; /* 30 x 7 */
-  margin: 10px;
+
+.ng2-datetime-picker .week-numbers-and-days {
   text-align: center;
 }
-.ng2-datetime-picker > .days .day-of-week,
-.ng2-datetime-picker > .days .day {
+.ng2-datetime-picker .week-numbers {
+  line-height: 30px;
+  display: inline-block;
+  padding: 30px 0 0 0;
+  color: #ddd;
+  text-align: right;
+  width: 21px;
+  vertical-align: top;
+}
+
+.ng2-datetime-picker  .days {
+  display: inline-block;
+  width: 210px; /* 30 x 7 */
+  text-align: center;
+  padding: 0 10px;
+}
+.ng2-datetime-picker .days .day-of-week,
+.ng2-datetime-picker .days .day {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   border: 1px solid transparent;
@@ -201,32 +234,32 @@ declare var moment: any;
   line-height: 28px;
   float: left;
 }
-.ng2-datetime-picker > .days .day-of-week {
+.ng2-datetime-picker .days .day-of-week {
   font-weight: bold;
 }
-.ng2-datetime-picker > .days .day-of-week.weekend {
+.ng2-datetime-picker .days .day-of-week.weekend {
   color: #ccc;
   background-color: inherit;
 }
-.ng2-datetime-picker > .days .day:not(.selectable) {
+.ng2-datetime-picker .days .day:not(.selectable) {
   color: #ccc;
   cursor: default;
 }
-.ng2-datetime-picker > .days .weekend {
+.ng2-datetime-picker .days .weekend {
   color: #ccc;
   background-color: #eee;
 }
-.ng2-datetime-picker > .days .day.selectable  {
+.ng2-datetime-picker .days .day.selectable  {
   cursor: pointer;
 }
-.ng2-datetime-picker > .days .day.selected {
+.ng2-datetime-picker .days .day.selected {
   background: gray;
   color: #fff;
 }
-.ng2-datetime-picker > .days .day:not(.selected).selectable:hover {
+.ng2-datetime-picker .days .day:not(.selected).selectable:hover {
   background: #eee;
 }
-.ng2-datetime-picker > .days:after {
+.ng2-datetime-picker .days:after {
   content: '';
   display: block;
   clear: left;
@@ -248,13 +281,9 @@ declare var moment: any;
 .ng2-datetime-picker .hourLabel,
 .ng2-datetime-picker .minutesLabel {
   display: inline-block;
-  width: 40px;
-  text-align: right;
+  width: 45px;
+  vertical-align: top;
 }
-.ng2-datetime-picker input[type=range] {
-  width: 200px;
-}
-
 .closing-layer {
   display: block;
   position: fixed;
@@ -282,11 +311,13 @@ declare var moment: any;
     bottom: 0;
     left: 0;
     right: 0;    
+    width: auto !important;
     animation: slideUp 0.1s ease-in-out;
   }
 
-  .ng2-datetime-picker .days {
-    margin: 10px auto;
+  .ng2-datetime-picker > .days {
+    display: block;
+    margin: 0 auto;
   }
 
   .closing-layer {
@@ -319,6 +350,7 @@ export class Ng2DatetimePickerComponent {
   @Input('disabled-dates')    disabledDates: Date[];
   @Input('show-close-button') showCloseButton: boolean;
   @Input('show-close-layer')  showCloseLayer: boolean;
+  @Input('show-week-numbers') showWeekNumbers: boolean = false;
   @Input('show-today-shortcut') showTodayShortcut: boolean = false;
 
   @Output('selected$')  selected$:EventEmitter<any> = new EventEmitter();

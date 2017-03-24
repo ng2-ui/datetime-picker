@@ -113,6 +113,33 @@ export class Ng2Datetime {
     }
   }
 
+  static getWeekNumber(date) {
+    if (!(date instanceof Date)) date = new Date();
+
+    // ISO week date weeks start on Monday, so correct the day number
+    var nDay = (date.getDay() + 6) % 7;
+
+    // ISO 8601 states that week 1 is the week with the first Thursday of that year
+    // Set the target date to the Thursday in the target week
+    date.setDate(date.getDate() - nDay + 3);
+
+    // Store the millisecond value of the target date
+    var n1stThursday = date.valueOf();
+
+    // Set the target to the first Thursday of the year
+    // First, set the target to January 1st
+    date.setMonth(0, 1);
+
+    // Not a Thursday? Correct the date to the next Thursday
+    if (date.getDay() !== 4) {
+      date.setMonth(0, 1 + ((4 - date.getDay()) + 7) % 7);
+    }
+
+    // The week number is the number of weeks between the first Thursday of the year
+    // and the Thursday in the target week (604800000 = 7 * 24 * 3600 * 1000)
+    return 1 + Math.ceil((n1stThursday - date) / 604800000);
+  }  
+
   //remove timezone
   private static removeTimezone(dateStr): string {
     // if no time is given, add 00:00:00 at the end
@@ -171,10 +198,22 @@ export class Ng2Datetime {
       trailingDays = trailingDays.slice(0, trailingDays.length - 7);
     }
 
+    let firstDay = new Date(firstDayOfMonth);
+    firstDay.setDate(firstDayOfMonth.getDate() - (leadingDays % 7));
+    let firstWeekNumber = Ng2Datetime.getWeekNumber(firstDay);
+    let numWeeks = Math.ceil((daysInMonth + leadingDays%7) / 7);
+    let weekNumbers =Array(numWeeks).fill(0).map( 
+      (el,ndx) => { 
+        let weekNum = (ndx + firstWeekNumber + 52) % 52;
+        return weekNum === 0 ? 52 : weekNum;
+      }
+    );
+
     let localizedDaysOfWeek =
       Ng2Datetime.daysOfWeek
         .concat(Ng2Datetime.daysOfWeek)
         .splice(Ng2Datetime.firstDayOfWeek, 7);
+        
 
     let monthData = {
       year: year,
@@ -186,7 +225,8 @@ export class Ng2Datetime {
       localizedDaysOfWeek: localizedDaysOfWeek,
       days: Ng2Datetime.days.slice(0, daysInMonth),
       leadingDays: Ng2Datetime.days.slice(-leadingDays - (31 - daysInLastMonth), daysInLastMonth),
-      trailingDays: trailingDays
+      trailingDays: trailingDays,
+      weekNumbers: weekNumbers
     };
 
     return monthData;

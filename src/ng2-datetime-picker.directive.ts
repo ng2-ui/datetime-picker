@@ -46,6 +46,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   @Input('max-hour')          maxHour: Date | number;
   @Input('disabled-dates')    disabledDates: Date[];
   @Input('show-close-layer')  showCloseLayer: boolean;
+  @Input('show-week-numbers') showWeekNumbers: boolean;
   @Input() formControlName: string;
 
   @Input('ngModel')        ngModel: any;
@@ -270,6 +271,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
     component.disabledDates  = this.disabledDates;
     component.showCloseButton = this.closeOnSelect === false;
     component.showCloseLayer = this.showCloseLayer;
+    component.showWeekNumbers = this.showWeekNumbers;
 
     this.styleDatetimePicker();
 
@@ -318,7 +320,7 @@ export class Ng2DatetimePickerDirective implements OnInit, OnChanges {
   private styleDatetimePicker () {
     // setting position, width, and height of auto complete dropdown
     let thisElBCR                         = this.el.getBoundingClientRect();
-    this.ng2DatetimePickerEl.style.width      = thisElBCR.width + 'px';
+    // this.ng2DatetimePickerEl.style.minWidth      = thisElBCR.width + 'px';
     this.ng2DatetimePickerEl.style.position   = 'absolute';
     this.ng2DatetimePickerEl.style.zIndex     = '1000';
     this.ng2DatetimePickerEl.style.left       = '0';

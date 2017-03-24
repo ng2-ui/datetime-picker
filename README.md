@@ -180,6 +180,7 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
   * **min-hour** number, mininum selectable hour
   * **max-hour** number, maximum selectable hour
   * **disabled-dates**  Array of Date, dates not selectable
+  * **show-week-numbers**  trueor false, default false. Show week numbers
 
 ## Outputs of directive
 
