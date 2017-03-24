@@ -12,32 +12,22 @@ import {Ng2Datetime} from './ng2-datetime';
 
 declare var moment: any;
 
-//@TODO
-// . display currently selected day
-
-/**
- * show a selected date in monthly calendar
- */
-@Component({
-  providers    : [Ng2Datetime],
-  selector     : 'ng2-datetime-picker',
-  template     : `
-<div class="closing-layer" (click)="close()" *ngIf="showCloseLayer" ></div>
-<div class="ng2-datetime-picker">
-  <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
-  
-  <!-- Month - Year  -->
+let monthYearHTML: string = `
   <div class="month" *ngIf="!timeOnly">
     <b class="prev_next prev year" (click)="updateMonthData(-12)">&laquo;</b>
     <b class="prev_next prev month" (click)="updateMonthData(-1)">&lsaquo;</b>
      <span title="{{monthData?.fullName}}">
-           {{monthData?.shortName}}
+       {{monthData?.shortName}}
      </span>
-    {{monthData.year}}
+     <span (click)="showYearSelector = true">
+      {{monthData.year}}
+     </span>
     <b class="prev_next next year" (click)="updateMonthData(+12)">&raquo;</b>
     <b class="prev_next next month" (click)="updateMonthData(+1)">&rsaquo;</b>
   </div>
+`;
 
+let daysHTML: string = `
   <div class="week-numbers-and-days"
     [ngClass]="{'show-week-numbers': !timeOnly && showWeekNumbers}">
     <!-- Week -->
@@ -90,12 +80,9 @@ declare var moment: any;
       </div>
     </div>
   </div>
+`;
 
-  <div class="shortcuts" *ngIf="showTodayShortcut">
-    <a href="#" (click)="selectToday()">Today</a>
-  </div>
-
-  <!-- Time -->
+let timeHTML: string = `
   <div class="time" id="time" *ngIf="!dateOnly">
     <div class="select-current-time" (click)="selectCurrentTime()">{{locale.currentTime}}</div>
     <label class="timeLabel">{{locale.time}}</label>
@@ -121,6 +108,50 @@ declare var moment: any;
              type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
     </div>
   </div>
+`;
+
+let yearSelectorHTML: string = `
+  <div class="year-selector" *ngIf="showYearSelector">
+    <div class="locale">
+      <b>{{locale.year}}</b>
+    </div>
+    <span class="year" 
+      *ngFor="let year of yearsSelectable"
+      (click)="selectYear(year)">
+      {{year}}
+    </span>
+  </div>
+`;
+
+//@TODO
+// . display currently selected day
+
+/**
+ * show a selected date in monthly calendar
+ */
+@Component({
+  providers    : [Ng2Datetime],
+  selector     : 'ng2-datetime-picker',
+  template     : `
+<div class="closing-layer" (click)="close()" *ngIf="showCloseLayer" ></div>
+<div class="ng2-datetime-picker">
+  <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
+  
+  <!-- Month - Year  -->
+  ${monthYearHTML}
+
+  <!-- Week number / Days  -->
+  ${daysHTML}
+
+  <div class="shortcuts" *ngIf="showTodayShortcut">
+    <a href="#" (click)="selectToday()">Today</a>
+  </div>
+
+  <!-- Hour Minute -->
+  ${timeHTML}
+
+  <!-- Year Selector -->
+  ${yearSelectorHTML}
 </div>
   `,
   styles       : [
@@ -270,6 +301,27 @@ declare var moment: any;
   padding: 10px;
   text-transform: Capitalize;
 }
+.ng2-datetime-picker .year-selector {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  height: 100%;
+  overflow: auto; 
+  padding: 5px;
+  z-index: 2;
+}
+.ng2-datetime-picker .year-selector .locale{
+  text-align: center;
+}
+.ng2-datetime-picker .year-selector .year {
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px 5px;
+}
+.ng2-datetime-picker .year-selector .year:hover {
+  background-color: #ddd;
+}
 .ng2-datetime-picker .select-current-time {
   position: absolute;
   top: 1em;
@@ -362,6 +414,8 @@ export class Ng2DatetimePickerComponent {
   public el:HTMLElement; // this component element
   public disabledDatesInTime: number[];
   public locale = Ng2Datetime.locale;
+  public showYearSelector = false;
+
   private _monthData: any;
 
   public constructor (
@@ -370,6 +424,16 @@ export class Ng2DatetimePickerComponent {
     public cdRef: ChangeDetectorRef
   ) {
     this.el = elementRef.nativeElement;
+  }
+
+  public get yearsSelectable(): number[] {
+    let startYear = this.year - 100;
+    let endYear = this.year + 50;
+    let years: number[] = [];
+    for (let year = startYear; year < endYear; year++) {
+      years.push(year);
+    }
+    return years;
   }
 
   public get year(): number {
@@ -397,20 +461,10 @@ export class Ng2DatetimePickerComponent {
     return dt;
   }
 
-  public isWeekend(dayNum: number, month?: number): boolean {
-    if (typeof month === 'undefined') {
-      return Ng2Datetime.weekends.indexOf(dayNum % 7) !== -1; //weekday index
-    } else {
-      let weekday = this.toDate(dayNum, month).getDay();
-      return Ng2Datetime.weekends.indexOf(weekday) !== -1;
-    }
-  }
-
   public set year (year) {}
   public set month (month) {}
   public set day (day) {}
   public set today (today) {}
-
 
   public ngOnInit() {
     if(!this.defaultValue || isNaN(this.defaultValue.getTime())) {
@@ -429,6 +483,20 @@ export class Ng2DatetimePickerComponent {
     }
 
     this._monthData = this.ng2Datetime.getMonthData(this.year, this.month);
+  }
+
+  public isWeekend(dayNum: number, month?: number): boolean {
+    if (typeof month === 'undefined') {
+      return Ng2Datetime.weekends.indexOf(dayNum % 7) !== -1; //weekday index
+    } else {
+      let weekday = this.toDate(dayNum, month).getDay();
+      return Ng2Datetime.weekends.indexOf(weekday) !== -1;
+    }
+  }
+
+  public selectYear(year) {
+    this._monthData = this.ng2Datetime.getMonthData(year, this._monthData.month);
+    this.showYearSelector = false;
   }
 
   public toDate (day:number, month?: number):Date {
