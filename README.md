@@ -1,10 +1,10 @@
-# ng2-datetime-picker
+# Angular(2+) Datetime Picker
 
-[![Build Status](https://travis-ci.org/ng2-ui/ng2-datetime-picker.svg?branch=master)](https://travis-ci.org/ng2-ui/ng2-datetime-picker)
-[![Join the chat at https://gitter.im/ng2-ui/ng2-datetime-picker](https://badges.gitter.im/ng2-ui/ng2-datetime-picker.svg)](https://gitter.im/ng2-ui/ng2-datetime-picker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/ng2-ui/datetime-picker.svg?branch=master)](https://travis-ci.org/ng2-ui/datetime-picker)
+[![Join the chat at https://gitter.im/ng2-ui/datetime-picker](https://badges.gitter.im/ng2-ui/datetime-picker.svg)](https://gitter.im/ng2-ui/datetime-picker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 AngularJS 2 DateTime Picker
 
-<a href="https://rawgit.com/ng2-ui/ng2-datetime-picker/master/app/index.html">
+<a href="https://rawgit.com/ng2-ui/datetime-picker/master/app/index.html">
   <img src="http://i.imgur.com/g5qbBBz.png" width="50%" style="border:1px solid grey" />
 </a>
 
@@ -22,25 +22,25 @@ AngularJS 2 DateTime Picker
 
 ## Install
 
-1. install ng2-datetime-picker
+1. install datetime-picker
 
-        $ npm install ng2-datetime-picker --save
+        $ npm install @ngui/datetime-picker --save
 
-2. add `map` and `packages` to your `systemjs.config.js`
+2. If you are using SystemJS, add `map` and `packages` to your `systemjs.config.js`
 
-        map[‘ng2-datetime-picker'] = 'node_modules/ng2-datetime-picker/dist';
-        packages[‘ng2-datetime-picker'] = { main: 'ng2-datetime-picker.umd.js', defaultExtension: 'js’ }
+        map[‘@ngui/datetime-picker'] = 'node_modules/@ngui/datetime-picker/dist';
+        packages[‘@ngui/datetime-picker'] = { main: '@ngui/datetime-picker.umd.js', defaultExtension: 'js’ }
 
-3. import Ng2DatetimePickerModule to your AppModule
+3. import NguiDatetimePickerModule to your AppModule
 
         import { NgModule } from '@angular/core';
         import { FormsModule } from "@angular/forms";
         import { BrowserModule  } from '@angular/platform-browser';
         import { AppComponent } from './app.component';
-        import { Ng2DatetimePickerModule } from 'ng2-datetime-picker';
+        import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
 
         @NgModule({
-          imports: [BrowserModule, FormsModule, Ng2DatetimePickerModule],
+          imports: [BrowserModule, FormsModule, NguiDatetimePickerModule],
           declarations: [AppComponent],
           bootstrap: [ AppComponent ]
         })
@@ -51,7 +51,7 @@ AngularJS 2 DateTime Picker
 
        <input
           [(ngModel)]="myDate"
-          ng2-datetime-picker
+          ngui-datetime-picker
           date-only="true" />
 
        <form [formGroup]="myForm">
@@ -59,12 +59,12 @@ AngularJS 2 DateTime Picker
            required
            [(ngModel)]='myVar'
            formControlName="date"
-           ng2-datetime-picker
+           ngui-datetime-picker
             date-only="true"/>
        </form>
 
        <input
-          [(ngModel)]="date2" ng2-datetime-picker
+          [(ngModel)]="date2" ngui-datetime-picker
           date-format="DD-MM-YYYY hh:mm"
           year="2014"
           month="12"
@@ -80,12 +80,12 @@ For full example, please check `test` directory to see the example of;
 
 ## Override default style
 
-The default style is written in `src/ng2-datetime-picker.component.ts`.
+The default style is written in `src/ngui-datetime-picker.component.ts`.
 This can be overwritten by giving a more detailed css selector.
 
 e.g.,
 
-    #my-div .ng2-datetime-picker {
+    #my-div .ngui-datetime-picker {
       background-color: blue;
     }
 
@@ -102,34 +102,34 @@ you can use both date-format and parse-format:
 
     <input
           [(ngModel)]="date"
-          ng2-datetime-picker
+          ngui-datetime-picker
           date-format="MM/DD/YYYY HH:mm"
           parse-format="YYYY-MM-DD HH:mm:ss" />
 
 If you want to have your own date format without using momentjs,
-please override `Ng2DateTime.parser` and `Ng2DateTime.formatDate` function.
+please override `NguiDateTime.parser` and `NguiDateTime.formatDate` function.
 For example,
 
-    import { Ng2DatetimePickerModule, Ng2Datetime } from 'ng2-datetime-picker';
+    import { NguiDatetimePickerModule, NguiDatetime } from '@ngui/datetime-picker';
 
     // Override Date object formatter
-    Ng2Datetime.formatDate = (date: Date) : string => {
+    NguiDatetime.formatDate = (date: Date) : string => {
         ..... my own function that returns a string ....
     };
 
     // Override Date object parser
-    Ng2Datetime.parseDate = (str: any): Date => {
+    NguiDatetime.parseDate = (str: any): Date => {
         .... my own function that returns a date ...
     } ;
 
     @NgModule({
-      imports: [BrowserModule, FormsModule, Ng2DatetimePickerModule],
+      imports: [BrowserModule, FormsModule, NguiDatetimePickerModule],
       declarations: [AppComponent],
       bootstrap: [ AppComponent ]
     })
     export class AppModule { }
 
-In addition, you can override other static variables of `Ng2Datetime` class. The following
+In addition, you can override other static variables of `NguiDatetime` class. The following
 is the list of variables that you can override.
 
   * **days**:            default: 1,2,....31           
@@ -166,7 +166,7 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
 
   * **date-only**,  true or false, default is false
   * **time-only**, true or false, default is false
-  * **close-on-select**, true or false. indicates to close ng2-datetime-picker when select a date. default: true
+  * **close-on-select**, true or false. indicates to close ngui-datetime-picker when select a date. default: true
   * **date-format**,  momentjs date format, e.g. YYYY-MM-DD hh:mm:ss.
     You need to include `moment` js in your html to use date-format.
     `<script src="moment.min.js"></script>`
@@ -197,8 +197,8 @@ please send me email to `allenhwkim AT gmail.com` with your github id.
 
 ### To start
 
-    $ git clone https://github.com/ng2-ui/ng2-datetime-picker.git
-    $ cd ng2-datetime-picker
+    $ git clone https://github.com/ng2-ui/datetime-picker.git
+    $ cd datetime-picker
     $ npm install
     $ npm start
 

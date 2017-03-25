@@ -4,7 +4,7 @@ const config = {
   resolve: {
     extensions: ['', '.ts', '.webpack.js', '.web.js', '.js'],
     alias: {
-      'ng2-datetime-picker': '../src/index.ts'
+      '@ngui/datetime-picker': '../src/index.ts'
     }
   },
   devtool: 'source-map',

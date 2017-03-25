@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 var config = {
   entry: {
-    'ng2-datetime-picker': path.join(__dirname, 'src', 'index.ts')
+    '@ngui/datetime-picker': path.join(__dirname, 'src', 'index.ts')
   },
   resolve: {
     extensions: ['', '.ts', '.js', '.json', '.css', '.html']
@@ -13,8 +13,8 @@ var config = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: "[name].umd.js",
-    library: ["[name]"],
+    filename: "datetime-picker.umd.js",
+    library: ["datetime-picker"],
     libraryTarget: "umd"
   },
   externals: [

@@ -5,12 +5,12 @@ declare var moment: any;
 moment['locale']('en-ca'); //e.g. fr-ca
 
 //noinspection TypeScriptCheckImport
-import { Ng2Datetime } from 'ng2-datetime-picker';
+import { NguiDatetime } from '@ngui/datetime-picker';
 
 var templateStr = `
     <fieldset><legend><h2>Attributes and Events</h2></legend>
-      <ng2-utils-1>
-        <ng2-datetime-picker
+      <ngui-utils-1>
+        <ngui-datetime-picker
           *ngIf="show !== false"
           date-format="DD-MM-YYYY hh:mm"
           [date-only]="false"
@@ -25,10 +25,10 @@ var templateStr = `
           [disabled-dates]="disabledDates"
           (closing$)="show = false"
           (selected$)="selectedDate = $event">
-        </ng2-datetime-picker>
+        </ngui-datetime-picker>
         <br/> selected DateTime : {{ selectedDate || defaultValue }}
-      </ng2-utils-1>
-      <pre>{{templateStr | htmlCode:'ng2-utils-1'}}</pre>
+      </ngui-utils-1>
+      <pre>{{templateStr | htmlCode:'ngui-utils-1'}}</pre>
     </fieldset>
 `;
 

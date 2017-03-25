@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
 //noinspection TypeScriptCheckImport
-import { Ng2Datetime } from 'ng2-datetime-picker';
-Ng2Datetime.firstDayOfWeek = 0; //e.g. 1, or 6
+import { NguiDatetime } from '@ngui/datetime-picker';
+NguiDatetime.firstDayOfWeek = 0; //e.g. 1, or 6
 
 @Component({
   selector: 'my-app',

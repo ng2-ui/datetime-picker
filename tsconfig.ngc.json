@@ -24,7 +24,7 @@
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
-      "ng2-datetime-picker": ["./index"]
+      "@ngui/datetime-picker": ["./index"]
     }
   },
   "files": [

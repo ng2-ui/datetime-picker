@@ -16,8 +16,8 @@ import { MaterialModule } from '@angular/material';
 import { AppComponent }   from './app.component';
 
 //noinspection TypeScriptCheckImport
-import { Ng2DatetimePickerModule, Ng2Datetime } from 'ng2-datetime-picker';
-import { Ng2UtilsModule } from 'ng2-utils';
+import { NguiDatetimePickerModule, NguiDatetime } from '@ngui/datetime-picker';
+import { NguiUtilsModule } from '@ngui/utils';
 
 import { APP_ROUTER_PROVIDERS, APP_ROUTER_COMPONENTS } from './app.route';
 
@@ -27,8 +27,8 @@ import { APP_ROUTER_PROVIDERS, APP_ROUTER_COMPONENTS } from './app.route';
     APP_ROUTER_PROVIDERS,
     FormsModule,
     ReactiveFormsModule,
-    Ng2UtilsModule, 
-    Ng2DatetimePickerModule,
+    NguiUtilsModule, 
+    NguiDatetimePickerModule,
     MaterialModule
   ],
   declarations: [AppComponent, APP_ROUTER_COMPONENTS],
