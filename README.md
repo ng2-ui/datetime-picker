@@ -1,5 +1,13 @@
 # Angular(2+) Datetime Picker
 
+## IMPORTANT NOTICE
+
+After 0.16.0 or higher, `ng2-datetime-picker` has been changed to `@ngui/datetime-picker`. Here are the changes;
+
+* Module `ng2-datetime-picker` has been changed to `@ngui/datetime-picker`.
+* Direvtive `ng2-datetime-picker` is moved to `ngui-datetime-picker`.
+* Class name `Ng2Datetime` is moved to `NguiDatetime`.
+
 [![Build Status](https://travis-ci.org/ng2-ui/datetime-picker.svg?branch=master)](https://travis-ci.org/ng2-ui/datetime-picker)
 [![Join the chat at https://gitter.im/ng2-ui/datetime-picker](https://badges.gitter.im/ng2-ui/datetime-picker.svg)](https://gitter.im/ng2-ui/datetime-picker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 AngularJS 2 DateTime Picker
