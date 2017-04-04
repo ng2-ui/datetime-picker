@@ -388,7 +388,7 @@ export class NguiDatetimePickerComponent {
   @Input('show-close-layer') showCloseLayer: boolean;
   @Input('show-week-numbers') showWeekNumbers: boolean = false;
   @Input('show-today-shortcut') showTodayShortcut: boolean = false;
-  @Input('show-time-12-hour') showTime12Hour: boolean = false;
+  @Input('show-am-pm') showAmPm: boolean = false;
 
   @Output('selected$') selected$: EventEmitter<any> = new EventEmitter();
   @Output('closing$') closing$: EventEmitter<any> = new EventEmitter();
@@ -566,7 +566,7 @@ export class NguiDatetimePickerComponent {
   }
 
   private convertHours(hours) {
-    if (this.showTime12Hour) {
+    if (this.showAmPm) {
       this.timeSuffix = (hours >= 12) ? 'PM' : 'AM';
       hours = (hours == 0) ? 12 : (hours > 12) ? hours - 12 : hours;
     } else {
