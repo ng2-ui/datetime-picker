@@ -23,6 +23,7 @@ export declare class NguiDatetimePickerComponent {
     showCloseLayer: boolean;
     showWeekNumbers: boolean;
     showTodayShortcut: boolean;
+    showAmPm: boolean;
     selected$: EventEmitter<any>;
     closing$: EventEmitter<any>;
     hours: ElementRef;
@@ -32,6 +33,7 @@ export declare class NguiDatetimePickerComponent {
     locale: any;
     showYearSelector: boolean;
     private _monthData;
+    private timeSuffix;
     constructor(elementRef: ElementRef, nguiDatetime: NguiDatetime, cdRef: ChangeDetectorRef);
     readonly yearsSelectable: number[];
     year: number;
@@ -57,4 +59,5 @@ export declare class NguiDatetimePickerComponent {
     isDateDisabled(date: Date): boolean;
     close(): void;
     selectToday(): void;
+    private convertHours(hours);
 }
