@@ -48,6 +48,7 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
   @Input('show-close-layer')  showCloseLayer: boolean;
   @Input('show-week-numbers') showWeekNumbers: boolean;
   @Input() formControlName: string;
+  @Input('draggable')         draggable: boolean = true;
 
   @Input('ngModel')        ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
@@ -240,7 +241,7 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
     this.componentRef   = this.viewContainerRef.createComponent(factory);
     this.nguiDatetimePickerEl = this.componentRef.location.nativeElement;
     this.nguiDatetimePickerEl.setAttribute('tabindex', '32767');
-    this.nguiDatetimePickerEl.setAttribute('draggable', 'true');
+    this.nguiDatetimePickerEl.setAttribute('draggable', String(this.draggable));
     this.nguiDatetimePickerEl.addEventListener('mousedown', (event) => {
       this.clickedDatetimePicker = true
     });
