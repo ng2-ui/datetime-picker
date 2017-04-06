@@ -29,6 +29,7 @@ var NguiDatetimePickerDirective = (function () {
         this.viewContainerRef = viewContainerRef;
         this.parent = parent;
         this.closeOnSelect = true;
+        this.draggable = true;
         this.ngModelChange = new core_1.EventEmitter();
         this.valueChanged$ = new core_1.EventEmitter();
         this.popupClosed$ = new core_1.EventEmitter();
@@ -54,7 +55,7 @@ var NguiDatetimePickerDirective = (function () {
             _this.componentRef = _this.viewContainerRef.createComponent(factory);
             _this.nguiDatetimePickerEl = _this.componentRef.location.nativeElement;
             _this.nguiDatetimePickerEl.setAttribute('tabindex', '32767');
-            _this.nguiDatetimePickerEl.setAttribute('draggable', 'true');
+            _this.nguiDatetimePickerEl.setAttribute('draggable', String(_this.draggable));
             _this.nguiDatetimePickerEl.addEventListener('mousedown', function (event) {
                 _this.clickedDatetimePicker = true;
             });
@@ -321,11 +322,11 @@ var NguiDatetimePickerDirective = (function () {
                 },] },
     ];
     /** @nocollapse */
-    NguiDatetimePickerDirective.ctorParameters = [
+    NguiDatetimePickerDirective.ctorParameters = function () { return [
         { type: core_1.ComponentFactoryResolver, },
         { type: core_1.ViewContainerRef, },
         { type: forms_1.ControlContainer, decorators: [{ type: core_1.Optional }, { type: core_1.Host }, { type: core_1.SkipSelf },] },
-    ];
+    ]; };
     NguiDatetimePickerDirective.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'parseFormat': [{ type: core_1.Input, args: ['parse-format',] },],
@@ -342,6 +343,7 @@ var NguiDatetimePickerDirective = (function () {
         'showCloseLayer': [{ type: core_1.Input, args: ['show-close-layer',] },],
         'showWeekNumbers': [{ type: core_1.Input, args: ['show-week-numbers',] },],
         'formControlName': [{ type: core_1.Input },],
+        'draggable': [{ type: core_1.Input, args: ['draggable',] },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
         'valueChanged$': [{ type: core_1.Output, args: ['valueChanged',] },],
