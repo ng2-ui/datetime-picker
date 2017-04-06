@@ -1,10 +1,10 @@
 "use strict";
-var ng2_datetime_1 = require('./ng2-datetime');
-exports.Ng2Datetime = ng2_datetime_1.Ng2Datetime;
-var ng2_datetime_picker_component_1 = require('./ng2-datetime-picker.component');
-exports.Ng2DatetimePickerComponent = ng2_datetime_picker_component_1.Ng2DatetimePickerComponent;
-var ng2_datetime_picker_directive_1 = require('./ng2-datetime-picker.directive');
-exports.Ng2DatetimePickerDirective = ng2_datetime_picker_directive_1.Ng2DatetimePickerDirective;
-var ng2_datetime_picker_module_1 = require('./ng2-datetime-picker.module');
-exports.Ng2DatetimePickerModule = ng2_datetime_picker_module_1.Ng2DatetimePickerModule;
+var datetime_1 = require('./datetime');
+exports.NguiDatetime = datetime_1.NguiDatetime;
+var datetime_picker_component_1 = require('./datetime-picker.component');
+exports.NguiDatetimePickerComponent = datetime_picker_component_1.NguiDatetimePickerComponent;
+var datetime_picker_directive_1 = require('./datetime-picker.directive');
+exports.NguiDatetimePickerDirective = datetime_picker_directive_1.NguiDatetimePickerDirective;
+var datetime_picker_module_1 = require('./datetime-picker.module');
+exports.NguiDatetimePickerModule = datetime_picker_module_1.NguiDatetimePickerModule;
 //# sourceMappingURL=index.js.map
