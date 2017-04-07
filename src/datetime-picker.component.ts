@@ -140,6 +140,15 @@ declare var moment: any;
   `,
   styles: [
     `
+* {
+  box-sizing: content-box;
+  /* 
+  This is necessary because the rest of the styles assume it 
+  and CSS "frameworks" explicitly set the box-sizing to border-box,
+  breaking the layout here.
+  */
+}
+
 @keyframes slideDown {
   0% {
     transform:  translateY(-10px);
