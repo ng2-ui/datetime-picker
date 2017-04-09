@@ -63,6 +63,7 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
 
   inputEl: HTMLInputElement;
   clickedDatetimePicker: boolean;
+  userModifyingValue: boolean = false;
 
   constructor (
     private resolver:ComponentFactoryResolver,
@@ -162,7 +163,12 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
     if (this.inputEl) {
       this.inputEl.addEventListener('focus', this.showDatetimePicker);
       this.inputEl.addEventListener('blur', this.hideDatetimePicker);
+      this.inputEl.addEventListener('keydown', this.handleKeyDown);
     }
+  }
+
+  handleKeyDown = (event) => {
+    this.userModifyingValue = true;
   }
 
 
@@ -177,15 +183,17 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
         this.updateDatepicker();
       } else if (date && typeof date === 'string') {
         /** if program assigns a string value, then format to date later */
-        setTimeout( () => {
-          let dt = this.getDate(date);
-          dt.toString = () => NguiDatetime.formatDate(dt, this.dateFormat, this.dateOnly);
-          this.ngModel = dt;
-          this.inputEl.value = ''+dt;
-        })
+        if (!this.userModifyingValue) {
+          setTimeout( () => {
+            let dt = this.getDate(date);
+            dt.toString = () => NguiDatetime.formatDate(dt, this.dateFormat, this.dateOnly);
+            this.ngModel = dt;
+            this.inputEl.value = ''+dt;
+          })
+        }
       }
     } 
-
+    this.userModifyingValue = false;
   }
 
   updateDatepicker() {

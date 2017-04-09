@@ -38,6 +38,7 @@ var templateStr = `
           (popupClosed)="onDatetimePickerClosed()"
           [close-on-select]="false" />
       </ngui-utils-4>
+      <button (click)="date3='Thu Jan 31 2015 00:00:00 GMT-0500 (EST)'">Change</button>
       <pre>{{templateStr | htmlCode:'ngui-utils-4'}}</pre>
     </fieldset>
    
