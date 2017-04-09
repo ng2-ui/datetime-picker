@@ -21,6 +21,7 @@ var templateStr = `
           [max-date]="maxDate"
           [min-hour]="9"
           [max-hour]="17"
+          [show-am-pm]="true"
           [show-close-button]="true"
           [disabled-dates]="disabledDates"
           (closing$)="show = false"

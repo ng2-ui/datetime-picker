@@ -8,7 +8,7 @@ import {
   EventEmitter,
   ViewChild
 } from '@angular/core';
-import {NguiDatetime} from './datetime';
+import { NguiDatetime } from './datetime';
 
 declare var moment: any;
 
@@ -19,9 +19,9 @@ declare var moment: any;
  * show a selected date in monthly calendar
  */
 @Component({
-  providers    : [NguiDatetime],
-  selector     : 'ngui-datetime-picker',
-  template     : `
+  providers: [NguiDatetime],
+  selector: 'ngui-datetime-picker',
+  template: `
   <div class="closing-layer" (click)="close()" *ngIf="showCloseLayer" ></div>
   <div class="ngui-datetime-picker">
     <div class="close-button" *ngIf="showCloseButton" (click)="close()"></div>
@@ -103,7 +103,7 @@ declare var moment: any;
       <div class="select-current-time" (click)="selectCurrentTime()">{{locale.currentTime}}</div>
       <label class="timeLabel">{{locale.time}}</label>
       <span class="timeValue">
-        {{("0"+hour).slice(-2)}} : {{("0"+minute).slice(-2)}}
+        {{convertHours(hour)}} : {{("0"+minute).slice(-2)}} {{timeSuffix}}
       </span><br/>
       <div>
         <label class="hourLabel">{{locale.hour}}:</label>
@@ -138,7 +138,7 @@ declare var moment: any;
     </div>
   </div>
   `,
-  styles       : [
+  styles: [
     `
 @keyframes slideDown {
   0% {
@@ -371,38 +371,40 @@ declare var moment: any;
   encapsulation: ViewEncapsulation.None
 })
 export class NguiDatetimePickerComponent {
-  @Input('date-format')       dateFormat: string;
-  @Input('date-only')         dateOnly: boolean;
-  @Input('time-only')         timeOnly: boolean;
-  @Input('selected-date')     selectedDate: Date;
-  @Input('hour')              hour: number;
-  @Input('minute')            minute: number;
-  @Input('minuteStep')        minuteStep: number = 1;
-  @Input('default-value')     defaultValue: Date;
-  @Input('min-date')          minDate: Date;
-  @Input('max-date')          maxDate: Date;
-  @Input('min-hour')          minHour: number;
-  @Input('max-hour')          maxHour: number;
-  @Input('disabled-dates')    disabledDates: Date[];
+  @Input('date-format') dateFormat: string;
+  @Input('date-only') dateOnly: boolean;
+  @Input('time-only') timeOnly: boolean;
+  @Input('selected-date') selectedDate: Date;
+  @Input('hour') hour: number;
+  @Input('minute') minute: number;
+  @Input('minuteStep') minuteStep: number = 1;
+  @Input('default-value') defaultValue: Date;
+  @Input('min-date') minDate: Date;
+  @Input('max-date') maxDate: Date;
+  @Input('min-hour') minHour: number;
+  @Input('max-hour') maxHour: number;
+  @Input('disabled-dates') disabledDates: Date[];
   @Input('show-close-button') showCloseButton: boolean;
-  @Input('show-close-layer')  showCloseLayer: boolean;
+  @Input('show-close-layer') showCloseLayer: boolean;
   @Input('show-week-numbers') showWeekNumbers: boolean = false;
   @Input('show-today-shortcut') showTodayShortcut: boolean = false;
+  @Input('show-am-pm') showAmPm: boolean = false;
 
-  @Output('selected$')  selected$:EventEmitter<any> = new EventEmitter();
-  @Output('closing$')   closing$:EventEmitter<any> = new EventEmitter();
+  @Output('selected$') selected$: EventEmitter<any> = new EventEmitter();
+  @Output('closing$') closing$: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('hours')   hours:ElementRef;
-  @ViewChild('minutes') minutes:ElementRef;
+  @ViewChild('hours') hours: ElementRef;
+  @ViewChild('minutes') minutes: ElementRef;
 
-  public el:HTMLElement; // this component element
+  public el: HTMLElement; // this component element
   public disabledDatesInTime: number[];
   public locale = NguiDatetime.locale;
   public showYearSelector = false;
 
   private _monthData: any;
+  private timeSuffix: string;
 
-  public constructor (
+  public constructor(
     elementRef: ElementRef,
     public nguiDatetime: NguiDatetime,
     public cdRef: ChangeDetectorRef
@@ -436,7 +438,7 @@ export class NguiDatetimePickerComponent {
     return this._monthData;
   }
 
-  public get today ():Date {
+  public get today(): Date {
     let dt = new Date();
     dt.setHours(0);
     dt.setMinutes(0);
@@ -445,21 +447,21 @@ export class NguiDatetimePickerComponent {
     return dt;
   }
 
-  public set year (year) {}
-  public set month (month) {}
-  public set day (day) {}
-  public set today (today) {}
+  public set year(year) { }
+  public set month(month) { }
+  public set day(day) { }
+  public set today(today) { }
 
   public ngOnInit() {
-    if(!this.defaultValue || isNaN(this.defaultValue.getTime())) {
+    if (!this.defaultValue || isNaN(this.defaultValue.getTime())) {
       this.defaultValue = new Date();
     }
     this.selectedDate = this.defaultValue;
 
     // set hour and minute using moment if available to avoid having Javascript change timezones
     if (typeof moment === 'undefined') {
-      this.hour         = this.selectedDate.getHours();
-      this.minute       = this.selectedDate.getMinutes();
+      this.hour = this.selectedDate.getHours();
+      this.minute = this.selectedDate.getMinutes();
     } else {
       let m = moment(this.selectedDate);
       this.hour = m.hours();
@@ -483,15 +485,15 @@ export class NguiDatetimePickerComponent {
     this.showYearSelector = false;
   }
 
-  public toDate (day:number, month?: number):Date {
+  public toDate(day: number, month?: number): Date {
     return new Date(this._monthData.year, month || this._monthData.month, day);
   }
 
-  public toDateOnly (date:Date) {
+  public toDateOnly(date: Date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
   }
 
-  public selectCurrentTime(){
+  public selectCurrentTime() {
     this.hour = (new Date()).getHours();
     this.minute = (new Date()).getMinutes();
     this.selectDateTime();
@@ -509,8 +511,8 @@ export class NguiDatetimePickerComponent {
 
     // editing hours and minutes via javascript date methods causes date to lose timezone info,
     // so edit using moment if available
-    let hour = parseInt( '' + this.hour || '0', 10);
-    let minute = parseInt( '' + this.minute || '0', 10);
+    let hour = parseInt('' + this.hour || '0', 10);
+    let minute = parseInt('' + this.minute || '0', 10);
 
     if (typeof moment !== 'undefined') {
       // here selected date has a time of 00:00 in local time,
@@ -535,12 +537,12 @@ export class NguiDatetimePickerComponent {
   /**
    * show prev/next month calendar
    */
-  public updateMonthData (num:number) {
+  public updateMonthData(num: number) {
     this._monthData = this.nguiDatetime.getMonthData(this._monthData.year, this._monthData.month + num);
   }
 
   public isDateDisabled(date: Date) {
-    let dateInTime  = date.getTime();
+    let dateInTime = date.getTime();
     this.disabledDatesInTime =
       this.disabledDatesInTime || (this.disabledDates || []).map(d => d.getTime());
 
@@ -561,5 +563,15 @@ export class NguiDatetimePickerComponent {
 
   public selectToday() {
     this.selectDateTime(new Date());
+  }
+
+  private convertHours(hours) {
+    if (this.showAmPm) {
+      this.timeSuffix = (hours >= 12) ? 'PM' : 'AM';
+      hours = (hours == 0) ? 12 : (hours > 12) ? hours - 12 : hours;
+    } else {
+      this.timeSuffix = null;
+    }
+    return ("0" + hours).slice(-2);
   }
 }

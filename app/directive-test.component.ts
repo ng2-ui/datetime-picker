@@ -21,6 +21,7 @@ var templateStr = `
           [max-date]="date2MaxDate"
           [show-close-layer]="true"
           [show-week-numbers]="true"
+          [is-draggable]="false"
           date-only="true"/>
         date2: {{date2}}
         <button id="set-date" (click)="date2 = date2New">Set 2017-12-31</button>
