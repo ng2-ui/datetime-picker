@@ -1,6 +1,6 @@
 {
   "name": "@ngui/datetime-picker",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "Angular2 DateTime Picker",
   "license": "ISC",
   "main": "dist/datetime-picker.umd.js",

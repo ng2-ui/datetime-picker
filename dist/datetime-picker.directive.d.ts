@@ -22,7 +22,7 @@ export declare class NguiDatetimePickerDirective implements OnInit, OnChanges {
     showCloseLayer: boolean;
     showWeekNumbers: boolean;
     formControlName: string;
-    draggable: boolean;
+    isDraggable: boolean;
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
     valueChanged$: EventEmitter<{}>;
@@ -34,6 +34,7 @@ export declare class NguiDatetimePickerDirective implements OnInit, OnChanges {
     private sub;
     inputEl: HTMLInputElement;
     clickedDatetimePicker: boolean;
+    userModifyingValue: boolean;
     constructor(resolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, parent: ControlContainer);
     /**
      * convert defaultValue, minDate, maxDate, minHour, and maxHour to proper types
@@ -41,6 +42,7 @@ export declare class NguiDatetimePickerDirective implements OnInit, OnChanges {
     normalizeInput(): void;
     ngOnInit(): void;
     ngAfterViewInit(): void;
+    handleKeyDown: (event: any) => void;
     ngOnChanges(changes: SimpleChanges): void;
     updateDatepicker(): void;
     setInputElDateValue(date: any): void;

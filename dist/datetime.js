@@ -202,7 +202,7 @@ var NguiDatetime = (function () {
         { type: core_1.Injectable },
     ];
     /** @nocollapse */
-    NguiDatetime.ctorParameters = function () { return []; };
+    NguiDatetime.ctorParameters = [];
     return NguiDatetime;
 }());
 exports.NguiDatetime = NguiDatetime;

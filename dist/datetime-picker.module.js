@@ -18,7 +18,7 @@ var NguiDatetimePickerModule = (function () {
                 },] },
     ];
     /** @nocollapse */
-    NguiDatetimePickerModule.ctorParameters = function () { return []; };
+    NguiDatetimePickerModule.ctorParameters = [];
     return NguiDatetimePickerModule;
 }());
 exports.NguiDatetimePickerModule = NguiDatetimePickerModule;

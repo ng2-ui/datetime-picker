@@ -649,10 +649,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.viewContainerRef = viewContainerRef;
 	        this.parent = parent;
 	        this.closeOnSelect = true;
-	        this.draggable = true;
+	        this.isDraggable = true;
 	        this.ngModelChange = new core_1.EventEmitter();
 	        this.valueChanged$ = new core_1.EventEmitter();
 	        this.popupClosed$ = new core_1.EventEmitter();
+	        this.userModifyingValue = false;
+	        this.handleKeyDown = function (event) {
+	            _this.userModifyingValue = true;
+	        };
 	        /* input element string value is changed */
 	        this.inputElValueChanged = function (date) {
 	            _this.setInputElDateValue(date);
@@ -675,7 +679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this.componentRef = _this.viewContainerRef.createComponent(factory);
 	            _this.nguiDatetimePickerEl = _this.componentRef.location.nativeElement;
 	            _this.nguiDatetimePickerEl.setAttribute('tabindex', '32767');
-	            _this.nguiDatetimePickerEl.setAttribute('draggable', String(_this.draggable));
+	            _this.nguiDatetimePickerEl.setAttribute('draggable', String(_this.isDraggable));
 	            _this.nguiDatetimePickerEl.addEventListener('mousedown', function (event) {
 	                _this.clickedDatetimePicker = true;
 	            });
@@ -851,6 +855,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (this.inputEl) {
 	            this.inputEl.addEventListener('focus', this.showDatetimePicker);
 	            this.inputEl.addEventListener('blur', this.hideDatetimePicker);
+	            this.inputEl.addEventListener('keydown', this.handleKeyDown);
 	        }
 	    };
 	    NguiDatetimePickerDirective.prototype.ngOnChanges = function (changes) {
@@ -865,14 +870,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            else if (date && typeof date === 'string') {
 	                /** if program assigns a string value, then format to date later */
-	                setTimeout(function () {
-	                    var dt = _this.getDate(date);
-	                    dt.toString = function () { return datetime_1.NguiDatetime.formatDate(dt, _this.dateFormat, _this.dateOnly); };
-	                    _this.ngModel = dt;
-	                    _this.inputEl.value = '' + dt;
-	                });
+	                if (!this.userModifyingValue) {
+	                    setTimeout(function () {
+	                        var dt = _this.getDate(date);
+	                        dt.toString = function () { return datetime_1.NguiDatetime.formatDate(dt, _this.dateFormat, _this.dateOnly); };
+	                        _this.ngModel = dt;
+	                        _this.inputEl.value = '' + dt;
+	                    });
+	                }
 	            }
 	        }
+	        this.userModifyingValue = false;
 	    };
 	    NguiDatetimePickerDirective.prototype.updateDatepicker = function () {
 	        if (this.componentRef) {
@@ -996,9 +1004,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __metadata('design:type', String)
 	    ], NguiDatetimePickerDirective.prototype, "formControlName", void 0);
 	    __decorate([
-	        core_1.Input('draggable'), 
+	        core_1.Input('is-draggable'), 
 	        __metadata('design:type', Boolean)
-	    ], NguiDatetimePickerDirective.prototype, "draggable", void 0);
+	    ], NguiDatetimePickerDirective.prototype, "isDraggable", void 0);
 	    __decorate([
 	        core_1.Input('ngModel'), 
 	        __metadata('design:type', Object)

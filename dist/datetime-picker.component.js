@@ -201,11 +201,11 @@ var NguiDatetimePickerComponent = (function () {
                 },] },
     ];
     /** @nocollapse */
-    NguiDatetimePickerComponent.ctorParameters = function () { return [
+    NguiDatetimePickerComponent.ctorParameters = [
         { type: core_1.ElementRef, },
         { type: datetime_1.NguiDatetime, },
         { type: core_1.ChangeDetectorRef, },
-    ]; };
+    ];
     NguiDatetimePickerComponent.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
