@@ -140,15 +140,6 @@ declare var moment: any;
   `,
   styles: [
     `
-* {
-  box-sizing: content-box;
-  /* 
-  This is necessary because the rest of the styles assume it 
-  and CSS "frameworks" explicitly set the box-sizing to border-box,
-  breaking the layout here.
-  */
-}
-
 @keyframes slideDown {
   0% {
     transform:  translateY(-10px);
@@ -183,6 +174,7 @@ declare var moment: any;
 }
 .ngui-datetime-picker .days {
   width: 210px; /* 30 x 7 days */
+  box-sizing: content-box;
 }
 .ngui-datetime-picker .close-button {
   position: absolute;
@@ -191,6 +183,7 @@ declare var moment: any;
   right: 0;
   z-index: 1;
   padding: 0 5px;
+  box-sizing: content-box;
 }
 .ngui-datetime-picker .close-button:before {
   content: 'X';
@@ -218,6 +211,7 @@ declare var moment: any;
   cursor: pointer;
   width: 25px;
   text-align: center;
+  box-sizing: content-box;
 }
 .ngui-datetime-picker > .month > .prev_next:hover {
   background-color: #333;
@@ -241,6 +235,7 @@ declare var moment: any;
   text-align: right;
   width: 21px;
   vertical-align: top;
+  box-sizing: content-box;
 }
 
 .ngui-datetime-picker  .days {
@@ -248,11 +243,11 @@ declare var moment: any;
   width: 210px; /* 30 x 7 */
   text-align: center;
   padding: 0 10px;
+  box-sizing: content-box;
 }
 .ngui-datetime-picker .days .day-of-week,
 .ngui-datetime-picker .days .day {
   box-sizing: border-box;
-  -moz-box-sizing: border-box;
   border: 1px solid transparent;
   width: 30px;
   line-height: 28px;
@@ -328,6 +323,7 @@ declare var moment: any;
   display: inline-block;
   width: 45px;
   vertical-align: top;
+  box-sizing: content-box;
 }
 .closing-layer {
   display: block;
