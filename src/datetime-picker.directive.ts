@@ -46,6 +46,7 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
   @Input('max-hour')          maxHour: Date | number;
   @Input('disabled-dates')    disabledDates: Date[];
   @Input('show-close-layer')  showCloseLayer: boolean;
+  @Input('show-today-shortcut') showTodayShortcut: boolean = false;
   @Input('show-week-numbers') showWeekNumbers: boolean;
   @Input() formControlName: string;
   @Input('is-draggable')      isDraggable: boolean = true;
@@ -280,6 +281,7 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
     component.disabledDates  = this.disabledDates;
     component.showCloseButton = this.closeOnSelect === false;
     component.showCloseLayer = this.showCloseLayer;
+    component.showTodayShortcut = this.showTodayShortcut;
     component.showWeekNumbers = this.showWeekNumbers;
 
     this.styleDatetimePicker();
