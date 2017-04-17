@@ -21,7 +21,7 @@ var NguiDatetime = (function () {
             ret += dateOnly ? '' : ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
             return ret;
         }
-        else if (d && moment) {
+        else if (d && typeof moment !== 'undefined') {
             return moment(d).format(format);
         }
         else {

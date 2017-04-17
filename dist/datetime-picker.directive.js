@@ -29,6 +29,7 @@ var NguiDatetimePickerDirective = (function () {
         this.viewContainerRef = viewContainerRef;
         this.parent = parent;
         this.closeOnSelect = true;
+        this.showTodayShortcut = false;
         this.isDraggable = true;
         this.ngModelChange = new core_1.EventEmitter();
         this.valueChanged$ = new core_1.EventEmitter();
@@ -89,6 +90,7 @@ var NguiDatetimePickerDirective = (function () {
             component.disabledDates = _this.disabledDates;
             component.showCloseButton = _this.closeOnSelect === false;
             component.showCloseLayer = _this.showCloseLayer;
+            component.showTodayShortcut = _this.showTodayShortcut;
             component.showWeekNumbers = _this.showWeekNumbers;
             _this.styleDatetimePicker();
             component.selected$.subscribe(_this.dateSelected);
@@ -349,6 +351,7 @@ var NguiDatetimePickerDirective = (function () {
         'maxHour': [{ type: core_1.Input, args: ['max-hour',] },],
         'disabledDates': [{ type: core_1.Input, args: ['disabled-dates',] },],
         'showCloseLayer': [{ type: core_1.Input, args: ['show-close-layer',] },],
+        'showTodayShortcut': [{ type: core_1.Input, args: ['show-today-shortcut',] },],
         'showWeekNumbers': [{ type: core_1.Input, args: ['show-week-numbers',] },],
         'formControlName': [{ type: core_1.Input },],
         'isDraggable': [{ type: core_1.Input, args: ['is-draggable',] },],

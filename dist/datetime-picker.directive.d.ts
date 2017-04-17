@@ -20,6 +20,7 @@ export declare class NguiDatetimePickerDirective implements OnInit, OnChanges {
     maxHour: Date | number;
     disabledDates: Date[];
     showCloseLayer: boolean;
+    showTodayShortcut: boolean;
     showWeekNumbers: boolean;
     formControlName: string;
     isDraggable: boolean;
