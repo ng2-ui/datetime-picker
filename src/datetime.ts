@@ -77,7 +77,7 @@ export class NguiDatetime {
       ret = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate());
       ret += dateOnly ? '' : ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
       return ret;
-    } else if (d && moment) {
+    } else if (d && typeof moment !== 'undefined') {
       return moment(d).format(format);
     } else {
       return '';
