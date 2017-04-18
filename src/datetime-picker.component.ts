@@ -109,7 +109,7 @@ declare var moment: any;
         <label class="hourLabel">{{locale.hour}}:</label>
         <input #hours class="hourInput"
                tabindex="90000"
-               (change)="selectDateTime()"
+               (change)="selectTime(hours.value, minutes.value)"
                type="range"
                min="{{minHour || 0}}"
                max="{{maxHour || 23}}"
@@ -120,7 +120,7 @@ declare var moment: any;
         <input #minutes class="minutesInput"
                tabindex="90000"
                step="{{minuteStep}}"
-               (change)="selectDateTime()"
+               (change)="selectTime(hours.value, minutes.value)"
                type="range" min="0" max="59" range="10" [(ngModel)]="minute"/>
       </div>
     </div>
@@ -502,6 +502,18 @@ export class NguiDatetimePickerComponent {
     this.hour = (new Date()).getHours();
     this.minute = (new Date()).getMinutes();
     this.selectDateTime();
+  }
+
+  /**
+   * set the hour and minute
+   * @param hour {string}
+   * @param minute {string}
+   */
+  public selectTime (hour, minute) {
+      //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11
+      this.hour = parseInt(hour, 10) || 0;
+      this.minute = parseInt(minute, 10) || 0;
+      this.selectDateTime();
   }
 
   /**
