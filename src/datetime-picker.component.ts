@@ -394,6 +394,8 @@ export class NguiDatetimePickerComponent {
   @Input('show-week-numbers') showWeekNumbers: boolean = false;
   @Input('show-today-shortcut') showTodayShortcut: boolean = false;
   @Input('show-am-pm') showAmPm: boolean = false;
+  @Input('use-utc') useUtc: boolean = false; /* check directive */
+  @Input('current-is-today') currToday: boolean = false; /* check directive */
 
   @Output('selected$') selected$: EventEmitter<any> = new EventEmitter();
   @Output('closing$') closing$: EventEmitter<any> = new EventEmitter();
@@ -499,9 +501,25 @@ export class NguiDatetimePickerComponent {
   }
 
   public selectCurrentTime() {
-    this.hour = (new Date()).getHours();
-    this.minute = (new Date()).getMinutes();
-    this.selectDateTime();
+    if (this.useUtc) {
+      this.hour = (new Date()).getUTCHours();
+      this.minute = (new Date()).getUTCMinutes();
+    } else {
+      this.hour = (new Date()).getHours();
+      this.minute = (new Date()).getMinutes();
+    }
+    if (this.currToday) {
+      if (this.useUtc) {
+        let d = new Date();
+        this.selectDateTime(new Date(d.getUTCFullYear(),
+          d.getUTCMonth(),
+          d.getUTCDate()));
+      } else {
+        this.selectDateTime(new Date());
+      }
+    } else {
+      this.selectDateTime();
+    }
   }
 
   /**
@@ -509,11 +527,11 @@ export class NguiDatetimePickerComponent {
    * @param hour {string}
    * @param minute {string}
    */
-  public selectTime (hour, minute) {
-      //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11
-      this.hour = parseInt(hour, 10) || 0;
-      this.minute = parseInt(minute, 10) || 0;
-      this.selectDateTime();
+  public selectTime(hour, minute) {
+    //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11
+    this.hour = parseInt(hour, 10) || 0;
+    this.minute = parseInt(minute, 10) || 0;
+    this.selectDateTime();
   }
 
   /**

@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var datetime_1 = __webpack_require__(1);
@@ -65,9 +65,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NguiDatetimePickerModule = datetime_picker_module_1.NguiDatetimePickerModule;
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -287,15 +287,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NguiDatetime = NguiDatetime;
 
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -322,6 +322,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.showWeekNumbers = false;
 	        this.showTodayShortcut = false;
 	        this.showAmPm = false;
+	        this.useUtc = false; /* check directive */
+	        this.currToday = false; /* check directive */
 	        this.selected$ = new core_1.EventEmitter();
 	        this.closing$ = new core_1.EventEmitter();
 	        this.locale = datetime_1.NguiDatetime.locale;
@@ -422,21 +424,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 	    };
 	    NguiDatetimePickerComponent.prototype.selectCurrentTime = function () {
-	        this.hour = (new Date()).getHours();
-	        this.minute = (new Date()).getMinutes();
-	        this.selectDateTime();
+	        if (this.useUtc) {
+	            this.hour = (new Date()).getUTCHours();
+	            this.minute = (new Date()).getUTCMinutes();
+	        }
+	        else {
+	            this.hour = (new Date()).getHours();
+	            this.minute = (new Date()).getMinutes();
+	        }
+	        if (this.currToday) {
+	            if (this.useUtc) {
+	                var d = new Date();
+	                this.selectDateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+	            }
+	            else {
+	                this.selectDateTime(new Date());
+	            }
+	        }
+	        else {
+	            this.selectDateTime();
+	        }
 	    };
 	    /**
-	     * set the hour and minute 
-	     * @param hour {string} 
-	     * @param minute {string} 
-	     */ 
-	    NguiDatetimePickerComponent.prototype.selectTime = function (hour, minute) { 
-	        //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11 
-	        this.hour = parseInt(hour, 10) || 0; 
-	        this.minute = parseInt(minute, 10) || 0; 
-	        this.selectDateTime(); 
-	    }; 
+	     * set the hour and minute
+	     * @param hour {string}
+	     * @param minute {string}
+	     */
+	    NguiDatetimePickerComponent.prototype.selectTime = function (hour, minute) {
+	        //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11
+	        this.hour = parseInt(hour, 10) || 0;
+	        this.minute = parseInt(minute, 10) || 0;
+	        this.selectDateTime();
+	    };
 	    /**
 	     * set the selected date and close it when closeOnSelect is true
 	     * @param date {Date}
@@ -581,7 +600,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __metadata('design:type', Boolean)
 	    ], NguiDatetimePickerComponent.prototype, "showAmPm", void 0);
 	    __decorate([
-	        core_1.Output('selected$'), 
+	        core_1.Input('use-utc'), 
+	        __metadata('design:type', Boolean)
+	    ], NguiDatetimePickerComponent.prototype, "useUtc", void 0);
+	    __decorate([
+	        /* check directive */ core_1.Input('current-is-today'), 
+	        __metadata('design:type', Boolean)
+	    ], NguiDatetimePickerComponent.prototype, "currToday", void 0);
+	    __decorate([
+	        /* check directive */ core_1.Output('selected$'), 
 	        __metadata('design:type', core_1.EventEmitter)
 	    ], NguiDatetimePickerComponent.prototype, "selected$", void 0);
 	    __decorate([
@@ -613,9 +640,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NguiDatetimePickerComponent = NguiDatetimePickerComponent;
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -662,6 +689,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.closeOnSelect = true;
 	        this.showTodayShortcut = false;
 	        this.isDraggable = true;
+	        this.useUtc = false; /* Change this attribute to true and the result of currentTime will be present in UTC */
+	        this.currToday = false; /* Change this attribute to true and the result of currentTime will be with 'today' date */
 	        this.ngModelChange = new core_1.EventEmitter();
 	        this.valueChanged$ = new core_1.EventEmitter();
 	        this.popupClosed$ = new core_1.EventEmitter();
@@ -723,6 +752,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            component.showCloseLayer = _this.showCloseLayer;
 	            component.showTodayShortcut = _this.showTodayShortcut;
 	            component.showWeekNumbers = _this.showWeekNumbers;
+	            component.useUtc = _this.useUtc;
+	            component.currToday = _this.currToday;
 	            _this.styleDatetimePicker();
 	            component.selected$.subscribe(_this.dateSelected);
 	            component.closing$.subscribe(function () {
@@ -1025,7 +1056,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __metadata('design:type', Boolean)
 	    ], NguiDatetimePickerDirective.prototype, "isDraggable", void 0);
 	    __decorate([
-	        core_1.Input('ngModel'), 
+	        core_1.Input('use-utc'), 
+	        __metadata('design:type', Boolean)
+	    ], NguiDatetimePickerDirective.prototype, "useUtc", void 0);
+	    __decorate([
+	        /* Change this attribute to true and the result of currentTime will be present in UTC */ core_1.Input('current-is-today'), 
+	        __metadata('design:type', Boolean)
+	    ], NguiDatetimePickerDirective.prototype, "currToday", void 0);
+	    __decorate([
+	        /* Change this attribute to true and the result of currentTime will be with 'today' date */ core_1.Input('ngModel'), 
 	        __metadata('design:type', Object)
 	    ], NguiDatetimePickerDirective.prototype, "ngModel", void 0);
 	    __decorate([
@@ -1055,15 +1094,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NguiDatetimePickerDirective = NguiDatetimePickerDirective;
 
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -1099,13 +1138,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NguiDatetimePickerModule = NguiDatetimePickerModule;
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
