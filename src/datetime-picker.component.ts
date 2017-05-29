@@ -95,7 +95,7 @@ declare var moment: any;
     </div>
 
     <div class="shortcuts" *ngIf="showTodayShortcut">
-      <a href="#" (click)="selectToday()">Today</a>
+      <a (click)="selectToday()">Today</a>
     </div>
 
     <!-- Hour Minute -->
