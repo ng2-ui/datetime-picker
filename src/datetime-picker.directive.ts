@@ -121,10 +121,10 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
     if(this.parent && this.formControlName) {
       if (this.parent["form"]) {
         this.ctrl = (<FormGroup>this.parent["form"]).get(this.formControlName);
-      } else if (this.parent["name"]) {
+      } else if (this.parent["path"]) {
         let formDir = this.parent.formDirective;
-        if (formDir instanceof FormGroupDirective && formDir.form.get(this.parent["name"])) {
-          this.ctrl = formDir.form.get(this.parent["name"]).get(this.formControlName);
+        if (formDir instanceof FormGroupDirective && formDir.form.get(this.parent["path"])) {
+          this.ctrl = formDir.form.get(this.parent["path"]).get(this.formControlName);
         }
       }
       if (this.ctrl) {
