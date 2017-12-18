@@ -1,7 +1,7 @@
 # Angular(2+) Datetime Picker
 
-## NOTE: NOT-MATAINED. 
-Accepting volunteers and ready to transfer full power to who wants to maintain this repo.
+## NOTE: NOT-MAINTAINED
+Accepting volunteers and ready to transfer ownership.
 
 
 [![Build Status](https://travis-ci.org/ng2-ui/datetime-picker.svg?branch=master)](https://travis-ci.org/ng2-ui/datetime-picker)
