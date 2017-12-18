@@ -1,7 +1,6 @@
 # Angular(2+) Datetime Picker
 
-## NOTE: NOT-MAINTAINED
-Accepting volunteers and ready to transfer ownership.
+
 
 
 [![Build Status](https://travis-ci.org/ng2-ui/datetime-picker.svg?branch=master)](https://travis-ci.org/ng2-ui/datetime-picker)
@@ -11,6 +10,10 @@ AngularJS 2 DateTime Picker
 <a href="https://rawgit.com/ng2-ui/datetime-picker/master/app/index.html">
   <img src="http://i.imgur.com/g5qbBBz.png" width="50%" style="border:1px solid grey" />
 </a>
+
+## NOTE: NOT-MAINTAINED
+Accepting volunteers and ready to transfer ownership.
+
 
 [Plunker Example](https://plnkr.co/edit/su2aiL)  
 [French Example](https://plnkr.co/edit/J6hXyB?p=preview)
