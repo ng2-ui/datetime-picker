@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 var config = {
   entry: {
-    '@ngui/datetime-picker': path.join(__dirname, 'src', 'index.ts')
+    '@public_marpereira/datetime-picker': path.join(__dirname, 'src', 'index.ts')
   },
   resolve: {
     extensions: ['', '.ts', '.js', '.json', '.css', '.html']

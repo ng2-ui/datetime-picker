@@ -24,6 +24,8 @@ export declare class NguiDatetimePickerDirective implements OnInit, OnChanges {
     showWeekNumbers: boolean;
     formControlName: string;
     isDraggable: boolean;
+    useUtc: boolean;
+    currToday: boolean;
     ngModel: any;
     ngModelChange: EventEmitter<{}>;
     valueChanged$: EventEmitter<{}>;

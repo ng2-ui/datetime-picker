@@ -49,7 +49,9 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
   @Input('show-today-shortcut') showTodayShortcut: boolean = false;
   @Input('show-week-numbers') showWeekNumbers: boolean;
   @Input() formControlName: string;
-  @Input('is-draggable') isDraggable: boolean = true;
+  @Input('is-draggable')      isDraggable: boolean = true;
+  @Input('use-utc')           useUtc: boolean = false; /* Change this attribute to true and the result of currentTime will be present in UTC */ 
+  @Input('current-is-today')     currToday: boolean = false; /* Change this attribute to true and the result of currentTime will be with 'today' date */
 
   @Input('ngModel') ngModel: any;
   @Output('ngModelChange') ngModelChange = new EventEmitter();
@@ -289,6 +291,8 @@ export class NguiDatetimePickerDirective implements OnInit, OnChanges {
     component.showCloseLayer = this.showCloseLayer;
     component.showTodayShortcut = this.showTodayShortcut;
     component.showWeekNumbers = this.showWeekNumbers;
+    component.useUtc         = this.useUtc;
+    component.currToday      = this.currToday;
 
     this.styleDatetimePicker();
 

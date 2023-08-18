@@ -31,6 +31,8 @@ var NguiDatetimePickerDirective = (function () {
         this.closeOnSelect = true;
         this.showTodayShortcut = false;
         this.isDraggable = true;
+        this.useUtc = false; /* Change this attribute to true and the result of currentTime will be present in UTC */
+        this.currToday = false; /* Change this attribute to true and the result of currentTime will be with 'today' date */
         this.ngModelChange = new core_1.EventEmitter();
         this.valueChanged$ = new core_1.EventEmitter();
         this.popupClosed$ = new core_1.EventEmitter();
@@ -92,6 +94,8 @@ var NguiDatetimePickerDirective = (function () {
             component.showCloseLayer = _this.showCloseLayer;
             component.showTodayShortcut = _this.showTodayShortcut;
             component.showWeekNumbers = _this.showWeekNumbers;
+            component.useUtc = _this.useUtc;
+            component.currToday = _this.currToday;
             _this.styleDatetimePicker();
             component.selected$.subscribe(_this.dateSelected);
             component.closing$.subscribe(function () {
@@ -332,11 +336,11 @@ var NguiDatetimePickerDirective = (function () {
                 },] },
     ];
     /** @nocollapse */
-    NguiDatetimePickerDirective.ctorParameters = [
+    NguiDatetimePickerDirective.ctorParameters = function () { return [
         { type: core_1.ComponentFactoryResolver, },
         { type: core_1.ViewContainerRef, },
         { type: forms_1.ControlContainer, decorators: [{ type: core_1.Optional }, { type: core_1.Host }, { type: core_1.SkipSelf },] },
-    ];
+    ]; };
     NguiDatetimePickerDirective.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'parseFormat': [{ type: core_1.Input, args: ['parse-format',] },],
@@ -355,6 +359,8 @@ var NguiDatetimePickerDirective = (function () {
         'showWeekNumbers': [{ type: core_1.Input, args: ['show-week-numbers',] },],
         'formControlName': [{ type: core_1.Input },],
         'isDraggable': [{ type: core_1.Input, args: ['is-draggable',] },],
+        'useUtc': [{ type: core_1.Input, args: ['use-utc',] },],
+        'currToday': [{ type: core_1.Input, args: ['current-is-today',] },],
         'ngModel': [{ type: core_1.Input, args: ['ngModel',] },],
         'ngModelChange': [{ type: core_1.Output, args: ['ngModelChange',] },],
         'valueChanged$': [{ type: core_1.Output, args: ['valueChanged',] },],

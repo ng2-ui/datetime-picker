@@ -14,6 +14,8 @@ var NguiDatetimePickerComponent = (function () {
         this.showWeekNumbers = false;
         this.showTodayShortcut = false;
         this.showAmPm = false;
+        this.useUtc = false; /* check directive */
+        this.currToday = false; /* check directive */
         this.selected$ = new core_1.EventEmitter();
         this.closing$ = new core_1.EventEmitter();
         this.locale = datetime_1.NguiDatetime.locale;
@@ -114,20 +116,37 @@ var NguiDatetimePickerComponent = (function () {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
     };
     NguiDatetimePickerComponent.prototype.selectCurrentTime = function () {
-        this.hour = (new Date()).getHours();
-        this.minute = (new Date()).getMinutes();
-        this.selectDateTime();
+        if (this.useUtc) {
+            this.hour = (new Date()).getUTCHours();
+            this.minute = (new Date()).getUTCMinutes();
+        }
+        else {
+            this.hour = (new Date()).getHours();
+            this.minute = (new Date()).getMinutes();
+        }
+        if (this.currToday) {
+            if (this.useUtc) {
+                var d = new Date();
+                this.selectDateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+            }
+            else {
+                this.selectDateTime(new Date());
+            }
+        }
+        else {
+            this.selectDateTime();
+        }
     };
-    /** 
-     * set the hour and minute 
-     * @param hour {string} 
-     * @param minute {string} 
-     */ 
-    NguiDatetimePickerComponent.prototype.selectTime = function (hour, minute) { 
-        //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11 
-        this.hour = parseInt(hour, 10) || 0; 
-        this.minute = parseInt(minute, 10) || 0; 
-        this.selectDateTime(); 
+    /**
+     * set the hour and minute
+     * @param hour {string}
+     * @param minute {string}
+     */
+    NguiDatetimePickerComponent.prototype.selectTime = function (hour, minute) {
+        //NOTE: must get hour & minute because 2-way binding does not work with range input in IE <= 11
+        this.hour = parseInt(hour, 10) || 0;
+        this.minute = parseInt(minute, 10) || 0;
+        this.selectDateTime();
     };
     /**
      * set the selected date and close it when closeOnSelect is true
@@ -212,11 +231,11 @@ var NguiDatetimePickerComponent = (function () {
                 },] },
     ];
     /** @nocollapse */
-    NguiDatetimePickerComponent.ctorParameters = [
+    NguiDatetimePickerComponent.ctorParameters = function () { return [
         { type: core_1.ElementRef, },
         { type: datetime_1.NguiDatetime, },
         { type: core_1.ChangeDetectorRef, },
-    ];
+    ]; };
     NguiDatetimePickerComponent.propDecorators = {
         'dateFormat': [{ type: core_1.Input, args: ['date-format',] },],
         'dateOnly': [{ type: core_1.Input, args: ['date-only',] },],
@@ -236,6 +255,8 @@ var NguiDatetimePickerComponent = (function () {
         'showWeekNumbers': [{ type: core_1.Input, args: ['show-week-numbers',] },],
         'showTodayShortcut': [{ type: core_1.Input, args: ['show-today-shortcut',] },],
         'showAmPm': [{ type: core_1.Input, args: ['show-am-pm',] },],
+        'useUtc': [{ type: core_1.Input, args: ['use-utc',] },],
+        'currToday': [{ type: core_1.Input, args: ['current-is-today',] },],
         'selected$': [{ type: core_1.Output, args: ['selected$',] },],
         'closing$': [{ type: core_1.Output, args: ['closing$',] },],
         'hours': [{ type: core_1.ViewChild, args: ['hours',] },],
