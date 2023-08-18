@@ -1,5 +1,5 @@
 {
-  "name": "@ngui/datetime-picker",
+  "name": "@public_marpereira/datetime-picker",
   "version": "0.16.3",
   "description": "Angular2 DateTime Picker",
   "license": "ISC",
